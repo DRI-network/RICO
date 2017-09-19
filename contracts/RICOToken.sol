@@ -7,7 +7,7 @@ pragma solidity ^0.4.15;
 import "./ERC20TokenStandard.sol";
 import "./SafeMath.sol";
 
-contract Token is ERC20TokenStandard {
+contract RICOToken is ERC20TokenStandard {
     
     using SafeMath for uint256;
 
@@ -24,7 +24,7 @@ contract Token is ERC20TokenStandard {
         _;
     }
 
-    function Token() {
+    function RICOToken() {
         owner = msg.sender;
     }
 
@@ -39,9 +39,5 @@ contract Token is ERC20TokenStandard {
         balances[_user] = balances[_user].add(_amount);
         totalSupply = totalSupply.add(_amount);
         return true;
-    }
-
-    function destruct() onlyOwner returns (bool) {
-        selfdestruct(owner);
     }
 }

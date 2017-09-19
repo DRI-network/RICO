@@ -24,7 +24,7 @@ contract DutchAuction {
     ERC20TokenStandard public token;
     address public wallet;
     address public owner;
-    uint public ceiling;
+    uint public donating;
     uint public priceFactor;
     uint public startBlocktime;
     uint public endTime;
@@ -65,7 +65,7 @@ contract DutchAuction {
     modifier isValidPayload(address receiver) {
         require(msg.data.length != 4 && msg.data.length != 36);
         // Payload length has to have correct length and receiver should not be dutch auction or gnosis token contract
-        require(receiver == address(token));
+        require(receiver != address(token));
 
         require(receiver != address(this));
 
@@ -87,20 +87,21 @@ contract DutchAuction {
      */
     /// @dev Contract constructor function sets owner
     /// @param _wallet Gnosis wallet
-    /// @param _ceiling Auction ceiling
+    /// @param _donating Auction minting
     /// @param _priceFactor Auction price factor
-    function DutchAuction(address _wallet, uint _ceiling, uint _priceFactor) public {
-        require(_wallet == 0 || _ceiling == 0 || _priceFactor == 0);
+    function DutchAuction(address _wallet, uint256 _donating, uint256 _tokenSupply, uint _priceFactor) public {
+        require(_wallet != 0 && _donating != 0 && _priceFactor != 0 && _tokenSupply != 0);
         // Arguments are null
         owner = msg.sender;
         wallet = _wallet;
-        ceiling = _ceiling;
+        donating = _donating;
+        MAX_TOKENS_SUPPLY = _tokenSupply;
         priceFactor = _priceFactor;
         stage = Stages.AuctionDeployed;
     }
 
     /// @dev Setup function sets external contracts' addresses
-    /// @param _gnosisToken Gnosis token address
+    /// @param _token Gnosis token address
     function setup(ERC20TokenStandard _token) public isOwner atStage(Stages.AuctionDeployed) {
         require (address(_token) != 0);
             // Argument is null
@@ -112,16 +113,16 @@ contract DutchAuction {
     }
 
     /// @dev Starts auction and sets startBlock
-    function startAuction() public isWallet atStage(Stages.AuctionSetUp) {
+    function startAuction() public isOwner atStage(Stages.AuctionSetUp) {
         stage = Stages.AuctionStarted;
         startBlocktime = block.timestamp;
     }
 
     /// @dev Changes auction ceiling and start price factor before auction is started
-    /// @param _ceiling Updated auction ceiling
+    /// @param _donating Updated auction ceiling
     /// @param _priceFactor Updated start price factor
-    function changeSettings(uint _ceiling, uint _priceFactor) public isWallet atStage(Stages.AuctionSetUp) {
-        ceiling = _ceiling;
+    function changeSettings(uint _donating, uint _priceFactor) public isOwner atStage(Stages.AuctionSetUp) {
+        donating = _donating;
         priceFactor = _priceFactor;
     }
 
@@ -149,7 +150,7 @@ contract DutchAuction {
         amount = msg.value;
         // Prevent that more than 90% of tokens are sold. Only relevant if cap not reached
         uint maxWei = (MAX_TOKENS_SUPPLY / 10 ** 18) * calcTokenPrice() - totalReceived;
-        uint maxWeiBasedOnTotalReceived = ceiling - totalReceived;
+        uint maxWeiBasedOnTotalReceived = donating - totalReceived;
         if (maxWeiBasedOnTotalReceived < maxWei)
             maxWei = maxWeiBasedOnTotalReceived;
         // Only invest maximum possible amount
@@ -198,7 +199,7 @@ contract DutchAuction {
      */
     function finalizeAuction() private {
         stage = Stages.AuctionEnded;
-        if (totalReceived == ceiling)
+        if (totalReceived == donating)
             finalPrice = calcTokenPrice();
         else
             finalPrice = calcStopPrice();

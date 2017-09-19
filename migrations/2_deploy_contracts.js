@@ -1,5 +1,5 @@
-var RECO = artifacts.require("./RECO.sol");
+var SampleICO = artifacts.require("./SampleICO.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(RECO);
+  deployer.deploy(SampleICO);
 };
