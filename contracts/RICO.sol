@@ -44,19 +44,25 @@ contract RICO {
   uint256 startAuctionTime;
   TokenStructure ts;
   RICOToken public token;
-  DutchAuction da;
+  DutchAuction public auction;
   
-  Round[] rounds;
+  Round[] public rounds;
   MarketMaker[] mms;
   mapping(address => uint256) weiBalances;
 
   Status status = Status.TokenInit;
 
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    // Only owner is allowed to proceed
+    _;
+  }
+
   function RICO() {
     owner = msg.sender;
   }
 
-  function init(uint256 _totalSupply, uint256 _tobAmount, uint256 _tobPrice) returns(bool) {
+  function init(uint256 _totalSupply, address _po, uint256 _tobAmount, uint256 _tobPrice) internal onlyOwner() returns(bool) {
 
     require(status == Status.TokenInit);
 
@@ -64,7 +70,7 @@ contract RICO {
 
     ts = TokenStructure({
       totalSupply: _totalSupply,
-      po: msg.sender,
+      po: _po,
       tobAmount: _tobAmount,
       tobPrice: _tobPrice
     });
@@ -74,7 +80,7 @@ contract RICO {
     return true;
   }
 
-  function initTokenData(string _name, string _symbol, uint8 _decimals) returns (bool) {
+  function initTokenData(string _name, string _symbol, uint8 _decimals) internal onlyOwner() returns (bool) {
 
     require(status == Status.TokenCreated);
 
@@ -83,7 +89,7 @@ contract RICO {
     return true;
   }
 
-  function addRound(uint256 _roundSupply, uint256 _execTime, address _to) returns (bool) {
+  function addRound(uint256 _roundSupply, uint256 _execTime, address _to) internal onlyOwner() returns (bool) {
 
     require(status == Status.TokenCreated);
 
@@ -98,7 +104,7 @@ contract RICO {
     return true;
   }
 
-  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, string _yourname) returns (bool) {
+  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, string _yourname) internal onlyOwner() returns (bool) {
     
     require(status == Status.TokenCreated);
 
@@ -114,18 +120,22 @@ contract RICO {
     return true;
   }
 
-  function setDonation(uint256 _proofOfDonationCapOfToken, uint256 _proofOfDonationCapOfWei ) {
+  function setDonation(uint256 _proofOfDonationCapOfToken, uint256 _proofOfDonationCapOfWei ) internal onlyOwner() returns (bool) {
     
-    da = new DutchAuction(ts.po, _proofOfDonationCapOfWei, _proofOfDonationCapOfToken,  8000);   //stopPrice
+    require(status == Status.TokenCreated);
 
-    token.mint(address(da), _proofOfDonationCapOfToken);
+    auction = new DutchAuction(ts.po, _proofOfDonationCapOfWei, _proofOfDonationCapOfToken,  8000);   //stopPrice
 
-    da.setup(token);
+    token.mint(address(auction), _proofOfDonationCapOfToken);
+
+    auction.setup(token);
    
-
+    return true;
   }
 
   function tokenConfirmed() returns (bool) {
+
+    require(status == Status.TokenCreated);
 
     require(msg.sender == ts.po);
 
