@@ -3,7 +3,7 @@ import "./ERC20TokenStandard.sol";
 
 
 /// @title Dutch auction contract - distribution of Gnosis tokens using an auction
-/// @author Stefan George - <stefan@gnosis.pm> modified for RICO Yusaku Senga - <syrohei@gmail.com>
+/// @author Stefan George - <stefan@gnosis.pm> modified for RICO Framework Yusaku Senga - <syrohei@gmail.com>
 contract DutchAuction {
 
     /*
@@ -14,7 +14,7 @@ contract DutchAuction {
     /*
      *  Constants
      */
-    uint public MAX_TOKENS_SUPPLY; // 
+    uint public MAX_TOKENS_SUPPLY; 
     uint public WAITING_PERIOD;
 
     /*

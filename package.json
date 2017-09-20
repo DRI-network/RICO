@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/syrohei/RICO.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "YusakuSenga",
+  "license": "GPL-v3",
   "bugs": {
     "url": "https://github.com/syrohei/RICO/issues"
   },
