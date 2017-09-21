@@ -10,11 +10,37 @@ import "./SafeMath.sol";
 import "./DutchAuction.sol";
 
 contract RICO {
+  /// using safemath
+  using SafeMath for uint256;
 
-  using SafeMath
-  for uint256;
+  /**
+   * Events
+   */
+   
+  event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
+  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, string kiminonamae, uint256 totalReserve);
+  event InitTokenData(string name, string symbol, uint8 decimasl);
+  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
 
-  /// Struct
+  /**
+   * Modifiers
+   */
+
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    // Only owner is allowed to proceed
+    _;
+  }
+
+  modifier onlyProjectOwner() {
+    require(msg.sender == ts.po);
+    _;
+  }
+
+
+  /**
+   * Storage
+   */
 
   struct Round {
     uint256 roundSupply;
@@ -48,40 +74,22 @@ contract RICO {
 
   address public owner;
   uint256 public startAuctionTime;
-
   TokenStructure public ts;
   RICOToken public token;
   DutchAuction public auction;
+  mapping(address => uint256) weiBalances;
+
   Status public status = Status.TokenInit;
   Round[] public rounds;
   MarketMaker[] public mms;
-  mapping(address => uint256) weiBalances;
 
 
-  /// Event
-
-  event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
-  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, string kiminonamae, uint256 totalReserve);
-  event InitTokenData(string name, string symbol, uint8 decimasl);
-  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
-
-  /// Modifier 
-
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    // Only owner is allowed to proceed
-    _;
-  }
-
-  modifier onlyProjectOwner() {
-    require(msg.sender == ts.po);
-    _;
-  }
 
   /**
    * constructor
    * @dev set owner when this contract deployed.
    */
+
   function RICO() {
     owner = msg.sender;
   }
@@ -148,7 +156,7 @@ contract RICO {
   }
 
   /**
-   * @dev implement token supply defined by token creation strategies.
+   * @dev define a token supply by token creation strategies.
    * @param _roundSupply      represent a token mintable amount for this round.
    * @param _execTime         represent a unlocking time and token creation time.
    * @param _to               represent a token receive address.
@@ -178,7 +186,7 @@ contract RICO {
   }
 
   /**
-   * @dev implement distribute program a tobAmount from project owner defined by token creation strategies.
+   * @dev distribute a tobAmount from project owner defined by token creation strategies.
    * @param _distributeWei      represent a distribute ether amount for this project.
    * @param _execTime           represent a unlocking distribute time.
    * @param _maker              represent a ether receive address.
@@ -207,6 +215,11 @@ contract RICO {
     return true;
   }
 
+
+  /**
+   * @dev  confirm token creation strategies by projectOwner.
+   */
+
   function structureConfirm() onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
@@ -221,7 +234,7 @@ contract RICO {
 
 
   /**
-   * @dev executes from project owner to tob.
+   * @dev executes ether deposit to tob for project owner.
    */
 
   function deposit() payable onlyProjectOwner() returns(bool) {
@@ -238,7 +251,7 @@ contract RICO {
 
   /**
    * @dev executes Tob call from peoject owner and setup auction;
-   * @param 
+   * @param _startAuctionTime represent a time of auction start.
    */
 
   function execTob(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
