@@ -18,7 +18,7 @@ contract RICO {
    */
    
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
-  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, string kiminonamae, uint256 totalReserve);
+  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 kiminonamae, uint256 totalReserve);
   event InitTokenData(string name, string symbol, uint8 decimasl);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
 
@@ -53,7 +53,7 @@ contract RICO {
     uint256 distributeWei;
     uint256 execTime;
     address maker;
-    string kiminonamae; // :) let's marketmaking!!
+    bytes32 kiminonamae; // :) let's marketmaking!!
   }
 
   struct TokenStructure {
@@ -194,7 +194,7 @@ contract RICO {
    * @param _kiminonamae        represent a market maker name;
    */
 
-  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, string _kiminonamae) internal onlyOwner() returns(bool) {
+  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _kiminonamae) internal onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -218,7 +218,7 @@ contract RICO {
 
 
   /**
-   * @dev  confirm token creation strategies by projectOwner.
+   * @dev confirm token creation strategies by projectOwner.
    */
 
   function structureConfirm() onlyProjectOwner() returns(bool) {
@@ -273,6 +273,8 @@ contract RICO {
     auction.setup(token);
 
     status = Status.TokenTobExecuted;
+
+    return true;
 
   }
 
@@ -366,7 +368,7 @@ contract RICO {
 
     uint256 totalDistributeWei = 0;
 
-    for (uint i = 0; i < rounds.length; i++) {
+    for (uint i = 0; i < mms.length; i++) {
 
       MarketMaker memory mm = mms[i];
 
