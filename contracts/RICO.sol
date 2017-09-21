@@ -34,6 +34,7 @@ contract RICO {
 
   modifier onlyProjectOwner() {
     require(msg.sender == ts.po);
+    // Only projectOwner is allowed to proceed
     _;
   }
 
@@ -251,7 +252,7 @@ contract RICO {
 
   /**
    * @dev executes Tob call from peoject owner and setup auction;
-   * @param _startAuctionTime represent a time of auction start.
+   * @param _startAuctionTime represent a unix time of auction start.
    */
 
   function execTob(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
@@ -275,6 +276,10 @@ contract RICO {
 
   }
 
+  /**
+   * @dev executes donate to project and call dutch auction process.
+   */
+
   function donate() payable returns(bool) {
 
     require(status == Status.TokenTobExecuted);
@@ -292,6 +297,10 @@ contract RICO {
     //da.bid.value(msg.value)(0);
 
   }
+
+  /**
+   * @dev executes donate to project and call dutch auction process.
+   */
 
   function execRound(uint256 _index) {
 
@@ -311,6 +320,10 @@ contract RICO {
 
   }
 
+  /**
+   * @dev executes distribute to market maker follow this token strategies.
+   */
+
   function execMarketMaker(uint256 _index) onlyProjectOwner() returns(bool) {
 
     require(_index < mms.length && _index >= 0);
@@ -327,6 +340,10 @@ contract RICO {
 
   }
 
+  /**
+   * @dev calculate TotalReserveSupply sum of all rounds.
+   */
+
   function calcTotalReserveSupply() internal constant returns(uint256) {
 
     uint256 totalReserveSupply = 0;
@@ -340,6 +357,10 @@ contract RICO {
     }
     return totalReserveSupply;
   }
+
+  /**
+   * @dev calculate TotalDistributeWei sum of all market makers.
+   */
 
   function calcTotalDistributeWei() internal constant returns(uint256) {
 
@@ -355,9 +376,18 @@ contract RICO {
     return totalDistributeWei;
   }
 
+  /**
+   * @dev calculate token EnsureSupply sum of all supply before confirm strategy.
+   */
+
   function calcEnsureSupply() internal constant returns(uint256) {
     return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
+
+
+  /**
+   * @dev automatically execute received transactions.
+   */
 
   function () {
     if (status == Status.TokenStructureConfirmed)
