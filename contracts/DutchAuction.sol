@@ -1,9 +1,10 @@
 pragma solidity ^0.4.15;
 import "./ERC20TokenStandard.sol";
 
-
 /// @title Dutch auction contract - distribution of Gnosis tokens using an auction
 /// @author Stefan George - <stefan@gnosis.pm> modified for RICO Framework Yusaku Senga - <syrohei@gmail.com>
+/// license let's see in LICENSE
+
 contract DutchAuction {
 
     /*
@@ -15,7 +16,7 @@ contract DutchAuction {
      *  Constants
      */
     uint public MAX_TOKENS_SUPPLY; 
-    uint public WAITING_PERIOD;
+    uint public WAITING_PERIOD = 6 days;
 
     /*
      *  Storage

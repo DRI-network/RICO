@@ -1,14 +1,12 @@
-/**
- * @title RICO - Responsible Initial Coin Offering
- * @author - Yusaku Senga<syrohei@gmail.com>.
- * @license let's see in LICENSE
- */
 pragma solidity ^0.4.15;
-
 import "./RICOToken.sol";
 import "./SafeMath.sol";
 import "./DutchAuction.sol";
 
+/// @title RICO - Responsible Initial Coin Offering
+/// @author - Yusaku Senga<syrohei@gmail.com>.
+/// license let's see in LICENSE
+ 
 contract RICO {
   /// using safemath
   using SafeMath for uint256;
