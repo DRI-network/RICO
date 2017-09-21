@@ -4,7 +4,7 @@ import "./SafeMath.sol";
 import "./DutchAuction.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
-/// @author - Yusaku Senga<syrohei@gmail.com>.
+/// @author - Yusaku Senga < syrohei@gmail.com >
 /// license let's see in LICENSE
  
 contract RICO {
@@ -86,7 +86,7 @@ contract RICO {
 
   /**
    * constructor
-   * @dev set owner when this contract deployed.
+   * @dev define owner when this contract deployed.
    */
 
   function RICO() {
@@ -155,7 +155,7 @@ contract RICO {
   }
 
   /**
-   * @dev define a token supply by token creation strategies.
+   * @dev define a token supply by token creation strategy.
    * @param _roundSupply      represent a token mintable amount for this round.
    * @param _execTime         represent a unlocking time and token creation time.
    * @param _to               represent a token receive address.
@@ -185,7 +185,7 @@ contract RICO {
   }
 
   /**
-   * @dev distribute a tobAmount from project owner defined by token creation strategies.
+   * @dev distribute a tobAmount from project owner defined by token creation strategy.
    * @param _distributeWei      represent a distribute ether amount for this project.
    * @param _execTime           represent a unlocking distribute time.
    * @param _maker              represent a ether receive address.
@@ -216,10 +216,10 @@ contract RICO {
 
 
   /**
-   * @dev confirm token creation strategies by projectOwner.
+   * @dev confirm token creation strategy by projectOwner.
    */
 
-  function structureConfirm() onlyProjectOwner() returns(bool) {
+  function strategyConfirm() external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -321,7 +321,7 @@ contract RICO {
   }
 
   /**
-   * @dev executes distribute to market maker follow this token strategies.
+   * @dev executes distribute to market maker follow this token strategy.
    */
 
   function execMarketMaker(uint256 _index) onlyProjectOwner() returns(bool) {

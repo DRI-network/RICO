@@ -1,10 +1,8 @@
-/**
- * @title SafeMath from https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/math/SafeMath.sol
- * @dev Math operations with safety checks that throw on error
- */
 pragma solidity ^0.4.15;
 import "./RICO.sol";
 
+/// @title SampleICO - SampleICO using with RICO Framework
+/// @author - Yusaku Senga < syrohei@gmail.com >
 
 contract SampleICO is RICO {
 
