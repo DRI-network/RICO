@@ -5,9 +5,9 @@
 pragma solidity ^0.4.15;
 
 
-import "./ERC20Token.sol";
+import "./EIP20Token.sol";
 
-contract ERC20TokenStandard is ERC20Token {
+contract EIP20TokenStandard is EIP20Token {
 
     function transfer(address _to, uint256 _value) returns(bool success) {
         //Default assumes totalSupply can't be over max (2^256 - 1).

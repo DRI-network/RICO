@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/syrohei/RICO#readme",
   "dependencies": {
-    "truffle": "^3.4.9"
+    "truffle": "^3.4.9",
+    "web3": "^1.0.0-beta.21"
   }
 }

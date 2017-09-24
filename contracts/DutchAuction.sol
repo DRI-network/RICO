@@ -1,5 +1,5 @@
 pragma solidity ^0.4.15;
-import "./ERC20TokenStandard.sol";
+import "./EIP20TokenStandard.sol";
 
 /// @title Dutch auction contract - distribution of Gnosis tokens using an auction
 /// @author Stefan George - <stefan@gnosis.pm> modified for RICO Framework Yusaku Senga - <syrohei@gmail.com>
@@ -22,7 +22,7 @@ contract DutchAuction {
      *  Storage
      */
      
-    ERC20TokenStandard public token;
+    EIP20TokenStandard public token;
     address public wallet;
     address public owner;
     uint public donating;
@@ -103,7 +103,7 @@ contract DutchAuction {
 
     /// @dev Setup function sets external contracts' addresses
     /// @param _token Gnosis token address
-    function setup(ERC20TokenStandard _token) public isOwner atStage(Stages.AuctionDeployed) {
+    function setup(EIP20TokenStandard _token) public isOwner atStage(Stages.AuctionDeployed) {
         require (address(_token) != 0);
             // Argument is null
         token = _token;

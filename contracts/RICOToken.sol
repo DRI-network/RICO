@@ -1,12 +1,12 @@
 pragma solidity ^0.4.15;
-import "./ERC20TokenStandard.sol";
+import "./EIP20TokenStandard.sol";
 import "./SafeMath.sol";
 
 /// @title RICOToken - RICOToken Standard
 /// @author - Yusaku Senga < syrohei@gmail.com >
 /// license let's see in LICENSE
 
-contract RICOToken is ERC20TokenStandard {
+contract RICOToken is EIP20TokenStandard {
     /// using safemath
     using SafeMath for uint256;
     /// declaration token name
@@ -25,7 +25,7 @@ contract RICOToken is ERC20TokenStandard {
     }
 
     /**
-     * constructor
+     * constructorÏ
      * @dev define owner when this contract deployed.
      */
     function RICOToken() {

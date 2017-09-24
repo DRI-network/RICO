@@ -249,11 +249,28 @@ contract RICO {
   }
 
   /**
-   * @dev executes Tob call from peoject owner and setup auction;
+   * @dev widthdraw ether from this contract.
+   */
+  
+  function widthdraw() returns (bool) {
+
+    uint256 max = weiBalances[msg.sender];
+
+    require(this.balance >= max);
+
+    require(msg.sender.send(max));
+
+    weiBalances[msg.sender] = 0;
+
+    return true;
+  }
+
+  /**
+   * @dev executes TOB call from peoject owner and setup auction;
    * @param _startAuctionTime represent a unix time of auction start.
    */
 
-  function execTob(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
+  function execTOB(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -294,9 +311,8 @@ contract RICO {
 
     return true;
 
-    //da.bid.value(msg.value)(0);
-
   }
+
 
   /**
    * @dev executes donate to project and call dutch auction process.
@@ -335,6 +351,14 @@ contract RICO {
     require(this.balance >= mm.distributeWei);
 
     require(mm.maker.send(mm.distributeWei));
+
+    return true;
+
+  }
+
+  function mintToken() external returns (bool) {
+
+    auction.claimTokens(msg.sender);
 
     return true;
 
