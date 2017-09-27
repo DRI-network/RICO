@@ -17,11 +17,11 @@ This framework is a decentralized framework, that makeing the initial coin offer
 This project using truffle framework, you can install truffle framwork first.
 
 ```
-npm install truffle@3.4.9 -g 
+$ npm install truffle@3.4.9 -g 
 ```
 And you can using ethereumjs-testrpc for testing.
 ```
-npm install ethereumjs-testrpc -g
+$ npm install ethereumjs-testrpc -g
 ```
 
 ## Getting Started 
@@ -29,7 +29,7 @@ npm install ethereumjs-testrpc -g
 ### ropsten testnet
 Set up etheruem Geth node with modules.
 ```
-geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
+$ geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
 ```
 **Caution ropsten hit a Byzantium HardFork #1700000 you have to update geth to v1.7 and sync latest block.**
 
@@ -47,13 +47,13 @@ Add configuration to truffle.js
 
 Deploy Contracts.
 ```
-truffle migrate --network testnet
+$ truffle migrate --network testnet
 ``` 
 
 ### mainet deploy
 
 ```
-truffle migrate --network testnet
+$ truffle migrate --network testnet
 ``` 
 
 ## SimpleICO Refference
@@ -97,10 +97,10 @@ truffle migrate --network testnet
 ### test for etheruemjs-testprc
 
 ```
-npm install -g 
+$ npm install -g 
 ```
 ```
-truffle test 
+$ truffle test 
 ```
 
 ## LICENSE
