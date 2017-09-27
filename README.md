@@ -26,7 +26,7 @@ $ npm install ethereumjs-testrpc -g
 
 ## Getting Started 
 
-### ropsten testnet
+### ropsten testnet deploy
 Set up etheruem Geth node with modules.
 ```
 $ geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
@@ -56,7 +56,7 @@ $ truffle migrate --network testnet
 $ truffle migrate --network testnet
 ``` 
 
-## SimpleICO Refference
+## SimpleICO Reference
 
 
 ```
