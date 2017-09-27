@@ -8,30 +8,36 @@ This framework is a decentralized framework, that makeing the initial coin offer
 - Safety 
 - selfMinting
 
+
+
 ## Getting Started for ropsten testnet
 
 This project using truffle framework, you can install truffle framwork first.
 
-```truffle.js
- testnet: {
-      host: "192.168.0.103",
-      port: 8545,
-      network_id: 3, // Match any network id
-      gas: 4612188,
-      gasPrice: 30000000000
-    }
 ```
 npm install truffle@3.4.9 -g 
 ```
 and set up etheruem Geth node with modules.
 ```
 geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
+```
+**caution ropsten hit a Byzantium HardFork #1700000** you have to update geth to v1.7 and sync latest block. 
 
+add configuration to truffle.js 
+```
+ testnet: {
+      host: "192.168.0.103",  // geth rpc addr
+      port: 8545,
+      network_id: 3, // Match ropsten network id
+      gas: 4612188,
+      gasPrice: 30000000000
+    }
+```
 ```
 truffle migrate --network testnet
 ``` 
 
-## 
+## SimpleICO Refference
 
 ```
  contract SimpleICO is RICO {
