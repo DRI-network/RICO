@@ -27,7 +27,7 @@ npm install ethereumjs-testrpc -g
 ## Getting Started for ropsten testnet
 
 
-And set up etheruem Geth node with modules.
+Set up etheruem Geth node with modules.
 ```
 geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
 ```
@@ -44,6 +44,8 @@ Add configuration to truffle.js
  }
   
 ```
+
+Deploy Contracts.
 ```
 truffle migrate --network testnet
 ``` 
@@ -95,6 +97,7 @@ truffle test
 ```
 
 ## LICENSE
+```
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -102,3 +105,4 @@ truffle test
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
+```
