@@ -8,30 +8,41 @@ This framework is a decentralized framework, that makeing the initial coin offer
 - Safety 
 - selfMinting
 
+## Dependencies
 
-
-## Getting Started for ropsten testnet
+- Node v8.4.0
+- Truffle v3.4.9
+- solidty-compiler v0.4.15
 
 This project using truffle framework, you can install truffle framwork first.
 
 ```
 npm install truffle@3.4.9 -g 
 ```
-and set up etheruem Geth node with modules.
+And you can using ethereumjs-testrpc for testing.
+```
+npm install ethereumjs-testrpc -g
+```
+
+## Getting Started for ropsten testnet
+
+
+And set up etheruem Geth node with modules.
 ```
 geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
 ```
-**caution ropsten hit a Byzantium HardFork #1700000** you have to update geth to v1.7 and sync latest block. 
+**Caution ropsten hit a Byzantium HardFork #1700000 you have to update geth to v1.7 and sync latest block.**
 
-add configuration to truffle.js 
-```
+Add configuration to truffle.js 
+```js
  testnet: {
       host: "192.168.0.103",  // geth rpc addr
       port: 8545,
       network_id: 3, // Match ropsten network id
       gas: 4612188,
       gasPrice: 30000000000
-    }
+ }
+  
 ```
 ```
 truffle migrate --network testnet
@@ -71,3 +82,23 @@ truffle migrate --network testnet
    }
  }
 ```
+
+## Test 
+
+### test for etheruemjs-testprc
+
+```
+npm install -g 
+```
+```
+truffle test 
+```
+
+## LICENSE
+
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
