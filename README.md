@@ -1,8 +1,37 @@
 # Responsible Initial Coin Offering ( RICO ) Framework
 
-This framework is a decentralized framework, that makeing the initial coin offering more responsible
+This framework is a decentralized framework, that makeing the initial coin offering more responsible.
 
-## Getting Start
+## Motivation
+
+- Automatecaly
+- Safety 
+- selfMinting
+
+## Getting Started for ropsten testnet
+
+This project using truffle framework, you can install truffle framwork first.
+
+```truffle.js
+ testnet: {
+      host: "192.168.0.103",
+      port: 8545,
+      network_id: 3, // Match any network id
+      gas: 4612188,
+      gasPrice: 30000000000
+    }
+```
+npm install truffle@3.4.9 -g 
+```
+and set up etheruem Geth node with modules.
+```
+geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
+
+```
+truffle migrate --network testnet
+``` 
+
+## 
 
 ```
  contract SimpleICO is RICO {
