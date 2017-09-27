@@ -24,9 +24,9 @@ And you can using ethereumjs-testrpc for testing.
 npm install ethereumjs-testrpc -g
 ```
 
-## Getting Started for ropsten testnet
+## Getting Started 
 
-
+### ropsten testnet
 Set up etheruem Geth node with modules.
 ```
 geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
@@ -50,7 +50,14 @@ Deploy Contracts.
 truffle migrate --network testnet
 ``` 
 
+### mainet deploy
+
+```
+truffle migrate --network testnet
+``` 
+
 ## SimpleICO Refference
+
 
 ```
  contract SimpleICO is RICO {
