@@ -1,7 +1,7 @@
 pragma solidity ^0.4.15;
 import "./RICO.sol";
 
-/// @title SampleICO - SampleICO using with RICO Framework
+/// @title SimpleICO - Sample ICO using with RICO Framework
 /// @author - Yusaku Senga < syrohei@gmail.com >
 
  contract SimpleICO is RICO {
