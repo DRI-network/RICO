@@ -9,10 +9,10 @@ import "./RICO.sol";
    string  symbol = "RIT";
    uint8   decimals = 18;
    uint256 totalSupply = 400000 ether;                    // 40万 Tokenを最大発行上限
-   uint256 tobAmountToken = totalSupply * 1 / 100;        // TOBの割合 10%
+   uint256 tobAmountToken = totalSupply * 1 / 100;        // TOBの割合 1%
    uint256 tobAmountWei = 100 ether;                      // TOBでのETH消費量 100ETH
    uint256 PoDCap = totalSupply * 20 / 100;               // PoDでの発行20%
-   uint256 poDCapWei = 10000 ether;                       // PoDでの寄付10000ETH
+   uint256 PoDCapWei = 10000 ether;                       // PoDでの寄付10000ETH
 
    uint256 firstSupply = totalSupply * 10 / 100;          // 1回目の発行量 10%
    uint256 firstSupplyTime = block.timestamp + 40 days;   // 1回目の発行時間（生成時から40日後)
@@ -26,7 +26,7 @@ import "./RICO.sol";
    function SimpleICO() { } 
  
    function init(address _projectOwner) external onlyOwner() returns (bool) {
-     init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, poDCapWei, _projectOwner);
+     init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, _projectOwner);
      initTokenData(name, symbol, decimals);
      addRound(firstSupply, firstSupplyTime, _projectOwner);
      addRound(secondSupply, secondSupplyTime, _projectOwner);

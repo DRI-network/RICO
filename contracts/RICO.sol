@@ -14,11 +14,12 @@ contract RICO {
   /**
    * Events
    */
-   
+
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
   event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 kiminonamae, uint256 totalReserve);
-  event InitTokenData(string name, string symbol, uint8 decimasl);
+  event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
+  event InitDutchAuction(address wallet, uint tokenSupply, uint donating);
 
   /**
    * Modifiers
@@ -35,7 +36,6 @@ contract RICO {
     // Only projectOwner is allowed to proceed
     _;
   }
-
 
   /**
    * Storage
@@ -82,8 +82,6 @@ contract RICO {
   Round[] public rounds;
   MarketMaker[] public mms;
 
-
-
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -128,7 +126,10 @@ contract RICO {
 
     token = new RICOToken();
 
-    auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); //stopPrice
+    //set stopPriceFactor 8000
+    auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); 
+
+    InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
 
     status = Status.TokenCreated;
 

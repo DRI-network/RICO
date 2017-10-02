@@ -15,7 +15,7 @@ contract DutchAuction {
     /*
      *  Constants
      */
-    uint public MAX_TOKENS_SUPPLY; 
+    uint public tokenSupply; 
     uint public WAITING_PERIOD = 6 days;
 
     /*
@@ -96,7 +96,7 @@ contract DutchAuction {
         owner = msg.sender;
         wallet = _wallet;
         donating = _donating;
-        MAX_TOKENS_SUPPLY = _tokenSupply;
+        tokenSupply = _tokenSupply;
         priceFactor = _priceFactor;
         stage = Stages.AuctionDeployed;
     }
@@ -108,7 +108,7 @@ contract DutchAuction {
             // Argument is null
         token = _token;
         // Validate token balance
-        require(token.balanceOf(this) == MAX_TOKENS_SUPPLY);
+        require(token.balanceOf(this) == tokenSupply);
 
         stage = Stages.AuctionSetUp;
     }
@@ -150,7 +150,7 @@ contract DutchAuction {
 
         amount = msg.value;
         // Prevent that more than 90% of tokens are sold. Only relevant if cap not reached
-        uint maxWei = (MAX_TOKENS_SUPPLY / 10 ** 18) * calcTokenPrice() - totalReceived;
+        uint maxWei = (tokenSupply / 10 ** 18) * calcTokenPrice() - totalReceived;
         uint maxWeiBasedOnTotalReceived = donating - totalReceived;
         if (maxWeiBasedOnTotalReceived < maxWei)
             maxWei = maxWeiBasedOnTotalReceived;
@@ -186,7 +186,7 @@ contract DutchAuction {
     /// @dev Calculates stop price
     /// @return Returns stop price
     function calcStopPrice() constant public returns(uint) {
-        return totalReceived * 10 ** 18 / MAX_TOKENS_SUPPLY + 1;
+        return totalReceived * 10 ** 18 / tokenSupply + 1;
     }
 
     /// @dev Calculates token price ETH/Token pair
@@ -206,7 +206,7 @@ contract DutchAuction {
             finalPrice = calcStopPrice();
         uint soldTokens = totalReceived * 10 ** 18 / finalPrice;
         // Auction contract transfers all unsold tokens to Gnosis inventory multisig
-        token.transfer(wallet, MAX_TOKENS_SUPPLY - soldTokens);
+        token.transfer(wallet, tokenSupply - soldTokens);
         endTime = now;
     }
 }
