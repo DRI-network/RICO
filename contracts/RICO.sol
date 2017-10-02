@@ -16,7 +16,7 @@ contract RICO {
    */
 
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
-  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 kiminonamae, uint256 totalReserve);
+  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 metaData, uint256 totalReserve);
   event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
   event InitDutchAuction(address wallet, uint tokenSupply, uint donating);
@@ -51,7 +51,7 @@ contract RICO {
     uint256 distributeWei;
     uint256 execTime;
     address maker;
-    bytes32 kiminonamae; // :) let's marketmaking!!
+    bytes32 metaData; // meta data is payload to verify identity for marketmaker :) let's marketmaking!!
   }
 
   struct TokenStructure {
@@ -128,7 +128,7 @@ contract RICO {
 
     //set stopPriceFactor 8000
     auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); 
-
+    //auction contract deployed.
     InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
 
     status = Status.TokenCreated;
@@ -162,7 +162,7 @@ contract RICO {
    * @param _to               represent a token receive address.
    */
 
-  function addRound(uint256 _roundSupply, uint256 _execTime, address _to) internal onlyOwner() returns(bool) {
+  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) internal onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -190,10 +190,10 @@ contract RICO {
    * @param _distributeWei      represent a distribute ether amount for this project.
    * @param _execTime           represent a unlocking distribute time.
    * @param _maker              represent a ether receive address.
-   * @param _kiminonamae        represent a market maker name;
+   * @param _metaData        represent a market maker name;
    */
 
-  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _kiminonamae) internal onlyOwner() returns(bool) {
+  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _metaData) internal onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -205,12 +205,12 @@ contract RICO {
       distributeWei: _distributeWei,
       execTime: _execTime,
       maker: _maker,
-      kiminonamae: _kiminonamae
+      metaData: _metaData
     });
 
     mms.push(mm);
 
-    AddMarketMaker(mm.distributeWei, mm.execTime, mm.maker, mm.kiminonamae, calcTotalDistributeWei());
+    AddMarketMaker(mm.distributeWei, mm.execTime, mm.maker, mm.metaData, calcTotalDistributeWei());
 
     return true;
   }

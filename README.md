@@ -1,12 +1,16 @@
-# Responsible Initial Coin Offering ( RICO ) Framework
+# Responsible Initial Coin Offering ( RICO ) Framework 
+
+**Please be careful. This Version is Alfa. application may contain bugs.**
 
 This framework is a decentralized framework, that makeing the initial coin offering more responsible.
 
 ## Motivation
 
-- Automatecaly
-- Safety 
-- selfMinting
+- Autonomous
+- Comfortable 
+- Decentralizing
+- Equitable
+- Mintable
 
 ## Dependencies
 
