@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/syrohei/RICO.git"
+    "url": "git+https://github.com/DRI-project/RICO.git"
   },
-  "author": "YusakuSenga",
-  "license": "GPL-v3",
+  "author": "Yusaku Senga",
+  "license": "GPLv3",
   "bugs": {
-    "url": "https://github.com/syrohei/RICO/issues"
+    "url": "https://github.com/DRI-project/RICO/issues"
   },
-  "homepage": "https://github.com/syrohei/RICO#readme",
+  "homepage": "https://github.com/DRI-project/RICO#readme",
   "dependencies": {
     "truffle": "^3.4.9",
     "web3": "^1.0.0-beta.21"

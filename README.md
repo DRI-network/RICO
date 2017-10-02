@@ -1,6 +1,6 @@
 # Responsible Initial Coin Offering ( RICO ) Framework 
 
-**Please be careful. This Version is Alfa. application may contain bugs.**
+**Please be careful. This Version is Alpha. application may contain bugs.**
 
 This framework is a decentralized framework, that makeing the initial coin offering more responsible.
 
