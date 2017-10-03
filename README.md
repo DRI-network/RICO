@@ -58,7 +58,7 @@ $ truffle migrate --network testnet
 ### mainet deploy
 
 ```
-$ truffle migrate --network testnet
+$ truffle migrate --network mainnet
 ``` 
 
 ## SimpleICO Reference
