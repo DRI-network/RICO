@@ -101,10 +101,14 @@ $ truffle migrate --network testnet
 ### testing on ethereumjs-testrpc
 
 ```
-$ npm install ethereumjs-testrpc -g 
-```
-```
 $ truffle test 
+```
+### testing on ropsten testnet
+
+please set timeout `this.timeout` if block confirmation too slow. 
+
+```
+$ truffle test --network testnet
 ```
 
 ## LICENSE
