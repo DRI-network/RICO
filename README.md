@@ -18,7 +18,8 @@ This framework is a decentralized framework, that makeing the initial coin offer
 - Truffle v3.4.9
 - solidty-compiler v0.4.15
 
-This project using truffle framework, you can install truffle framwork first.
+This project using truffle framework, you can install truffle framework first.
+reference for truffle [truffle](http://truffleframework.com/)
 
 ```
 $ npm install truffle@3.4.9 -g 
