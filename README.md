@@ -57,6 +57,17 @@ $ truffle migrate --network testnet
 
 ### mainet deploy
 
+Add configuration to truffle.js
+```
+
+ mainnet: {
+      host: "10.23.122.2",
+      port: 8545,
+      network_id: 1, // Match main network id
+      gas: 6312188,
+      gasPrice: 30000000000
+    }
+```
 ```
 $ truffle migrate --network mainnet
 ``` 
