@@ -2,7 +2,7 @@ pragma solidity ^0.4.15;
 import "./EIP20TokenStandard.sol";
 
 /// @title Dutch auction contract - distribution of Gnosis tokens using an auction
-/// @author Stefan George - <stefan@gnosis.pm> modified for RICO Framework Yusaku Senga - <syrohei@gmail.com>
+/// @author Stefan George - <stefan@gnosis.pm> modified for RICO Framework Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
 contract DutchAuction {

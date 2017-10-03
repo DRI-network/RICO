@@ -2,7 +2,8 @@ pragma solidity ^0.4.15;
 import "./RICO.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
-/// @author - Yusaku Senga < syrohei@gmail.com >
+/// @author - Yusaku Senga <senga@dri.network>
+/// license let's see in LICENSE
 
  contract SimpleICO is RICO {
    string  name = "Responsible ICO Token";
@@ -26,7 +27,7 @@ import "./RICO.sol";
    function SimpleICO() { } 
  
    function init(address _projectOwner) external onlyOwner() returns (bool) {
-     init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, _projectOwner);
+     super.init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, _projectOwner);
      initTokenData(name, symbol, decimals);
      addTokenRound(firstSupply, firstSupplyTime, _projectOwner);
      addTokenRound(secondSupply, secondSupplyTime, _projectOwner);

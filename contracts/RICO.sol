@@ -4,7 +4,7 @@ import "./SafeMath.sol";
 import "./DutchAuction.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
-/// @author - Yusaku Senga < syrohei@gmail.com >
+/// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
  
 contract RICO {
@@ -17,6 +17,7 @@ contract RICO {
 
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
   event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 metaData, uint256 totalReserve);
+  event Deposit(address sender, uint256 amount);
   event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
   event InitDutchAuction(address wallet, uint tokenSupply, uint donating);
@@ -108,7 +109,7 @@ contract RICO {
     uint256 _proofOfDonationCapOfWei,
     address _po
   )
-  onlyOwner() returns(bool) 
+  internal onlyOwner() returns(bool) 
   {
 
     require(status == Status.TokenInit);
@@ -129,11 +130,12 @@ contract RICO {
     //set stopPriceFactor 8000
     auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); 
     //auction contract deployed.
+
     InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
 
-    status = Status.TokenCreated;
-
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
+
+    status = Status.TokenCreated;
 
     return true;
   }
@@ -245,8 +247,14 @@ contract RICO {
 
     weiBalances[msg.sender] = weiBalances[msg.sender].add(msg.value);
 
+    Deposit(msg.sender, getBalanceOfWei(msg.sender));
+
     return true;
 
+  }
+
+  function getBalanceOfWei(address _sender) constant returns (uint256) {
+    return weiBalances[_sender];
   }
 
   /**
@@ -319,7 +327,7 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function execRound(uint256 _index) {
+  function execRound(uint256 _index) external returns (bool) {
 
     require(status == Status.TokenTobExecuted);
 
@@ -335,13 +343,14 @@ contract RICO {
 
     delete rounds[_index];
 
+    return true;
   }
 
   /**
    * @dev executes distribute to market maker follow this token strategy.
    */
 
-  function execMarketMaker(uint256 _index) onlyProjectOwner() returns(bool) {
+  function execMarketMaker(uint256 _index) external onlyProjectOwner() returns(bool) {
 
     require(_index < mms.length && _index >= 0);
 

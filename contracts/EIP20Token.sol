@@ -1,11 +1,11 @@
-// Abstract contract for the full ERC 20 Token standard
+// Abstract contract for the full EIP 20 Token standard
 // https://github.com/ethereum/EIPs/issues/20
 // https://github.com/ConsenSys/Tokens/blob/master/contracts/Token.sol
 // 
 pragma solidity ^0.4.15;
 
 contract EIP20Token {
-    /* This is a slight change to the ERC20 base standard.
+    /* This is a slight change to the EIP20 base standard.
     function totalSupply() constant returns (uint256 supply);
     is replaced with:
     uint256 public totalSupply;

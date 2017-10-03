@@ -101,15 +101,37 @@ contract('SimpleICO', function (accounts) {
 
     assert.strictEqual(web3.toAscii(logs[5].args.metaData).replace(/\0/g, ''), "YUSAKUSENGA", 'assert error metaData is not defined')
 
+
   })
   it("should be confirmed strategy for SimpleICO", async function () {
 
+    const owner = accounts[0]
     const projectOwner = accounts[1]
 
     const confirmed = await ico.strategyConfirm({
       from: projectOwner
     });
 
+    // error 
+    /*
+    const init = await ico.init(projectOwner, {
+      from: owner
+    });
+    */
+
     //console.log(confirmed)
   })
+  it("should be confirmed strategy for SimpleICO", async function () {
+
+    const projectOwner = accounts[1]
+
+
+    const deposit = await ico.deposit({
+      value: web3.toWei('0.01', 'ether'),
+      from: projectOwner
+    })
+
+    console.log(deposit.logs[0].amount.toNumber())
+  })
+
 })

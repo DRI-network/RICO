@@ -3,7 +3,7 @@ import "./EIP20TokenStandard.sol";
 import "./SafeMath.sol";
 
 /// @title RICOToken - RICOToken Standard
-/// @author - Yusaku Senga < syrohei@gmail.com >
+/// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
 contract RICOToken is EIP20TokenStandard {

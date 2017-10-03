@@ -2,7 +2,8 @@ pragma solidity 0.4.15;
 
 /// @title Multisignature wallet - Allows multiple parties to agree on transactions before execution.
 /// https://github.com/ConsenSys/MultiSigWallet/blob/master/contracts/solidity/MultiSigWallet.sol
-/// @author Stefan George - <stefan.george@consensys.net> @modify Yusaku Senga - <yusaku@smartcontract.jp>
+/// @author Stefan George - <stefan.george@consensys.net> @modify Yusaku Senga - <senga@dri.network>
+/// license let's see in LICENSE
 
 contract MultiSigWallet {
 
