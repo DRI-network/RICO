@@ -98,10 +98,10 @@ $ truffle migrate --network testnet
 
 ## Test 
 
-### test for etheruemjs-testprc
+### testing on ethereumjs-testrpc
 
 ```
-$ npm install -g 
+$ npm install ethereumjs-testrpc -g 
 ```
 ```
 $ truffle test 
