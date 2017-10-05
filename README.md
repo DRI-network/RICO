@@ -106,6 +106,15 @@ $ truffle migrate --network mainnet
    }
  }
 ```
+### set Token Meta data
+```
+   string  name = "Responsible ICO Token";
+   string  symbol = "RIT";
+   uint8   decimals = 18;
+```
+- name ( string )  name is Token name.  e.g. "Responsible ICO Token" 
+- symbol ( string ) symbol is token ticker. e.g. "RIT"
+- decimals ( uint8 ) decmals is token multiplexer. e.g.'18' 1 token = 1*10^18
 
 ## Test 
 
