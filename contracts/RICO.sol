@@ -38,6 +38,14 @@ contract RICO {
     _;
   }
 
+  modifier isAuctionStage() {
+    if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
+      auction.startAuction();
+    if (auction.stage() == DutchAuction.Stages.AuctionEnded)
+      status = Status.TokenAuctionEnded;
+    _;
+  }
+
   /**
    * Storage
    */
@@ -68,7 +76,8 @@ contract RICO {
     TokenInit,
     TokenCreated,
     TokenStructureConfirmed,
-    TokenTobExecuted
+    TokenTobExecuted,
+    TokenAuctionEnded
   }
 
   address public owner;
@@ -307,22 +316,25 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function donate() payable returns(bool) {
+  function donate() payable isAuctionStage() returns(bool) {
 
     require(status == Status.TokenTobExecuted);
 
     require(block.timestamp >= startAuctionTime);
 
-    if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
-      auction.startAuction();
+    auction.bid.value(msg.value)(msg.sender);
 
-    if (auction.stage() == DutchAuction.Stages.AuctionStarted)
-      auction.bid.value(msg.value)(msg.sender);
+    return true;
 
-    if (auction.stage() == DutchAuction.Stages.AuctionEnded ||
-        auction.stage() == DutchAuction.Stages.TradingStarted )
-      auction.claimTokens(msg.sender);
+  }
 
+  /**
+   * @dev executes claim token when auction trading time elapsed.
+   */
+
+  function mintToken() returns (bool) {
+
+    auction.claimTokens(msg.sender);
 
     return true;
 
@@ -428,6 +440,8 @@ contract RICO {
       deposit();
     if (status == Status.TokenTobExecuted)
       donate();
+    if (status == Status.TokenAuctionEnded)
+      mintToken();
   }
 
 
