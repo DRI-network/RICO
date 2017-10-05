@@ -121,7 +121,7 @@ contract('SimpleICO', function (accounts) {
 
     //console.log(confirmed)
   })
-  it("should be confirmed strategy for SimpleICO", async function () {
+  it("should be available deposit ether to this contract", async function () {
 
     const projectOwner = accounts[1]
 
@@ -131,7 +131,7 @@ contract('SimpleICO', function (accounts) {
       from: projectOwner
     })
 
-    console.log(deposit.logs[0].amount.toNumber())
+    console.log(deposit.logs[0].amount)
   })
 
 })

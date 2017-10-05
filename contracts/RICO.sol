@@ -68,8 +68,7 @@ contract RICO {
     TokenInit,
     TokenCreated,
     TokenStructureConfirmed,
-    TokenTobExecuted,
-    TokenMintRound
+    TokenTobExecuted
   }
 
   address public owner;
@@ -285,14 +284,16 @@ contract RICO {
 
     require(weiBalances[msg.sender] > ts.tobAmountWei);
 
-    require(token.mint(ts.po, ts.tobAmountWei));
+    require(token.mintable(ts.po, ts.tobAmountToken, now + 180 days));
 
     weiBalances[msg.sender] = weiBalances[msg.sender].sub(ts.tobAmountWei);
 
     startAuctionTime = _startAuctionTime;
 
     // deployed dutch auction 
-    token.mint(address(auction), ts.proofOfDonationCapOfToken);
+    token.mintable(address(auction), ts.proofOfDonationCapOfToken, now);
+
+    token.mint(address(auction));
 
     auction.setup(token);
 
@@ -318,6 +319,11 @@ contract RICO {
     if (auction.stage() == DutchAuction.Stages.AuctionStarted)
       auction.bid.value(msg.value)(msg.sender);
 
+    if (auction.stage() == DutchAuction.Stages.AuctionEnded ||
+        auction.stage() == DutchAuction.Stages.TradingStarted )
+      auction.claimTokens(msg.sender);
+
+
     return true;
 
   }
@@ -339,7 +345,9 @@ contract RICO {
 
     require(token.totalSupply() <= ts.totalSupply);
 
-    require(token.mint(round.to, round.roundSupply));
+    require(token.mintable(round.to, round.roundSupply, now));
+
+    require(token.mint(round.to));
 
     delete rounds[_index];
 
@@ -361,14 +369,6 @@ contract RICO {
     require(this.balance >= mm.distributeWei);
 
     require(mm.maker.send(mm.distributeWei));
-
-    return true;
-
-  }
-
-  function mintToken() external returns (bool) {
-
-    auction.claimTokens(msg.sender);
 
     return true;
 
