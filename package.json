@@ -1,6 +1,6 @@
 {
   "name": "rico",
-  "version": "1.0.0",
+  "version": "0.9.0-alpha",
   "description": "",
   "main": "truffle.js",
   "directories": {
