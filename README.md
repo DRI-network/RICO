@@ -152,7 +152,7 @@ EIP-20 is a TokenStandard Format on the Ethereum Blockchain.
 #### function addMarketMaker(distributeWei, execTime, maker, metaData)
 
 This feature is more important precept of RICO Framework. project Owner will spent ether when TOB executed. that ether will be send to RICO contract.but anyone unable to sent ether from contarct in that case. So, RICO has to diestribute ETH to someone from contract.this precept must be defined in token strategy to sending ETH to someone and this method will be called by projectOwner. To decide someone to be honestly we design incentive models. it seems to be market maker.
-#### params 
+##### params 
 - distributeWei (uint256) -- distributeWei represent a distribute ether amount for this project.
 - execTime (uint256) -- execTime represent a unlocking distribute time.
 - maker(address)  -- maker is represent a ether receive address.
