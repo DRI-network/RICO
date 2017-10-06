@@ -10,14 +10,14 @@ const totalSupply = 400000; // 40万 Tokenを最大発行上限
 const tobAmountToken = totalSupply * 0.02; // TOBの割合 2%
 const tobAmountWei = 100; // TOBでのETH消費量 100ETH
 
-const PoDCap = totalSupply * 0.3; // PoDでの発行30%
+const PoDCap = totalSupply * 0.5; // PoDでの発行50%
 const PoDCapWei = 10000; // PoDでの寄付10000ETH
 
 const firstSupply = totalSupply * 0.3; // 1回目の発行量 30%
-const firstSupplyTime = now + 40; // 1回目の発行時間（生成時から40日後)
+const firstSupplyTime = now + 90; // 1回目の発行時間（生成時から90日後)
 
-const secondSupply = totalSupply * 0.38; // 2回目の発行量　38%
-const secondSupplyTime = now + 140; // 1回目の発行時間（生成時から40日後)
+const secondSupply = totalSupply * 0.18; // 2回目の発行量　18%
+const secondSupplyTime = now + 180; // 1回目の発行時間（生成時から180日後)
 
 const mm_1 = '0x1d0dcc8d8bcafa8e8502beaeef6cbd49d3affcdc'; //マーケットメイカー1
 const distributeWei_1 = 100; //マーケットメイカー1への寄付額

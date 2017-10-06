@@ -92,9 +92,9 @@ This code is an example of an ico contract using RICO.
    uint256 PoDCapToken = totalSupply * 50 / 100;               // PoDでの発行50%
    uint256 poDCapWei = 10000 ether;                       // PoDでの寄付10000ETH
 
-   uint256 firstSupply = totalSupply * 10 / 100;          // 1回目の発行量 10%
+   uint256 firstSupply = totalSupply * 30 / 100;          // 1回目の発行量 30%
    uint256 firstSupplyTime = block.timestamp + 40 days;   // 1回目の発行時間（生成時から40日後)
-   uint256 secondSupply = totalSupply * 69 / 100;         // 2回目の発行量　69%
+   uint256 secondSupply = totalSupply * 18 / 100;         // 2回目の発行量　18%
    uint256 secondSupplyTime = block.timestamp + 140 days; // 1回目の発行時間（生成時から40日後)
    address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; //マーケットメイカー
    uint256 mm_1_amount = 100 ether;                           //マーケットメイカーへの寄付額
