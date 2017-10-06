@@ -78,7 +78,7 @@ $ truffle migrate --network mainnet
 ## SimpleICO Reference
 
 ### Overview
-RICO has several guid line api interfaces for ICOs. By combining these interfaces, implementing a flexible token issuing scheme. it call the token structure.
+RICO has several GuidLine API for ICOs. By combining these interfaces, implementing a flexible token issuing scheme. it call the token structure.
 This code is an example of an ico contract using RICO.
 
 ```
@@ -118,10 +118,10 @@ Token distribute round has been divided by two steps.
 
 [![https://gyazo.com/0300b95fed0b436322212e26a7f9280b](https://i.gyazo.com/0300b95fed0b436322212e26a7f9280b.png)](https://gyazo.com/0300b95fed0b436322212e26a7f9280b)
 
-### RICO Guidline API Interface
+### RICO Guidline API
 
 #### function init(totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, poDCapWei, projectOwner)
-this function implement initialize RICO Framework and Deployment dependency contracts.
+this function implement initialize RICO Framework and deploy all dependency contracts.
 ##### params
 - projectOwner ( address ) -- a projcetOwner is a params of responsible token manager in RICO concept.if Ethereum address is checksumed, it may unmatch address that unable checksumed while the EVM operate codes.
 - totalSupply ( uint256 ) -- a literal `ether` mean 10**18 on EVM execution. this case is decimals equal 18, this token available ether literal.
@@ -134,7 +134,7 @@ this function implement initialize RICO Framework and Deployment dependency cont
 #### function initTokenData(name, symbol, decimals)
 
 EIP-20 is a TokenStandard Format on the Ethereum Blockchain.
-`string` is a type in solidity. length **< 32bytes**. name is a represent Project name. sybmol is a represent Project ticker symbol. decimals is a represent a token multiplexer 1 token = 1*10^multiplexer. e.g. "Responsible ICO Token" ,"RIT","18".
+`string` is a type in solidity. length **<= 32bytes**. name is a represent Project name. sybmol is a represent Project ticker symbol. decimals is a represent a token multiplexer 1 token = 1*10^multiplexer. e.g. "Responsible ICO Token" ,"RIT","18".
 
 ##### params
 - name (string) -- name is a represent token name.
