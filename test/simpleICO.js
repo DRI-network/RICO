@@ -137,7 +137,7 @@ contract('SimpleICO', function (accounts) {
       from: projectOwner
     })
 
-    console.log(deposit.logs[0].amount)
+   // console.log(deposit.logs[0].amount)
   })
 
 })
