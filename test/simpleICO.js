@@ -12,6 +12,7 @@ const tobAmountWei = 100; // TOBでのETH消費量 100ETH
 
 const PoDCap = totalSupply * 0.5; // PoDでの発行50%
 const PoDCapWei = 10000; // PoDでの寄付10000ETH
+const PoDstrat = 0;
 
 const firstSupply = totalSupply * 0.3; // 1回目の発行量 30%
 const firstSupplyTime = now + 90; // 1回目の発行時間（生成時から90日後)
@@ -41,14 +42,19 @@ contract('SimpleICO', function (accounts) {
     // console.log(logs)
 
     //initialize Dutch Auction
-    assert.strictEqual(logs[0].event, 'InitDutchAuction', 'assert error event[0] != InitDutchAuction')
+    if (PoDstrat == 0) {
+      logs.unshift(logs[0])
+    }
+    if (PoDstrat == 1) {
+      assert.strictEqual(logs[0].event, 'InitDutchAuction', 'assert error event[0] != InitDutchAuction')
 
-    assert.strictEqual(logs[0].args.wallet, projectOwner, 'assert error projectOwner is not defined')
+      assert.strictEqual(logs[0].args.wallet, projectOwner, 'assert error projectOwner is not defined')
 
-    assert.strictEqual(logs[0].args.tokenSupply.toNumber(), PoDCap * 10 ** 18, 'assert error DutchAuction token supply is not defined')
+      assert.strictEqual(logs[0].args.tokenSupply.toNumber(), PoDCap * 10 ** 18, 'assert error DutchAuction token supply is not defined')
 
-    assert.strictEqual(logs[0].args.donating.toNumber(), PoDCapWei * 10 ** 18, 'assert error DutchAuction ether supply is not defined')
+      assert.strictEqual(logs[0].args.donating.toNumber(), PoDCapWei * 10 ** 18, 'assert error DutchAuction ether supply is not defined')
 
+    }
     assert.strictEqual(logs[1].event, 'InitStructure', 'asset error event[1] != InitStructure')
 
     assert.strictEqual(logs[1].args.totalSupply.toNumber(), totalSupply * 10 ** 18, 'assert error totalsupply is not defined')

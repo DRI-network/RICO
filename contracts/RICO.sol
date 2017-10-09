@@ -84,7 +84,8 @@ contract RICO {
   }
 
   address public owner;
-  uint256 public startAuctionTime;
+  uint256 public startTimeOfPoD;
+  uint256 public donatedWei;
   TokenStructure public ts;
   RICOToken public token;
   DutchAuction public auction;
@@ -110,7 +111,7 @@ contract RICO {
    * @param _tobAmountWei               buying amount of project owner when tob call.
    * @param _proofOfDonationCapOfToken  donation cap of token.
    * @param _proofOfDonationCapOfWei    donation cap of ether.
-   * @param _proofOfDonationStrategy    donation strategy 1=DutchAuction.
+   * @param _proofOfDonationStrategy    donation strategy 0=Normal,1=DutchAuction.
    * @param _po                         project owner address.
    */
   function init(
@@ -119,7 +120,7 @@ contract RICO {
     uint256 _tobAmountWei,
     uint256 _proofOfDonationCapOfToken,
     uint256 _proofOfDonationCapOfWei,
-    uint256 _proofofDonationStrategy,
+    uint256 _proofOfDonationStrategy,
     address _po
   )
   internal onlyOwner() returns(bool) 
@@ -133,7 +134,7 @@ contract RICO {
       tobAmountWei: _tobAmountWei,
       proofOfDonationCapOfWei: _proofOfDonationCapOfWei,
       proofOfDonationCapOfToken: _proofOfDonationCapOfToken,
-      proofOfDonationStrategy: _proofofDonationStrategy,
+      proofOfDonationStrategy: _proofOfDonationStrategy,
       po: _po
     });
 
@@ -141,9 +142,9 @@ contract RICO {
 
     token = new RICOToken();
 
-    //set stopPriceFactor 8000
-    if (ts.proofOfDonationStrategy == 0) {
-      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); 
+    //set stopPriceFactor 7500
+    if (ts.proofOfDonationStrategy == 1) {
+      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 7500); 
           //auction contract deployed.
       InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
     }
@@ -241,7 +242,7 @@ contract RICO {
 
     require(status == Status.TokenCreated);
 
-    if (ts.proofOfDonationStrategy == 0)
+    if (ts.proofOfDonationStrategy == 1)
       require(auction.stage() == DutchAuction.Stages.AuctionDeployed);
 
     status = Status.TokenStructureConfirmed;
@@ -291,11 +292,11 @@ contract RICO {
   }
 
   /**
-   * @dev executes TOB call from peoject owner and setup auction;
-   * @param _startAuctionTime represent a unix time of auction start.
+   * @dev executes TOB call from peoject owner.
+   * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
-  function execTOB(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
+  function execTOB(uint256 _startTimeOfPoD) external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -305,10 +306,12 @@ contract RICO {
 
     weiBalances[msg.sender] = weiBalances[msg.sender].sub(ts.tobAmountWei);
 
-    startAuctionTime = _startAuctionTime;
+    startTimeOfPoD = _startTimeOfPoD;
 
-    // deployed dutch auction 
-    if (ts.proofOfDonationStrategy == 0) {
+    if (ts.proofOfDonationStrategy == 0)
+      donatedWei = 0;
+
+    if (ts.proofOfDonationStrategy == 1) {
 
       token.mintable(address(auction), ts.proofOfDonationCapOfToken, now);
 
@@ -331,9 +334,17 @@ contract RICO {
 
     require(status == Status.TokenTobExecuted);
 
-    require(block.timestamp >= startAuctionTime);
+    require(block.timestamp >= startTimeOfPoD);
 
-    if (ts.proofOfDonationStrategy == 0) 
+    if (ts.proofOfDonationStrategy == 0) {
+      uint256 tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
+      uint256 mintable = tokenPrice * msg.value;
+      require(donatedWei.add(mintable) <= ts.proofOfDonationCapOfToken);
+      require(token.mintable(this, mintable, startTimeOfPoD + 7 days));
+      donatedWei.add(mintable);
+    }
+
+    if (ts.proofOfDonationStrategy == 1) 
       auction.bid.value(msg.value)(msg.sender);
 
     return true;
@@ -345,7 +356,10 @@ contract RICO {
    */
 
   function mintToken() returns (bool) {
-    if (ts.proofOfDonationStrategy == 0) 
+    if (ts.proofOfDonationStrategy == 0)
+      token.mint(msg.sender);
+
+    if (ts.proofOfDonationStrategy == 1) 
       auction.claimTokens(msg.sender);
 
     return true;

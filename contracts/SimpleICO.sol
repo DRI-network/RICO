@@ -14,7 +14,7 @@ import "./RICO.sol";
    uint256 tobAmountWei = 100 ether;                      // TOBでのETH消費量 100ETH
    uint256 PoDCap = totalSupply * 50 / 100;               // PoDでの発行50%
    uint256 PoDCapWei = 10000 ether;                       // PoDでの寄付10000ETH
-   uint256 PoDstrat = 1;                                  // PoDの方法
+   uint256 PoDstrat = 0;                                  // PoDの方法
 
    uint256 firstSupply = totalSupply * 30 / 100;          // 1回目の発行量 30%
    uint256 firstSupplyTime = block.timestamp + 90 days;   // 1回目の発行時間（生成時から90日後)
