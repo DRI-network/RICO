@@ -39,10 +39,12 @@ contract RICO {
   }
 
   modifier isAuctionStage() {
-    if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
-      auction.startAuction();
-    if (auction.stage() == DutchAuction.Stages.AuctionEnded)
-      status = Status.TokenAuctionEnded;
+    if (ts.proofOfDonationStrategy == 0) {
+      if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
+        auction.startAuction();
+      if (auction.stage() == DutchAuction.Stages.AuctionEnded)
+        status = Status.TokenAuctionEnded;
+    }
     _;
   }
 
@@ -69,6 +71,7 @@ contract RICO {
     uint256 tobAmountWei;
     uint256 proofOfDonationCapOfWei;
     uint256 proofOfDonationCapOfToken;
+    uint256 proofOfDonationStrategy;
     address po;
   }
 
@@ -81,7 +84,8 @@ contract RICO {
   }
 
   address public owner;
-  uint256 public startAuctionTime;
+  uint256 public startTimeOfPoD;
+  uint256 public donatedWei;
   TokenStructure public ts;
   RICOToken public token;
   DutchAuction public auction;
@@ -107,6 +111,7 @@ contract RICO {
    * @param _tobAmountWei               buying amount of project owner when tob call.
    * @param _proofOfDonationCapOfToken  donation cap of token.
    * @param _proofOfDonationCapOfWei    donation cap of ether.
+   * @param _proofOfDonationStrategy    donation strategy 0=Normal,1=DutchAuction.
    * @param _po                         project owner address.
    */
   function init(
@@ -115,6 +120,7 @@ contract RICO {
     uint256 _tobAmountWei,
     uint256 _proofOfDonationCapOfToken,
     uint256 _proofOfDonationCapOfWei,
+    uint256 _proofOfDonationStrategy,
     address _po
   )
   internal onlyOwner() returns(bool) 
@@ -128,6 +134,7 @@ contract RICO {
       tobAmountWei: _tobAmountWei,
       proofOfDonationCapOfWei: _proofOfDonationCapOfWei,
       proofOfDonationCapOfToken: _proofOfDonationCapOfToken,
+      proofOfDonationStrategy: _proofOfDonationStrategy,
       po: _po
     });
 
@@ -135,11 +142,12 @@ contract RICO {
 
     token = new RICOToken();
 
-    //set stopPriceFactor 8000
-    auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 8000); 
-    //auction contract deployed.
-
-    InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
+    //set stopPriceFactor 7500
+    if (ts.proofOfDonationStrategy == 1) {
+      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 7500); 
+          //auction contract deployed.
+      InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
+    }
 
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
 
@@ -200,7 +208,7 @@ contract RICO {
    * @param _distributeWei      represent a distribute ether amount for this project.
    * @param _execTime           represent a unlocking distribute time.
    * @param _maker              represent a ether receive address.
-   * @param _metaData        represent a market maker name;
+   * @param _metaData           represent a market maker name or meta payload;
    */
 
   function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _metaData) internal onlyOwner() returns(bool) {
@@ -234,7 +242,8 @@ contract RICO {
 
     require(status == Status.TokenCreated);
 
-    require(auction.stage() == DutchAuction.Stages.AuctionDeployed);
+    if (ts.proofOfDonationStrategy == 1)
+      require(auction.stage() == DutchAuction.Stages.AuctionDeployed);
 
     status = Status.TokenStructureConfirmed;
 
@@ -283,11 +292,11 @@ contract RICO {
   }
 
   /**
-   * @dev executes TOB call from peoject owner and setup auction;
-   * @param _startAuctionTime represent a unix time of auction start.
+   * @dev executes TOB call from peoject owner.
+   * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
-  function execTOB(uint256 _startAuctionTime) external onlyProjectOwner() returns(bool) {
+  function execTOB(uint256 _startTimeOfPoD) external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -297,14 +306,19 @@ contract RICO {
 
     weiBalances[msg.sender] = weiBalances[msg.sender].sub(ts.tobAmountWei);
 
-    startAuctionTime = _startAuctionTime;
+    startTimeOfPoD = _startTimeOfPoD;
 
-    // deployed dutch auction 
-    token.mintable(address(auction), ts.proofOfDonationCapOfToken, now);
+    if (ts.proofOfDonationStrategy == 0)
+      donatedWei = 0;
 
-    token.mint(address(auction));
+    if (ts.proofOfDonationStrategy == 1) {
 
-    auction.setup(token);
+      token.mintable(address(auction), ts.proofOfDonationCapOfToken, now);
+
+      token.mint(address(auction));
+
+      auction.setup(token);
+    }
 
     status = Status.TokenTobExecuted;
 
@@ -320,9 +334,18 @@ contract RICO {
 
     require(status == Status.TokenTobExecuted);
 
-    require(block.timestamp >= startAuctionTime);
+    require(block.timestamp >= startTimeOfPoD);
 
-    auction.bid.value(msg.value)(msg.sender);
+    if (ts.proofOfDonationStrategy == 0) {
+      uint256 tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
+      uint256 mintable = tokenPrice * msg.value;
+      require(donatedWei.add(mintable) <= ts.proofOfDonationCapOfToken);
+      require(token.mintable(this, mintable, startTimeOfPoD + 7 days));
+      donatedWei.add(mintable);
+    }
+
+    if (ts.proofOfDonationStrategy == 1) 
+      auction.bid.value(msg.value)(msg.sender);
 
     return true;
 
@@ -333,8 +356,11 @@ contract RICO {
    */
 
   function mintToken() returns (bool) {
+    if (ts.proofOfDonationStrategy == 0)
+      token.mint(msg.sender);
 
-    auction.claimTokens(msg.sender);
+    if (ts.proofOfDonationStrategy == 1) 
+      auction.claimTokens(msg.sender);
 
     return true;
 

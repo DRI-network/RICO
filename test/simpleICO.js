@@ -10,14 +10,15 @@ const totalSupply = 400000; // 40万 Tokenを最大発行上限
 const tobAmountToken = totalSupply * 0.02; // TOBの割合 2%
 const tobAmountWei = 100; // TOBでのETH消費量 100ETH
 
-const PoDCap = totalSupply * 0.3; // PoDでの発行30%
+const PoDCap = totalSupply * 0.5; // PoDでの発行50%
 const PoDCapWei = 10000; // PoDでの寄付10000ETH
+const PoDstrat = 0;
 
 const firstSupply = totalSupply * 0.3; // 1回目の発行量 30%
-const firstSupplyTime = now + 40; // 1回目の発行時間（生成時から40日後)
+const firstSupplyTime = now + 90; // 1回目の発行時間（生成時から90日後)
 
-const secondSupply = totalSupply * 0.38; // 2回目の発行量　38%
-const secondSupplyTime = now + 140; // 1回目の発行時間（生成時から40日後)
+const secondSupply = totalSupply * 0.18; // 2回目の発行量　18%
+const secondSupplyTime = now + 180; // 1回目の発行時間（生成時から180日後)
 
 const mm_1 = '0x1d0dcc8d8bcafa8e8502beaeef6cbd49d3affcdc'; //マーケットメイカー1
 const distributeWei_1 = 100; //マーケットメイカー1への寄付額
@@ -41,14 +42,19 @@ contract('SimpleICO', function (accounts) {
     // console.log(logs)
 
     //initialize Dutch Auction
-    assert.strictEqual(logs[0].event, 'InitDutchAuction', 'assert error event[0] != InitDutchAuction')
+    if (PoDstrat == 0) {
+      logs.unshift(logs[0])
+    }
+    if (PoDstrat == 1) {
+      assert.strictEqual(logs[0].event, 'InitDutchAuction', 'assert error event[0] != InitDutchAuction')
 
-    assert.strictEqual(logs[0].args.wallet, projectOwner, 'assert error projectOwner is not defined')
+      assert.strictEqual(logs[0].args.wallet, projectOwner, 'assert error projectOwner is not defined')
 
-    assert.strictEqual(logs[0].args.tokenSupply.toNumber(), PoDCap * 10 ** 18, 'assert error DutchAuction token supply is not defined')
+      assert.strictEqual(logs[0].args.tokenSupply.toNumber(), PoDCap * 10 ** 18, 'assert error DutchAuction token supply is not defined')
 
-    assert.strictEqual(logs[0].args.donating.toNumber(), PoDCapWei * 10 ** 18, 'assert error DutchAuction ether supply is not defined')
+      assert.strictEqual(logs[0].args.donating.toNumber(), PoDCapWei * 10 ** 18, 'assert error DutchAuction ether supply is not defined')
 
+    }
     assert.strictEqual(logs[1].event, 'InitStructure', 'asset error event[1] != InitStructure')
 
     assert.strictEqual(logs[1].args.totalSupply.toNumber(), totalSupply * 10 ** 18, 'assert error totalsupply is not defined')
@@ -131,7 +137,7 @@ contract('SimpleICO', function (accounts) {
       from: projectOwner
     })
 
-    console.log(deposit.logs[0].amount)
+   // console.log(deposit.logs[0].amount)
   })
 
 })

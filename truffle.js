@@ -18,7 +18,7 @@ module.exports = {
       host: "10.23.122.2",
       port: 8545,
       network_id: 1, // Match main network id
-      gas: 6312188,
+      gas: 6312188,  // Gaslimit based on latestblock
       gasPrice: 30000000000
     }
   }
