@@ -6,13 +6,13 @@ import "./DutchAuction.sol";
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
- 
+
 contract RICO {
   /// using safemath
   using SafeMath for uint256;
 
   /**
-   * Events
+   * Events 
    */
 
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
@@ -40,7 +40,7 @@ contract RICO {
   }
 
   modifier isAuctionStage() {
-    if (ts.proofOfDonationStrategy == 0) {
+    if (ts.proofOfDonationStrategy == 1) {
       if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
         auction.startAuction();
       if (auction.stage() == DutchAuction.Stages.AuctionEnded)
@@ -53,8 +53,14 @@ contract RICO {
    * Storage
    */
 
-  struct Round {
+  struct TokenRound {
     uint256 roundSupply;
+    uint256 execTime;
+    address to;
+  }
+
+  struct WithdrawalRound {
+    uint256 distributeWei;
     uint256 execTime;
     address to;
   }
@@ -87,6 +93,7 @@ contract RICO {
   address public owner;
   uint256 public startTimeOfPoD;
   uint256 public donatedWei;
+  uint256 public sendWei;
   uint256 public tokenPrice;
   TokenStructure public ts;
   RICOToken public token;
@@ -94,8 +101,10 @@ contract RICO {
   mapping(address => uint256) weiBalances;
 
   Status public status = Status.TokenInit;
-  Round[] public rounds;
+  TokenRound[] public tRounds;
+  WithdrawalRound[] public wRounds;
   MarketMaker[] public mms;
+
 
   /**
    * constructor
@@ -146,8 +155,9 @@ contract RICO {
 
     //set stopPriceFactor 7500
     if (ts.proofOfDonationStrategy == 1) {
-      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 7500); 
-          //auction contract deployed.
+
+      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 7500);
+      //auction contract deployed.
       InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
     }
 
@@ -192,18 +202,47 @@ contract RICO {
 
     require(mintableOfRound >= _roundSupply);
 
-    Round memory round = Round({
+    TokenRound memory tr = TokenRound({
       roundSupply: _roundSupply,
       execTime: _execTime,
       to: _to
     });
 
-    rounds.push(round);
+    tRounds.push(tr);
 
-    AddTokenRound(round.roundSupply, round.execTime, round.to, calcTotalReserveSupply());
+    AddTokenRound(tr.roundSupply, tr.execTime, tr.to, calcTotalReserveSupply());
 
     return true;
   }
+
+  /**
+   * @dev distribute ether from contract defined by token creation strategy.
+   * @param _distributeWei      represent a distribute ether amount for this project.
+   * @param _execTime           represent a unlocking distribute time.
+   * @param _to                 represent a ether receive address.
+   */
+
+  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to) internal onlyOwner() returns(bool) {
+
+    require(status == Status.TokenCreated);
+
+    require(block.timestamp <= _execTime);
+
+    require(calcTotalWithdrawalWei().add(_distributeWei) <= ts.proofOfDonationCapOfWei);
+
+    WithdrawalRound memory wr = WithdrawalRound({
+      distributeWei: _distributeWei,
+      execTime: _execTime,
+      to: _to
+    });
+
+    wRounds.push(wr);
+
+    AddWithdrawalRound(wr.distributeWei, wr.execTime, wr.to, calcTotalWithdrawalWei());
+
+    return true;
+  }
+
 
   /**
    * @dev distribute a tobAmount from project owner defined by token creation strategy.
@@ -234,6 +273,7 @@ contract RICO {
 
     return true;
   }
+
 
 
   /**
@@ -272,23 +312,23 @@ contract RICO {
 
   }
 
-  function getBalanceOfWei(address _sender) constant returns (uint256) {
+  function getBalanceOfWei(address _sender) constant returns(uint256) {
     return weiBalances[_sender];
   }
 
   /**
    * @dev widthdraw ether from this contract.
    */
-  
-  function widthdraw() returns (bool) {
 
-    uint256 withdrawal = weiBalances[msg.sender];
+  function widthdraw(uint256 _amount) returns (bool) {
 
-    require(this.balance >= withdrawal);
+    require(weiBalances[msg.sender] >= _amount);
 
-    require(msg.sender.send(withdrawal));
+    require(this.balance >= _amount);
 
-    weiBalances[msg.sender] = 0;
+    require(msg.sender.send(_amount));
+
+    weiBalances[msg.sender] = weiBalances[msg.sender].sub(_amount);
 
     return true;
   }
@@ -306,7 +346,11 @@ contract RICO {
 
     require(token.mintable(ts.po, ts.tobAmountToken, now + 180 days));
 
-    weiBalances[msg.sender] = weiBalances[msg.sender].sub(ts.tobAmountWei);
+    uint256 refunds = weiBalances[msg.sender].sub(ts.tobAmountWei);
+
+    require(msg.sender.send(refunds));
+
+    weiBalances[msg.sender] = 0;
 
     startTimeOfPoD = _startTimeOfPoD;
 
@@ -348,12 +392,10 @@ contract RICO {
 
       require(token.mintable(this, mintable, startTimeOfPoD + 7 days));
 
-      weiBalances[ts.po] = weiBalances[ts.po].add(msg.value);
-
       donatedWei = donatedWei.add(mintable);
     }
 
-    if (ts.proofOfDonationStrategy == 1) 
+    if (ts.proofOfDonationStrategy == 1)
       auction.bid.value(msg.value)(msg.sender);
 
     return true;
@@ -364,14 +406,14 @@ contract RICO {
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken() returns (bool) {
+  function mintToken() returns(bool) {
     if (ts.proofOfDonationStrategy == 0) // strategy is normal
       token.mint(msg.sender);
 
     if (ts.proofOfDonationStrategy == 1) // strategy is dutchauction
       auction.claimTokens(msg.sender);
 
-    return true;  
+    return true;
 
   }
 
@@ -380,23 +422,21 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function execRound(uint256 _index) external returns (bool) {
+  function execRound(uint256 _index) external returns(bool) {
 
-    require(status == Status.TokenTobExecuted);
+    require(_index < tRounds.length);
 
-    require(_index < rounds.length && _index >= 0);
+    TokenRound memory tr = tRounds[_index];
 
-    Round memory round = rounds[_index];
-
-    require(round.execTime < block.timestamp);
+    require(block.timestamp >= tr.execTime);
 
     require(token.totalSupply() <= ts.totalSupply);
 
-    require(token.mintable(round.to, round.roundSupply, now));
+    require(token.mintable(tr.to, tr.roundSupply, now));
 
-    require(token.mint(round.to));
+    require(token.mint(tr.to));
 
-    delete rounds[_index];
+    delete tRounds[_index];
 
     return true;
   }
@@ -405,13 +445,41 @@ contract RICO {
    * @dev executes distribute to market maker follow this token strategy.
    */
 
+  function execWithdrawal(uint256 _index) external onlyProjectOwner() returns(bool) {
+
+    require(_index < wRounds.length);
+
+    WithdrawalRound memory wr = wRounds[_index];
+
+    require(block.timestamp >= wr.execTime);
+   
+    uint256 amount = 0;
+
+    if (donatedWei >= sendWei.add(wr.distributeWei)) {
+       amount = wr.distributeWei;
+    } else {
+       amount = donatedWei - sendWei;
+    }
+
+    weiBalances[wr.to] = weiBalances[wr.to].add(amount);
+
+    sendWei = sendWei.add(wr.distributeWei);
+
+    return true;
+
+  }
+
+  /**
+   * @dev executes distribute to market maker follow this token strategy.
+   */
+
   function execMarketMaker(uint256 _index) external onlyProjectOwner() returns(bool) {
 
-    require(_index < mms.length && _index >= 0);
-
-    require(status == Status.TokenTobExecuted);
+    require(_index < mms.length);
 
     MarketMaker memory mm = mms[_index];
+
+    require(block.timestamp >= mm.execTime);
 
     require(this.balance >= mm.distributeWei);
 
@@ -429,9 +497,9 @@ contract RICO {
 
     uint256 totalReserveSupply = 0;
 
-    for (uint i = 0; i < rounds.length; i++) {
+    for (uint i = 0; i < tRounds.length; i++) {
 
-      Round memory round = rounds[i];
+      TokenRound memory round = tRounds[i];
 
       totalReserveSupply = totalReserveSupply.add(round.roundSupply);
 
@@ -455,6 +523,24 @@ contract RICO {
 
     }
     return totalDistributeWei;
+  }
+
+  /**
+   * @dev calculate total withdrawal ether sum of all rounds.
+   */
+
+  function calcTotalWithdrawalWei() internal constant returns(uint256) {
+
+    uint256 totalWithdrawalWei = 0;
+
+    for (uint i = 0; i < wRounds.length; i++) {
+
+      WithdrawalRound memory wr = wRounds[i];
+
+      totalWithdrawalWei = totalWithdrawalWei.add(wr.distributeWei);
+
+    }
+    return totalWithdrawalWei;
   }
 
   /**
