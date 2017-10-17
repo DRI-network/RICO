@@ -16,6 +16,7 @@ contract RICO {
    */
 
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
+  event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, uint256 totalWithdrawals);
   event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 metaData, uint256 totalReserve);
   event Deposit(address sender, uint256 amount);
   event InitTokenData(string name, string symbol, uint8 decimals);
@@ -86,6 +87,7 @@ contract RICO {
   address public owner;
   uint256 public startTimeOfPoD;
   uint256 public donatedWei;
+  uint256 public tokenPrice;
   TokenStructure public ts;
   RICOToken public token;
   DutchAuction public auction;
@@ -280,11 +282,11 @@ contract RICO {
   
   function widthdraw() returns (bool) {
 
-    uint256 max = weiBalances[msg.sender];
+    uint256 withdrawal = weiBalances[msg.sender];
 
-    require(this.balance >= max);
+    require(this.balance >= withdrawal);
 
-    require(msg.sender.send(max));
+    require(msg.sender.send(withdrawal));
 
     weiBalances[msg.sender] = 0;
 
@@ -300,7 +302,7 @@ contract RICO {
 
     require(status == Status.TokenStructureConfirmed);
 
-    require(weiBalances[msg.sender] > ts.tobAmountWei);
+    require(weiBalances[msg.sender] >= ts.tobAmountWei);
 
     require(token.mintable(ts.po, ts.tobAmountToken, now + 180 days));
 
@@ -337,11 +339,18 @@ contract RICO {
     require(block.timestamp >= startTimeOfPoD);
 
     if (ts.proofOfDonationStrategy == 0) {
-      uint256 tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
+
+      tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
+
       uint256 mintable = tokenPrice * msg.value;
+
       require(donatedWei.add(mintable) <= ts.proofOfDonationCapOfToken);
+
       require(token.mintable(this, mintable, startTimeOfPoD + 7 days));
-      donatedWei.add(mintable);
+
+      weiBalances[ts.po] = weiBalances[ts.po].add(msg.value);
+
+      donatedWei = donatedWei.add(mintable);
     }
 
     if (ts.proofOfDonationStrategy == 1) 
@@ -356,13 +365,13 @@ contract RICO {
    */
 
   function mintToken() returns (bool) {
-    if (ts.proofOfDonationStrategy == 0)
+    if (ts.proofOfDonationStrategy == 0) // strategy is normal
       token.mint(msg.sender);
 
-    if (ts.proofOfDonationStrategy == 1) 
+    if (ts.proofOfDonationStrategy == 1) // strategy is dutchauction
       auction.claimTokens(msg.sender);
 
-    return true;
+    return true;  
 
   }
 
