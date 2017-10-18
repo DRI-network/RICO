@@ -4,21 +4,21 @@ module.exports = {
       host: "localhost",
       port: 8545,
       network_id: "*", // Match test network id
-      gas: 4622188,
+      gas: 6732056,
       gasPrice: 10000000000
     },
     testnet: {
       host: "192.168.0.103",
       port: 8545,
       network_id: 3, // Match ropsten network id
-      gas: 4612188,
-      gasPrice: 30000000000
+      gas: 6732056,
+      gasPrice: 10000000000
     },
     mainnet: {
       host: "10.23.122.2",
       port: 8545,
       network_id: 1, // Match main network id
-      gas: 6312188,  // Gaslimit based on latestblock
+      gas: 7000000,  // Gaslimit based on latestblock
       gasPrice: 30000000000
     }
   }

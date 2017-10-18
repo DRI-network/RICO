@@ -151,7 +151,7 @@ contract RICO {
 
     require(_totalSupply >= calcEnsureSupply());
     
-    if (_tokenAddr != 0x0)
+    if (_tokenAddr == 0x0)
       token = new RICOToken();
     else
       token = RICOToken(_tokenAddr);
@@ -557,7 +557,6 @@ contract RICO {
   function calcEnsureSupply() internal constant returns(uint256) {
     return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
-
 
   /**
    * @dev automatically execute received transactions.

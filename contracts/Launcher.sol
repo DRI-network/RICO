@@ -5,9 +5,10 @@ import "./RICO.sol";
 /// @author - Yusaku Senga <senga@dri.network>
 /// license let's see in LICENSE
 
+
 contract Launcher {
-  address owner;
-  RICO ico;
+  address public projectOwner;
+  RICO public ico;
 
   string name = "Responsible ICO Token";
   string symbol = "RIT";
@@ -27,23 +28,20 @@ contract Launcher {
   uint256 mm_1_amount = 100 ether; //マーケットメイカーへの寄付額
   uint256 mmDistributeTime_1 = block.timestamp + 100 days; //マーケットメイカーの寄付実行時間
 
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    /// Only owner is allowed to proceed
-    _;
+  function Launcher() {
+    projectOwner = msg.sender; 
   }
 
-  function Launcher() {}
-
-  function init(address _rico) external onlyOwner() returns(bool) {
-    ico = RICO(_rico);
+  function init() returns(bool) {
+    ico = new RICO();
     return true;
   }
 
-  function setup(address _projectOwner) onlyOwner() returns(bool) {
-    ico.init(0, totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, PoDstrat, _projectOwner);
-    ico.addTokenRound(firstSupply, firstSupplyTime, _projectOwner);
-    ico.addTokenRound(secondSupply, secondSupplyTime, _projectOwner);
+  function setup() returns(bool) {
+    ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, PoDstrat, projectOwner);
+    ico.initTokenData(name, symbol, decimals);
+    ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
+    ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);
     ico.addMarketMaker(mm_1_amount, mmDistributeTime_1, mm_1, "YUSAKUSENGA");
     return true;
   }
