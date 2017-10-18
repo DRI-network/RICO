@@ -1,4 +1,4 @@
-pragma solidity ^ 0.4 .15;
+pragma solidity ^0.4.15;
 import "./EIP20TokenStandard.sol";
 import "./SafeMath.sol";
 
@@ -47,7 +47,7 @@ contract RICOToken is EIP20TokenStandard {
      * @param _decimals     representation of Token decimals.
      */
 
-    function init(string _name, string _symbol, uint8 _decimals) onlyOwner() returns(bool) {
+    function init(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
@@ -76,7 +76,7 @@ contract RICOToken is EIP20TokenStandard {
      */
     function mint(address _user) external returns(bool) {
 
-        for (uint n = 0; n < mints[_user].length - 1; n++) {
+        for (uint n = 0; n < mints[_user].length; n++) {
 
             Mint memory m = mints[_user][n];
 
@@ -89,9 +89,21 @@ contract RICOToken is EIP20TokenStandard {
         return true;
     }
 
+    /**
+     * @dev changeable for token owner.
+     * @param _newOwner representation of new owner address.
+     */
+    function changeOwner(address _newOwner) external onlyOwner() returns (bool) {
+        require(_newOwner != 0x0);
+
+        owner = _newOwner;
+
+        return true;
+    }
+
 
     /**
-     * @dev constant return whether time elapsed.
+     * @dev constant return status whether time elapsed.
      * @param _executeTime  representation of time of executable.
      */
     function isExecutable(uint256 _executeTime) internal constant returns(bool) {
@@ -101,15 +113,5 @@ contract RICOToken is EIP20TokenStandard {
         return true;
     }
 
-    /**
-     * @dev changeable for token owner.
-     * @param _newOwner representation of new owner address.
-     */
-    function changeOwner(address _newOwner) onlyOwner() returns (bool) {
-        require(_newOwner != 0x0);
 
-        owner = _newOwner;
-
-        return true;
-    }
 }

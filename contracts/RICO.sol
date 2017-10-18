@@ -126,6 +126,7 @@ contract RICO {
    * @param _po                         project owner address.
    */
   function init(
+    address _tokenAddr,
     uint256 _totalSupply,
     uint256 _tobAmountToken,
     uint256 _tobAmountWei,
@@ -150,8 +151,11 @@ contract RICO {
     });
 
     require(_totalSupply >= calcEnsureSupply());
-
-    token = new RICOToken();
+    
+    if (_tokenAddr != 0x0)
+      token = new RICOToken();
+    else
+      token = RICOToken(_tokenAddr);
 
     //set stopPriceFactor 7500
     if (ts.proofOfDonationStrategy == 1) {

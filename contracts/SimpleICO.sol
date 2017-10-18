@@ -25,7 +25,7 @@ import "./RICO.sol";
    uint256 mmDistributeTime_1 = block.timestamp + 100 days;         //マーケットメイカーの寄付実行時間
  
    function SimpleICO() { 
-     RICO ico = new RICO();
+    // RICO ico = new RICO();
      //address _projectOwner = msg.sender;
      //ico.init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, PoDstrat, _projectOwner);
      //ico.addTokenRound(firstSupply, firstSupplyTime, _projectOwner);

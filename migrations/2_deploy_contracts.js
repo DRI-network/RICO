@@ -3,7 +3,7 @@ var RICO = artifacts.require("./RICO.sol");
 
 module.exports = function (deployer, network, accounts) {
 
-  //if (network === "development") return; // Don't deploy on tests
+  if (network === "development") return; // Don't deploy on tests
   
   deployer.deploy(SimpleICO).then(async() => {
     const si = await SimpleICO.deployed();
