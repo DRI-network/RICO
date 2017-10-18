@@ -10,7 +10,6 @@ import "./DutchAuction.sol";
 contract RICO {
   /// using safemath
   using SafeMath for uint256;
-
   /**
    * Events 
    */

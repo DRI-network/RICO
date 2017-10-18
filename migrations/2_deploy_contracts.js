@@ -1,15 +1,21 @@
-var SimpleICO = artifacts.require("./SimpleICO.sol");
+var Launcher = artifacts.require("./Launcher.sol");
 var RICO = artifacts.require("./RICO.sol");
 
-module.exports = function (deployer, network, accounts) {
+module.exports = async function (deployer, network, accounts) {
 
-  if (network === "development") return; // Don't deploy on tests
+  //if (network === "development") return; // Don't deploy on tests
+
+  const rico = await deployer.deploy(RICO)
+  const launcher = await deployer.deploy(Launcher)
+
+  const rico_i = await RICO.deployed();
+  const launcher_i = await launcher.deployed();
+  console.log(rico_i)
+
+  const init = await launcher_i.init(rico_i.address, {
+    from: accounts[0]
+  });
+  //const ss = await si.setup()
+  process.on('unhandledRejection', console.dir);
   
-  deployer.deploy(SimpleICO).then(async() => {
-    const si = await SimpleICO.deployed();
-   // const init = await si.init(accounts[1], {
-     // from: accounts[0]
-    //});
-    //const ss = await si.setup()
-  })
 };
