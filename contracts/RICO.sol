@@ -445,7 +445,7 @@ contract RICO {
    * @dev executes distribute to market maker follow this token strategy.
    */
 
-  function execWithdrawal(uint256 _index) external onlyProjectOwner() returns(bool) {
+  function execWithdrawal(uint256 _index) external returns(bool) {
 
     require(_index < wRounds.length);
 
@@ -465,6 +465,8 @@ contract RICO {
 
     sendWei = sendWei.add(wr.distributeWei);
 
+    delete wRounds[_index];
+    
     return true;
 
   }
@@ -484,6 +486,8 @@ contract RICO {
     require(this.balance >= mm.distributeWei);
 
     require(mm.maker.send(mm.distributeWei));
+
+    delete mms[_index];
 
     return true;
 
