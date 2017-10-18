@@ -122,7 +122,7 @@ Token distribute round has been divided by two steps.
 
 #### function init(totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner)
 This function implement initialize RICO Framework and deploy all dependency contracts.
-#### params
+##### params
 | argument | type | description |
 |:---|:---:|:---|
 | projectOwner | address | projcetOwner is a params of responsible token manager in RICO concept.if Ethereum address is checksumed, it may unmatch address that unable checksumed while the EVM operate codes. |
