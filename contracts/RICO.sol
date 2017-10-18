@@ -134,7 +134,7 @@ contract RICO {
     uint256 _proofOfDonationStrategy,
     address _po
   )
-  internal onlyOwner() returns(bool) 
+  external onlyOwner() returns(bool) 
   {
 
     require(status == Status.TokenInit);
@@ -170,11 +170,11 @@ contract RICO {
 
   /**
    * @dev initialize token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         represent a Token name.
-   * @param _symbol       represent a Token symbol.
-   * @param _decimals     represent a Token decimals.
+   * @param _name         representation of Token name.
+   * @param _symbol       representation of Token symbol.
+   * @param _decimals     representation of Token decimals.
    */
-  function initTokenData(string _name, string _symbol, uint8 _decimals) internal onlyOwner() returns(bool) {
+  function initTokenData(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -192,7 +192,7 @@ contract RICO {
    * @param _to               represent a token receive address.
    */
 
-  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) internal onlyOwner() returns(bool) {
+  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) external onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -222,7 +222,7 @@ contract RICO {
    * @param _to                 represent a ether receive address.
    */
 
-  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to) internal onlyOwner() returns(bool) {
+  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to) external onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -252,7 +252,7 @@ contract RICO {
    * @param _metaData           represent a market maker name or meta payload;
    */
 
-  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _metaData) internal onlyOwner() returns(bool) {
+  function addMarketMaker(uint256 _distributeWei, uint256 _execTime, address _maker, bytes32 _metaData) external onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -422,7 +422,7 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function execRound(uint256 _index) external returns(bool) {
+  function execTokenRound(uint256 _index) external returns(bool) {
 
     require(_index < tRounds.length);
 
@@ -445,7 +445,7 @@ contract RICO {
    * @dev executes distribute to market maker follow this token strategy.
    */
 
-  function execWithdrawal(uint256 _index) external returns(bool) {
+  function execWithdrawalRound(uint256 _index) external returns(bool) {
 
     require(_index < wRounds.length);
 
@@ -466,7 +466,7 @@ contract RICO {
     sendWei = sendWei.add(wr.distributeWei);
 
     delete wRounds[_index];
-    
+
     return true;
 
   }

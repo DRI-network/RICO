@@ -38,7 +38,7 @@ contract('SimpleICO', function (accounts) {
       from: owner
     });
 
-    const logs = init.logs
+    const logs = setup.logs
     // console.log(logs)
 
     //initialize Dutch Auction

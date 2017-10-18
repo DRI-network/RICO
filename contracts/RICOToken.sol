@@ -33,7 +33,7 @@ contract RICOToken is EIP20TokenStandard {
     }
 
     /**
-     * constructorÏ
+     * constructor
      * @dev define owner when this contract deployed.
      */
     function RICOToken() {
@@ -42,9 +42,9 @@ contract RICOToken is EIP20TokenStandard {
 
     /** 
      * @dev initialize token meta Data implement for ERC-20 Token Standard Format.
-     * @param _name         represent a Token name.
-     * @param _symbol       represent a Token symbol.
-     * @param _decimals     represent a Token decimals.
+     * @param _name         representation of Token name.
+     * @param _symbol       representation of Token symbol.
+     * @param _decimals     representation of Token decimals.
      */
 
     function init(string _name, string _symbol, uint8 _decimals) onlyOwner() returns(bool) {
@@ -56,9 +56,9 @@ contract RICOToken is EIP20TokenStandard {
 
     /** 
      * @dev Add mintable token to user verified owner.
-     * @param _user         represent a minting user address.
-     * @param _amount       represent a minting token quantities.
-     * @param _atTime       represent a minting time of mintable
+     * @param _user         representation of minting user address.
+     * @param _amount       representation of minting token quantities.
+     * @param _atTime       representation of minting time of mintable
      */
     function mintable(address _user, uint256 _amount, uint256 _atTime) external onlyOwner() returns(bool) {
         Mint memory m = Mint({
@@ -72,7 +72,7 @@ contract RICOToken is EIP20TokenStandard {
 
     /**
      * @dev all minting token to user verified by owner.
-     * @param _user         represent a minting user address.
+     * @param _user         representation of minting user address.
      */
     function mint(address _user) external returns(bool) {
 
@@ -92,12 +92,24 @@ contract RICOToken is EIP20TokenStandard {
 
     /**
      * @dev constant return whether time elapsed.
-     * @param _executeTime         represent a time of executable.
+     * @param _executeTime  representation of time of executable.
      */
     function isExecutable(uint256 _executeTime) internal constant returns(bool) {
         if (block.timestamp < _executeTime) {
             return false;
         }
+        return true;
+    }
+
+    /**
+     * @dev changeable for token owner.
+     * @param _newOwner representation of new owner address.
+     */
+    function changeOwner(address _newOwner) onlyOwner() returns (bool) {
+        require(_newOwner != 0x0);
+
+        owner = _newOwner;
+
         return true;
     }
 }

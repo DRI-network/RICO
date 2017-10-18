@@ -5,7 +5,7 @@ import "./RICO.sol";
 /// @author - Yusaku Senga <senga@dri.network>
 /// license let's see in LICENSE
 
- contract SimpleICO is RICO {
+ contract SimpleICO {
    string  name = "Responsible ICO Token";
    string  symbol = "RIT";
    uint8   decimals = 18;
@@ -24,14 +24,13 @@ import "./RICO.sol";
    uint256 mm_1_amount = 100 ether;                           //マーケットメイカーへの寄付額
    uint256 mmDistributeTime_1 = block.timestamp + 100 days;         //マーケットメイカーの寄付実行時間
  
-   function SimpleICO() { } 
- 
-   function init(address _projectOwner) external onlyOwner() returns (bool) {
-     super.init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, PoDstrat, _projectOwner);
-     initTokenData(name, symbol, decimals);
-     addTokenRound(firstSupply, firstSupplyTime, _projectOwner);
-     addTokenRound(secondSupply, secondSupplyTime, _projectOwner);
-     addMarketMaker(mm_1_amount, mmDistributeTime_1, mm_1, "YUSAKUSENGA");
-     return true;
-   }
+   function SimpleICO() { 
+     RICO ico = new RICO();
+     //address _projectOwner = msg.sender;
+     //ico.init(totalSupply, tobAmountToken, tobAmountWei, PoDCap, PoDCapWei, PoDstrat, _projectOwner);
+     //ico.addTokenRound(firstSupply, firstSupplyTime, _projectOwner);
+    // ico.addTokenRound(secondSupply, secondSupplyTime, _projectOwner);
+    // ico.addMarketMaker(mm_1_amount, mmDistributeTime_1, mm_1, "YUSAKUSENGA");
+
+   } 
  }
