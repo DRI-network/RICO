@@ -159,9 +159,10 @@ contract RICO {
     //set stopPriceFactor 7500
     if (ts.proofOfDonationStrategy == 1) {
 
-      auction = new DutchAuction(ts.po, ts.proofOfDonationCapOfWei, ts.proofOfDonationCapOfToken, 7500);
+      auction = new DutchAuction();
+      auction.init(ts.po, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
       //auction contract deployed.
-      InitDutchAuction(auction.wallet(), auction.tokenSupply(), auction.donating());
+      InitDutchAuction(auction.wallet(), auction.numTokensAuctioned(), auction.receivedWei());
     }
 
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
@@ -411,11 +412,13 @@ contract RICO {
 
     if (ts.proofOfDonationStrategy == 1) { 
       // strategy is dutchauction
+      require(auction.endTime() + 7 days <= block.timestamp);
+
       auction.claimTokens(msg.sender);
 
       token.mintable(msg.sender, auction.getTokenBalance(msg.sender), now);
 
-      token.mint()
+      token.mint(msg.sender);
     }
 
     return true;
