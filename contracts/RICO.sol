@@ -229,7 +229,7 @@ contract RICO {
 
     require(status == Status.TokenCreated);
 
-    require(block.timestamp <= _execTime);
+    require(_execTime >= block.timestamp);
 
     require(calcTotalWithdrawalWei().add(_distributeWei) <= ts.proofOfDonationCapOfWei);
 
@@ -315,10 +315,6 @@ contract RICO {
 
   }
 
-  function getBalanceOfWei(address _sender) constant returns(uint256) {
-    return weiBalances[_sender];
-  }
-
   /**
    * @dev widthdraw ether from this contract.
    */
@@ -383,7 +379,7 @@ contract RICO {
 
     require(status == Status.TokenTobExecuted);
 
-    require(block.timestamp >= startTimeOfPoD);
+    require(startTimeOfPoD <= block.timestamp);
 
     if (ts.proofOfDonationStrategy == 0) {
 
@@ -413,8 +409,14 @@ contract RICO {
     if (ts.proofOfDonationStrategy == 0) // strategy is normal
       token.mint(msg.sender);
 
-    if (ts.proofOfDonationStrategy == 1) // strategy is dutchauction
+    if (ts.proofOfDonationStrategy == 1) { 
+      // strategy is dutchauction
       auction.claimTokens(msg.sender);
+
+      token.mintable(msg.sender, auction.getTokenBalance(msg.sender), now);
+
+      token.mint()
+    }
 
     return true;
 
@@ -557,6 +559,11 @@ contract RICO {
   function calcEnsureSupply() internal constant returns(uint256) {
     return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
+
+  function getBalanceOfWei(address _sender) constant returns(uint256) {
+    return weiBalances[_sender];
+  }
+
 
   /**
    * @dev automatically execute received transactions.

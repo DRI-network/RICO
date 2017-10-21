@@ -18,7 +18,7 @@ contract RICOToken is EIP20TokenStandard {
   /// declaration token owner
   address public owner;
 
-  mapping(address => Mint[]) public mints;
+  mapping(address => Mint[]) public issuable;
 
   struct Mint {
     uint256 amount;
@@ -64,7 +64,7 @@ contract RICOToken is EIP20TokenStandard {
       amount: _amount,
       atTime: _atTime
     });
-    mints[_user].push(m);
+    issuable[_user].push(m);
     return true;
   }
 
@@ -75,15 +75,15 @@ contract RICOToken is EIP20TokenStandard {
    */
   function mint(address _user) external returns(bool) {
 
-    for (uint n = 0; n < mints[_user].length; n++) {
+    for (uint n = 0; n < issuable[_user].length; n++) {
 
-      Mint memory m = mints[_user][n];
+      Mint memory m = issuable[_user][n];
 
       require(isExecutable(m.atTime));
 
       balances[_user] = balances[_user].add(m.amount);
       totalSupply = totalSupply.add(m.amount);
-      delete mints[_user][n];
+      delete issuable[_user][n];
     }
     return true;
   }
