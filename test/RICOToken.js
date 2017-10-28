@@ -61,7 +61,7 @@ contract('RICOToken', function (accounts) {
     assert.strictEqual(balance.toNumber(), 2000 * 10 ** decimals, 'balance of projectOwner != 2000 * 10 ** decimals')
 
   })
-  it("should be mintable additional token and mint now for projectOwner", async function () {
+  it("should be more mintable additional token and mint now for projectOwner", async function () {
     const now = Math.floor(new Date().getTime() / 1000);
 
     const projectOwner = accounts[1]

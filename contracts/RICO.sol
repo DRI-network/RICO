@@ -286,10 +286,10 @@ contract RICO {
   }
 
   /**
-   * @dev widthdraw ether from this contract.
+   * @dev withdraw ether from this contract.
    */
 
-  function widthdraw(uint256 _amount) external returns (bool) {
+  function withdraw(uint256 _amount) external returns (bool) {
 
     require(weiBalances[msg.sender] >= _amount);
 
@@ -303,13 +303,15 @@ contract RICO {
   }
 
   /**
-   * @dev executes TOB call from peoject owner.
+   * @dev executes TOB call from project owner.
    * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
   function execTOB(uint256 _startTimeOfPoD) external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
+
+    require(_startTimeOfPoD >= block.timestamp);
 
     require(weiBalances[msg.sender] >= ts.tobAmountWei);
 
@@ -362,7 +364,8 @@ contract RICO {
       donatedWei = donatedWei.add(mintable);
     }
 
-    if (ts.proofOfDonationStrategy == 1){
+    if (ts.proofOfDonationStrategy == 1) {
+
       auction.bid.value(msg.value)(msg.sender);
 
       tokenPrice = auction.nowPrice();
