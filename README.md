@@ -115,6 +115,7 @@ contract Launcher {
 
   function setup() returns(bool) {
     require(msg.sender == projectOwner);
+
     ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
