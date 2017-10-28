@@ -147,6 +147,9 @@ contract RICO {
       token = new RICOToken();
     else
       token = RICOToken(_tokenAddr);
+    
+    if (ts.proofOfDonationStrategy == 0)
+      tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
 
     //set stopPriceFactor 7500
     if (ts.proofOfDonationStrategy == 1) {
@@ -157,6 +160,7 @@ contract RICO {
       //auction contract deployed.
       InitDutchAuction(auction.wallet(), auction.numTokensAuctioned(), auction.receivedWei());
     }
+
 
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
 
@@ -349,8 +353,6 @@ contract RICO {
 
     if (ts.proofOfDonationStrategy == 0) {
 
-      tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
-
       uint256 mintable = tokenPrice * msg.value;
 
       require(donatedWei.add(mintable) <= ts.proofOfDonationCapOfToken);
@@ -360,8 +362,11 @@ contract RICO {
       donatedWei = donatedWei.add(mintable);
     }
 
-    if (ts.proofOfDonationStrategy == 1)
+    if (ts.proofOfDonationStrategy == 1){
       auction.bid.value(msg.value)(msg.sender);
+
+      tokenPrice = auction.nowPrice();
+    }
 
     return true;
 
@@ -505,6 +510,18 @@ contract RICO {
     return weiBalances[_sender];
   }
 
+
+  /**
+   * @dev changeable for token owner.
+   * @param _newOwner set new owner of this contract.
+   */
+  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
+    require(_newOwner != 0x0);
+
+    owner = _newOwner;
+
+    return true;
+  }
 
   /**
    * @dev automatically execute received transactions.

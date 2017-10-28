@@ -1,4 +1,4 @@
-pragma solidity ^ 0.4 .15;
+pragma solidity ^0.4.15;
 import "./RICO.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
@@ -26,16 +26,20 @@ contract Launcher {
   uint256 mmCreateTime = block.timestamp + 100 days; // set ether transferable time to 100 days.
   uint256 PoDstrat = 0;      //set token strategy.
 
+
   function Launcher() {
     projectOwner = msg.sender;
   }
 
-  function init() returns(bool) {
-    ico = new RICO();
+  function init(address _rico) returns(bool) {
+    require(msg.sender == projectOwner);
+    ico = RICO(_rico);
     return true;
   }
 
   function setup() returns(bool) {
+    require(msg.sender == projectOwner);
+
     ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
@@ -43,5 +47,4 @@ contract Launcher {
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
     return true;
   }
-
 }

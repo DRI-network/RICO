@@ -47,6 +47,8 @@ contract DutchAuction {
 
   // Wei per RDN (Rei * token_multiplier)
 
+  uint public nowPrice;
+
   // Bidder address => bid value
   mapping(address => uint) public bids;
   mapping (address => uint256) balances;
@@ -269,7 +271,8 @@ contract DutchAuction {
   function missingFundsToEndAuction() constant public returns(uint) {
 
     // num_tokens_auctioned = total number of Rei (RDN * token_multiplier) that is auctioned
-    uint requiredWeiAtPrice = numTokensAuctioned * price() / tokenMultiplier;
+    nowPrice = price();
+    uint requiredWeiAtPrice = numTokensAuctioned * nowPrice / tokenMultiplier;
     if (requiredWeiAtPrice <= receivedWei) {
       return 0;
     }
