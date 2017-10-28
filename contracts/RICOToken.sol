@@ -41,9 +41,9 @@ contract RICOToken is EIP20TokenStandard {
 
   /** 
    * @dev initialize token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         representation of Token name.
-   * @param _symbol       representation of Token symbol.
-   * @param _decimals     representation of Token decimals.
+   * @param _name         set Token name.
+   * @param _symbol       set Token symbol.
+   * @param _decimals     set Token decimals.
    */
 
   function init(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
@@ -55,9 +55,9 @@ contract RICOToken is EIP20TokenStandard {
 
   /** 
    * @dev Add mintable token to user verified owner.
-   * @param _user         representation of minting user address.
-   * @param _amount       representation of minting token quantities.
-   * @param _atTime       representation of minting time of mintable
+   * @param _user         set minting user address.
+   * @param _amount       set minting token quantities.
+   * @param _atTime       set minting time of mintable
    */
   function mintable(address _user, uint256 _amount, uint256 _atTime) external onlyOwner() returns(bool) {
     Mint memory m = Mint({
@@ -71,7 +71,7 @@ contract RICOToken is EIP20TokenStandard {
 
   /**
    * @dev all minting token to user verified by owner.
-   * @param _user         representation of minting user address.
+   * @param _user         call user address for minting users token.
    */
   function mint(address _user) external returns(bool) {
 
@@ -90,7 +90,7 @@ contract RICOToken is EIP20TokenStandard {
 
   /**
    * @dev changeable for token owner.
-   * @param _newOwner representation of new owner address.
+   * @param _newOwner set new owner of this contract.
    */
   function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
     require(_newOwner != 0x0);
@@ -102,7 +102,7 @@ contract RICOToken is EIP20TokenStandard {
 
   /**
    * @dev constant return status whether time elapsed.
-   * @param _executeTime  representation of time of executable.
+   * @param _executeTime  set a elapsed time of to be executable.
    */
   function isExecutable(uint256 _executeTime) internal constant returns(bool) {
     if (block.timestamp < _executeTime) {

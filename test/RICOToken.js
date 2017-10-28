@@ -39,7 +39,7 @@ contract('RICOToken', function (accounts) {
       from: owner
     });
 
-    const mint = await token.mint(account2)
+    //const mint = await token.mint(account2)
 
     const balance = await token.balanceOf(account2)
 
@@ -95,9 +95,11 @@ contract('RICOToken', function (accounts) {
       from: owner
     })
 
+    /* 
     const mintable1 = await token.mintable(projectOwner, 3000 * 10 ** decimals, now, {
       from: owner
     });
+    */
 
     const mintable2 = await token.mintable(projectOwner, 3000 * 10 ** decimals, now, {
       from: newOwner

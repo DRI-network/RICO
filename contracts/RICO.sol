@@ -16,7 +16,6 @@ contract RICO {
 
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
   event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
-  event AddMarketMaker(uint256 distributeWei, uint256 execTime, address maker, bytes32 metaData, uint256 totalReserve);
   event Deposit(address sender, uint256 amount);
   event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
@@ -153,7 +152,7 @@ contract RICO {
     if (ts.proofOfDonationStrategy == 1) {
 
       auction = new DutchAuction();
-      
+
       auction.init(ts.po, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
       //auction contract deployed.
       InitDutchAuction(auction.wallet(), auction.numTokensAuctioned(), auction.receivedWei());
@@ -168,9 +167,9 @@ contract RICO {
 
   /**
    * @dev initialize token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         representation of Token name.
-   * @param _symbol       representation of Token symbol.
-   * @param _decimals     representation of Token decimals.
+   * @param _name         set Token name of RICO format.
+   * @param _symbol       set Token symbol of RICO format.
+   * @param _decimals     set Token decimals of RICO format.
    */
   function initTokenData(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
 
@@ -185,9 +184,9 @@ contract RICO {
 
   /**
    * @dev define a token supply by token creation strategy.
-   * @param _roundSupply      represent a token mintable amount for this round.
-   * @param _execTime         represent a unlocking time and token creation time.
-   * @param _to               represent a token receive address.
+   * @param _roundSupply      set token mintable amount for this round.
+   * @param _execTime         set unlocking time and token creation time.
+   * @param _to               set token receive address.
    */
 
   function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) external onlyOwner() returns(bool) {
@@ -215,9 +214,10 @@ contract RICO {
 
   /**
    * @dev distribute ether from contract defined by token creation strategy.
-   * @param _distributeWei      represent a distribute ether amount for this project.
-   * @param _execTime           represent a unlocking distribute time.
-   * @param _to                 represent a ether receive address.
+   * @param _distributeWei      set distribute ether amount for this project.
+   * @param _execTime           set unlocking distribute time.
+   * @param _to                 set ether receive address.
+   * @param _isMM               set bool for marketmaker flag.
    */
 
   function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to, bool _isMM) external onlyOwner() returns(bool) {
@@ -267,7 +267,7 @@ contract RICO {
    * @dev executes ether deposit to tob for project owner.
    */
 
-  function deposit() payable onlyProjectOwner() returns(bool) {
+  function deposit() payable onlyProjectOwner() external returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -285,7 +285,7 @@ contract RICO {
    * @dev widthdraw ether from this contract.
    */
 
-  function widthdraw(uint256 _amount) returns (bool) {
+  function widthdraw(uint256 _amount) external returns (bool) {
 
     require(weiBalances[msg.sender] >= _amount);
 
@@ -424,11 +424,11 @@ contract RICO {
 
     WithdrawalRound memory wr = wRounds[_index];
 
-    if (wr.isMarketMaker) {
+    if (wr.isMarketMaker) 
       require(msg.sender == ts.po);    //only call by projectOwner 
-    }else{
+    else
       require(msg.sender == wr.to);
-    }
+    
 
     require(block.timestamp >= wr.execTime);
    
@@ -509,13 +509,12 @@ contract RICO {
   /**
    * @dev automatically execute received transactions.
    */
-
   function () {
     if (status == Status.TokenStructureConfirmed)
-      deposit();
+      this.deposit();
     if (status == Status.TokenTobExecuted)
-      donate();
+      this.donate();
     if (status == Status.TokenAuctionEnded)
-      mintToken();
+      this.mintToken();
   }
 }
