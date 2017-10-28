@@ -100,7 +100,6 @@ contract RICOToken is EIP20TokenStandard {
     return true;
   }
 
-
   /**
    * @dev constant return status whether time elapsed.
    * @param _executeTime  representation of time of executable.

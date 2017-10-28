@@ -1,15 +1,15 @@
 pragma solidity ^0.4.15;
 import "./SafeMath.sol";
 import "./RICOToken.sol";
-
-
 /// @title Dutch auction contract - distribution of a fixed number of tokens using an auction.
 /// The contract code is inspired by the Gnosis auction contract. Main difference is that the
 /// auction ends if a fixed number of tokens was sold.
-/// @notice contract based on Raiden-Project. https://github.com/raiden-network/raiden-token/blob/master/contracts/auction.sol
+/// @notice contract based on Raiden-Project. Thanks to hard commit ethereum-communities!
+/// https://github.com/raiden-network/raiden-token/blob/master/contracts/auction.sol
 contract DutchAuction {
   /// using safemath
   using SafeMath for uint256;
+
   /*
    * Storage
    */
@@ -114,7 +114,7 @@ contract DutchAuction {
   )
   public isOwner() atStage(Stages.AuctionInit) returns (bool)
   {
-    require(_wallet != 0x0);
+    require(_wallet != 0x0 && _tokenSupply != 0);
     wallet = _wallet;
     numTokensAuctioned = _tokenSupply;
     changeSettings(_priceStart, _priceConstant, _priceExponent);
@@ -152,13 +152,13 @@ contract DutchAuction {
     //num_tokens_auctioned = token.balanceOf(address(this));
 
     // Set the number of the token multiplier for its decimals
-    tokenMultiplier = 10 ** uint(token.decimals());
-
+    tokenMultiplier = 10 ** uint256(token.decimals());
 
     stage = Stages.AuctionSetUp;
     Setup();
   }
 
+  /// --------------------------------- Auction Functions ------------------
 
 
 
@@ -190,7 +190,6 @@ contract DutchAuction {
     assert(finalPrice > 0);
   }
 
-  /// --------------------------------- Auction Functions ------------------
 
 
   /// @notice Send `msg.value` WEI to the auction from the `msg.sender` account.
