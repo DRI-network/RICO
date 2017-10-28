@@ -20,6 +20,7 @@ contract RICO {
   event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
   event InitDutchAuction(address wallet, uint tokenSupply, uint donating);
+  event Donation(uint256 time, address to, uint256 donatedWei);
 
   /**
    * Modifiers
@@ -355,13 +356,15 @@ contract RICO {
 
     if (ts.proofOfDonationStrategy == 0) {
 
+      require(block.timestamp <= startTimeOfPoD + 7 days);
+
+
+      require(donatedWei.add(msg.value) <= ts.proofOfDonationCapOfWei);
+
       uint256 mintable = tokenPrice * msg.value;
 
-      require(donatedWei.add(mintable) <= ts.proofOfDonationCapOfToken);
+      require(token.mintable(msg.sender, mintable, startTimeOfPoD + 14 days));
 
-      require(token.mintable(this, mintable, startTimeOfPoD + 7 days));
-
-      donatedWei = donatedWei.add(mintable);
     }
 
     if (ts.proofOfDonationStrategy == 1) {
@@ -370,6 +373,10 @@ contract RICO {
 
       tokenPrice = auction.nowPrice();
     }
+    
+    donatedWei = donatedWei.add(msg.value);
+
+    Donation(block.timestamp, msg.sender, donatedWei);
 
     return true;
 

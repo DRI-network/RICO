@@ -99,11 +99,12 @@ contract('ICOTest', function (accounts) {
     const balance = await rico.getBalanceOfWei(projectOwner)
     assert.equal(balance.toNumber(), web3.toWei('10', 'ether'), 'balance is not equal to 10 ether')
   })
-  it("should be available TOB executes in this contract", async function () {
+  it("should be available TOB executes in this contract and should be able to donate to project", async function () {
 
     const projectOwner = accounts[0]
+    const nows = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const podStartTime = now + 2000
+    const podStartTime = nows + 14
     // Error
     const execTOB = await rico.execTOB(podStartTime, {
       from: projectOwner
@@ -111,6 +112,35 @@ contract('ICOTest', function (accounts) {
 
     const balance = await rico.getBalanceOfWei(projectOwner)
     assert.equal(balance.toNumber(), web3.toWei('0', 'ether'), 'balance is not equal to 0 ether')
+
+    const podStartTimes = await rico.startTimeOfPoD.call()
+    console.log(podStartTimes)
+
+    const setTime = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [160],
+      id: 0
+    })
+    const setTime2 = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [1600],
+      id: 0
+    })
+
+    const status = await rico.status.call()
+    assert.strictEqual(status.toNumber(), 3, 'status is not 3')
+
+    // Error
+    const donate = await web3.eth.sendTransaction({
+      value: web3.toWei('1', 'ether'),
+      to: rico.address,
+      from: projectOwner
+    })
+
+    const balances = await rico.getBalanceOfWei(projectOwner)
+    assert.equal(balances.toNumber(), web3.toWei('0', 'ether'), 'balance is not equal to 0 ether')
   })
 
 })
