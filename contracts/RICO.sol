@@ -352,12 +352,11 @@ contract RICO {
 
     require(status == Status.TokenTobExecuted);
 
-    require(startTimeOfPoD <= block.timestamp);
+    require(block.timestamp >= startTimeOfPoD);
 
     if (ts.proofOfDonationStrategy == 0) {
 
       require(block.timestamp <= startTimeOfPoD + 7 days);
-
 
       require(donatedWei.add(msg.value) <= ts.proofOfDonationCapOfWei);
 

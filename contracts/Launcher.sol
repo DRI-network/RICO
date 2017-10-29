@@ -14,7 +14,7 @@ contract Launcher {
   uint8 decimals = 18;
   uint256 totalSupply = 400000 ether; // set maximum supply to 400,000.
   uint256 tobAmountToken = totalSupply * 2 / 100; // set token TOB ratio to 2% of total supply.
-  uint256 tobAmountWei = 10 ether; // set ether TOB spent to 100 ether.
+  uint256 tobAmountWei = 100 ether; // set ether TOB spent to 100 ether.
   uint256 PoDCapToken = totalSupply * 50 / 100; // set proof of donation token cap to 50% of Total Supply.
   uint256 PoDCapWei = 10000 ether; // set proof of donation ether cap to 10,000 ether.
   uint256 firstSupply = totalSupply * 30 / 100; // set first token supply to 30% of total supply.

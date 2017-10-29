@@ -11,7 +11,7 @@ const symbol = "RIT";
 const decimals = 18;
 const totalSupply = 400000 * ether; // set maximum supply to 400,000.
 const tobAmountToken = totalSupply * 2 / 100; // set token TOB ratio to 2% of total supply.
-const tobAmountWei = 10 * ether; // set ether TOB spent to 100 ether.
+const tobAmountWei = 100 * ether; // set ether TOB spent to 100 ether.
 const PoDCapToken = totalSupply * 50 / 100; // set proof of donation token cap to 50% of Total Supply.
 const PoDCapWei = 10000 * ether; // set proof of donation ether cap to 10,000 ether.
 const firstSupply = totalSupply * 30 / 100; // set first token supply to 30% of total supply.
@@ -81,23 +81,23 @@ contract('ICOTest', function (accounts) {
     const projectOwner = accounts[0]
 
     const deposit = await rico.deposit({
-      value: web3.toWei('12', 'ether'),
+      value: web3.toWei('120', 'ether'),
       from: projectOwner
     })
 
     const balance = await rico.getBalanceOfWei(projectOwner)
-    assert.equal(balance.toNumber(), web3.toWei('12', 'ether'), 'balance is not equal to 12 ether')
+    assert.equal(balance.toNumber(), web3.toWei('120', 'ether'), 'balance is not equal to 120 ether')
   })
   it("should be available withdrawal ether from this contract", async function () {
 
     const projectOwner = accounts[0]
 
-    const deposit = await rico.withdraw(web3.toWei('2', 'ether'), {
+    const withdraw = await rico.withdraw(web3.toWei('20', 'ether'), {
       from: projectOwner
     })
 
     const balance = await rico.getBalanceOfWei(projectOwner)
-    assert.equal(balance.toNumber(), web3.toWei('10', 'ether'), 'balance is not equal to 10 ether')
+    assert.equal(balance.toNumber(), web3.toWei('100', 'ether'), 'balance is not equal to 100 ether')
   })
   it("should be available TOB executes in this contract and should be able to donate to project", async function () {
 

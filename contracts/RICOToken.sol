@@ -60,6 +60,9 @@ contract RICOToken is EIP20TokenStandard {
    * @param _atTime       set minting time of mintable
    */
   function mintable(address _user, uint256 _amount, uint256 _atTime) external onlyOwner() returns(bool) {
+
+    require(block.timestamp <= _atTime);
+
     Mint memory m = Mint({
       amount: _amount,
       atTime: _atTime
@@ -79,11 +82,12 @@ contract RICOToken is EIP20TokenStandard {
 
       Mint memory m = issuable[_user][n];
 
-      require(isExecutable(m.atTime));
+      if (isExecutable(m.atTime)) {
 
-      balances[_user] = balances[_user].add(m.amount);
-      totalSupply = totalSupply.add(m.amount);
-      delete issuable[_user][n];
+        balances[_user] = balances[_user].add(m.amount);
+        totalSupply = totalSupply.add(m.amount);
+        delete issuable[_user][n];
+      }
     }
     return true;
   }
