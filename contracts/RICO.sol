@@ -38,12 +38,20 @@ contract RICO {
     _;
   }
 
-  modifier isAuctionStage() {
+  modifier updateStage() {
+    if (ts.proofOfDonationStrategy == 0) {
+      if (block.timestamp > startTimeOfPoD + 7 days) {
+        status = Status.TokenDonationEnded;
+      }
+      if (donatedWei == ts.proofOfDonationCapOfWei) {
+        status = Status.TokenDonationEnded;
+      }
+    }
     if (ts.proofOfDonationStrategy == 1) {
       if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
         auction.startAuction();
       if (auction.stage() == DutchAuction.Stages.AuctionEnded)
-        status = Status.TokenAuctionEnded;
+        status = Status.TokenDonationEnded;
     }
     _;
   }
@@ -80,7 +88,7 @@ contract RICO {
     TokenCreated,
     TokenStructureConfirmed,
     TokenTobExecuted,
-    TokenAuctionEnded
+    TokenDonationEnded
   }
 
   address public owner;
@@ -348,7 +356,7 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function donate() payable external isAuctionStage() returns(bool) {
+  function donate() payable external updateStage() returns(bool) {
 
     require(status == Status.TokenTobExecuted);
 
@@ -356,14 +364,11 @@ contract RICO {
 
     if (ts.proofOfDonationStrategy == 0) {
 
-      require(block.timestamp <= startTimeOfPoD + 7 days);
-
       require(donatedWei.add(msg.value) <= ts.proofOfDonationCapOfWei);
 
       uint256 mintable = tokenPrice * msg.value;
 
       require(token.mintable(msg.sender, mintable, startTimeOfPoD + 14 days));
-
     }
 
     if (ts.proofOfDonationStrategy == 1) {
@@ -546,7 +551,7 @@ contract RICO {
       this.deposit();
     if (status == Status.TokenTobExecuted)
       this.donate();
-    if (status == Status.TokenAuctionEnded)
+    if (status == Status.TokenDonationEnded)
       this.mintToken();
   }
 }
