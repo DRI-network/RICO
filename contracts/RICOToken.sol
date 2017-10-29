@@ -25,11 +25,21 @@ contract RICOToken is EIP20TokenStandard {
     uint256 atTime;
   }
 
+  /**
+   * Modifier
+   */
+
   modifier onlyOwner() {
     require(msg.sender == owner);
     /// Only owner is allowed to proceed
     _;
   }
+
+  /**
+   * Event
+   */
+
+  event Issued(address user, uint256 amount);
 
   /**
    * constructor
@@ -82,10 +92,11 @@ contract RICOToken is EIP20TokenStandard {
 
       Mint memory m = issuable[_user][n];
 
-      if (isExecutable(m.atTime)) {
+      if (isExecutable(m.atTime) && m.amount > 0) {
 
         balances[_user] = balances[_user].add(m.amount);
         totalSupply = totalSupply.add(m.amount);
+        Issued(_user, m.amount);
         delete issuable[_user][n];
       }
     }

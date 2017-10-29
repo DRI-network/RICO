@@ -170,4 +170,5 @@ contract('RICOToken', function (accounts) {
     })
 
   })
+  
 })

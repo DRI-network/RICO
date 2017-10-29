@@ -157,7 +157,7 @@ contract RICO {
 
       auction = new DutchAuction();
 
-      auction.init(ts.po, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
+      auction.init(this, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
       //auction contract deployed.
       InitDutchAuction(auction.wallet(), auction.numTokensAuctioned(), auction.receivedWei());
     }
@@ -272,7 +272,7 @@ contract RICO {
    * @dev executes ether deposit to tob for project owner.
    */
 
-  function deposit() payable onlyProjectOwner() external returns(bool) {
+  function deposit() payable external onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -348,7 +348,7 @@ contract RICO {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function donate() payable isAuctionStage() returns(bool) {
+  function donate() payable external isAuctionStage() returns(bool) {
 
     require(status == Status.TokenTobExecuted);
 
@@ -385,9 +385,7 @@ contract RICO {
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken() returns(bool) {
-    if (ts.proofOfDonationStrategy == 0) // strategy is normal
-      token.mint(msg.sender);
+  function mintToken() external returns(bool) {
 
     if (ts.proofOfDonationStrategy == 1) { 
       // strategy is dutchauction
@@ -397,8 +395,10 @@ contract RICO {
 
       token.mintable(msg.sender, auction.getTokenBalance(msg.sender), now);
 
-      token.mint(msg.sender);
     }
+    
+    // strategy is both
+    token.mint(msg.sender);
 
     return true;
 
@@ -416,6 +416,8 @@ contract RICO {
     TokenRound memory tr = tRounds[_index];
 
     require(block.timestamp >= tr.execTime);
+
+    require(tr.to != 0x0);
 
     require(token.totalSupply() <= ts.totalSupply);
 
@@ -462,6 +464,26 @@ contract RICO {
 
     return true;
 
+  }
+
+  /**
+   * @dev get balance of total withdrawal ether for sender.
+   */
+  function getBalanceOfWei(address _sender) external constant returns(uint256) {
+    return weiBalances[_sender];
+  }
+
+
+  /**
+   * @dev changeable for token owner.
+   * @param _newOwner set new owner of this contract.
+   */
+  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
+    require(_newOwner != 0x0);
+
+    owner = _newOwner;
+
+    return true;
   }
 
 
@@ -515,27 +537,11 @@ contract RICO {
     return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
 
-  function getBalanceOfWei(address _sender) external constant returns(uint256) {
-    return weiBalances[_sender];
-  }
-
-
-  /**
-   * @dev changeable for token owner.
-   * @param _newOwner set new owner of this contract.
-   */
-  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
-    require(_newOwner != 0x0);
-
-    owner = _newOwner;
-
-    return true;
-  }
 
   /**
    * @dev automatically execute received transactions.
    */
-  function () {
+  function () external payable {
     if (status == Status.TokenStructureConfirmed)
       this.deposit();
     if (status == Status.TokenTobExecuted)
