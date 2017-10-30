@@ -168,23 +168,23 @@ EIP-20 is a TokenStandard Format on the Ethereum Blockchain.
 |execTime | uint256 | unlocking time and token creation time. adapt to `now` literal or `block.timestamp` reteral that return unixtimestamps.|
 | to  | address| token will received address.|
 
-#### function addMarketMaker(distributeWei, execTime, maker, metaData)
+#### function addWithdrawalRound(distributeWei, execTime, to, isMM)
 
-This feature is more important precept of RICO Framework. project Owner will spent ether when TOB executed. that ether will be send to RICO contract.but anyone unable to sent ether from contract in that case. RICO has to diestribute ETH to someone from contract.this precept must be defined in token strategy to sending ETH to someone and this method will be called by projectOwner. To decide someone to be honestly we design incentive models. it seems to be market maker.
+This feature is more important precept of RICO Framework. project Owner will spent ether when TOB executed.and Proof of Donation send ether to RICO contract. that ether will be store to RICO contract.but anyone unable to sent ether from contract in that case. RICO has to diestribute ETH to someone from contract.this precept must be defined in token strategy to sending ETH to someone and this method will be called by projectOwner and receiver. To decide someone to be honestly we design incentive models. it seems to be market maker.
 ##### params 
 | argument | type | description |
 |:---|:---:|:---|
-| distributeWei | uint256|  distribute ether amount for this project. |
+| distributeWei | uint256|  distribute ether amount to receiver. |
 | execTime | uint256 |  unlocking distribute time. |
-| maker | address|  ether receive address.|
-| metaData | uint256|  market maker name or meta payload; |
+| to | address|  ether receive address.|
+| isMM | bool|  this process executes for marketmaker or not; |
 
 ## Test 
 
 ### testing on ethereumjs-testrpc
 running testrpc with account balance.
 ```
-testrpc -l 4700000 -b 1 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000"
+$ testrpc -l 4700000 -b 1 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000"
 ```
 
 ```
