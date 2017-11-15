@@ -96,7 +96,6 @@ contract DutchAuctionRegistry {
     address _caller,
     uint256 _tokenSupply,
     uint8 _tokenDecimals
-   
   )
   public isOwner() atStage(Stages.AuctionInit) returns(bool)
   {
