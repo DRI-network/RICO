@@ -111,7 +111,7 @@ contract RICO {
    * @dev define owner when this contract deployed.
    */
 
-  function RICO() {
+  function RICO() public {
     owner = msg.sender;
   }
 

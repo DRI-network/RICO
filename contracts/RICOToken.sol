@@ -45,7 +45,7 @@ contract RICOToken is EIP20TokenStandard {
    * constructor
    * @dev define owner when this contract deployed.
    */
-  function RICOToken() {
+  function RICOToken() public {
     owner = msg.sender;
   }
 

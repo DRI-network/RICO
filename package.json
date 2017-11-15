@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "console":"truffle console"
+    "console": "truffle console"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/DRI-project/RICO#readme",
   "dependencies": {
-    "truffle": "^3.4.9",
+    "truffle": "4.0.1",
     "web3": "^1.0.0-beta.21"
   }
 }
