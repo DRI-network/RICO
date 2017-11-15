@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 import "./EIP20TokenStandard.sol";
 import "./SafeMath.sol";
 

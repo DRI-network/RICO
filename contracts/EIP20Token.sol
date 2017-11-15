@@ -2,7 +2,7 @@
 // https://github.com/ethereum/EIPs/issues/20
 // https://github.com/ConsenSys/Tokens/blob/master/contracts/Token.sol
 // 
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 
 contract EIP20Token {
   /* This is a slight change to the EIP20 base standard.

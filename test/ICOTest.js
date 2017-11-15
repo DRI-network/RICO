@@ -25,11 +25,7 @@ const mm_1_amount = 100 * ether; // set ether amount to 100 ether for first mark
 const mmCreateTime = 15552000 // set ether transferable time to 100 days.
 const PoDstrat = 0; //set token strategy.
 
-var rico;
-var launcher;
-var token;
-
-contract('ICOTest', function (accounts) {
+contract('RICO', function (accounts) {
   it("should be deployed and init token for ICOTest", async function () {
 
     const projectOwner = accounts[0]
@@ -37,6 +33,9 @@ contract('ICOTest', function (accounts) {
     rico = await RICO.new();
 
     launcher = await Launcher.new();
+
+    token = await RICOToken.at(await rico.token())
+    
 
     const changeOwner = await rico.changeOwner(launcher.address, {
       from: projectOwner
@@ -50,7 +49,6 @@ contract('ICOTest', function (accounts) {
       from: projectOwner
     });
 
-    token = await RICOToken.at(await rico.token())
 
 
     const status = await rico.status.call()

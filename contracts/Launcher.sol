@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 import "./RICO.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
@@ -39,7 +39,6 @@ contract Launcher {
 
   function setup() returns(bool) {
     require(msg.sender == projectOwner);
-
     ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);

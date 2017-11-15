@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 import "./SafeMath.sol";
 import "./RICOToken.sol";
 /// @title Dutch auction contract - distribution of a fixed number of tokens using an auction.
