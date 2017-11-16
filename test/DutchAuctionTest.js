@@ -38,4 +38,8 @@ contract('DutchAuctionRegistry', function (accounts) {
       from: owner
     })
   })
+  it("should be start DutchAuction", async function () {
+    const start = await DAR.startAuction()
+  })
+      
 })
