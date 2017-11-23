@@ -27,7 +27,7 @@ contract Launcher {
   uint256 PoDstrat = 0;      //set token strategy.
 
 
-  function Launcher() {
+  function Launcher() public {
     projectOwner = msg.sender;
   }
 
