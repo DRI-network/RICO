@@ -1,5 +1,5 @@
 pragma solidity ^0.4.18;
-import "./RICOToken.sol";
+import "./AbsRICOToken.sol";
 import "./SafeMath.sol";
 import "./DutchAuction.sol";
 
@@ -127,6 +127,7 @@ contract RICO {
    */
   function init(
     address _tokenAddr,
+    address _daAddr,
     uint256 _totalSupply,
     uint256 _tobAmountToken,
     uint256 _tobAmountWei,
@@ -163,7 +164,7 @@ contract RICO {
     //set stopPriceFactor 7500
     if (ts.proofOfDonationStrategy == 1) {
 
-      auction = new DutchAuction();
+      auction = DutchAuction(_);
 
       auction.init(this, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
       //auction contract deployed.

@@ -1,12 +1,12 @@
 pragma solidity ^0.4.18;
-import "./EIP20TokenStandard.sol";
+import { EIP20StandardToken } from "./EIP20StandardToken.sol";
 import "./SafeMath.sol";
 
 /// @title RICOToken - RICOToken Standard
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract RICOToken is EIP20TokenStandard {
+contract RICOToken is EIP20StandardToken {
   /// using safemath
   using SafeMath for uint256;
   /// declaration token name

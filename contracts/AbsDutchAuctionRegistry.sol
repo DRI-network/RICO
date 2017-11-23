@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-/// @title Dutch auction contract - distribution of a fixed number of tokens using an auction.
+/// @title AbsDutchAuctionRegistry contract - abstract contract of DutchAuctionRegistry distribution of a fixed number of tokens using an auction.
 /// The contract code is inspired by the Gnosis auction contract. Main difference is that the
 /// auction ends if a fixed number of tokens was sold.
 /// @notice contract based on Raiden-Project. Thanks to hard commit ethereum-communities!

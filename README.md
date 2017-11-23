@@ -19,18 +19,14 @@ In our approach, all execution processes of issuing tokens are strictly defined 
 ## Dependencies
 
 - Node v8.4.0
-- Truffle v3.4.9
-- solidty-compiler v0.4.15
+- Truffle v4.0.1
+- solidty-compiler v0.4.18
 
 This project using truffle framework, you can install truffle framework first.
 reference for truffle => [truffle](http://truffleframework.com/)
 
 ```
-$ npm install truffle@3.4.9 -g 
-```
-And you can using ethereumjs-testrpc for testing.
-```
-$ npm install ethereumjs-testrpc -g
+$ npm install truffle@4.0.1 -g 
 ```
 
 ## Getting Started 
@@ -120,6 +116,7 @@ contract Launcher {
     ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
     ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
+    ico.addWithdrawalRound(PoDCapWei, now + 7 days, projectOwner, )
     return true;
   }
 }
@@ -183,7 +180,7 @@ This feature is more important precept of RICO Framework. project Owner will spe
 ### testing on ethereumjs-testrpc
 running testrpc with account balance.
 ```
-testrpc -l 4700000 -b 1 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000"
+testrpc -p 9545 -l 4700000 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000" --account="0x3e478e4fed09cdc68388286b94aeb1404df47b1f1df0de715e582d6aebc6e1c9,200000000000000000000" --account="0xa0d45d6a3911221c4e1b7edcd256741c6bcb9a247fda017a8946ff5f5c38021a,200000000000000000000" --account="0x1386ff12f7d49e6e4e835952493d034570e134bfb0fc6f9d17b49dbdf88d03b3,200000000000000000000" --account="0xf84d5b9d64e427d43645e3c12906d322410a87b277374a0335a4ca0da9316d23,200000000000000000000"
 ```
 
 ```

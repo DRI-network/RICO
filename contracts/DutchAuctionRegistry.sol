@@ -189,7 +189,7 @@ contract DutchAuctionRegistry {
   /// @notice Claim auction tokens for `msg.sender` after the auction has ended.
   /// @dev Claims tokens for `msg.sender` after auction. To be used if tokens can
   /// be claimed by beneficiaries, individually.
-  function claimTokens(address _receiver) public isOwner() atStage(Stages.AuctionEnded) returns(bool) {
+  function claimTokens(address _receiver) public atStage(Stages.AuctionEnded) returns(bool) {
 
     require(_receiver != 0x0);
 
