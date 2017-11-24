@@ -9,4 +9,5 @@ contract AbsRICOToken {
   function mintable(address _user, uint256 _amount, uint256 _atTime) external returns(bool);
   function mint(address _user) external returns(bool);
   function changeOwner(address _newOwner) external returns(bool);
+  function getTotalSupply() public returns(uint256);
 }

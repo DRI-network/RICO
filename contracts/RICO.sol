@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 import "./AbsRICOToken.sol";
-import "./PoD.sol";
+import "./AbsPoD.sol";
 import "./SafeMath.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
@@ -19,8 +19,6 @@ contract RICO {
   event Deposit(address sender, uint256 amount);
   event InitTokenData(string name, string symbol, uint8 decimals);
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
-  event InitDutchAuction(address wallet, uint tokenSupply, uint donating);
-  event Donation(uint256 time, address to, uint256 donatedWei);
 
   /**
    * Modifiers
@@ -35,24 +33,6 @@ contract RICO {
   modifier onlyProjectOwner() {
     require(msg.sender == ts.po);
     // Only projectOwner is allowed to proceed
-    _;
-  }
-
-  modifier updateStage() {
-    if (ts.proofOfDonationStrategy == 0) {
-      if (block.timestamp > startTimeOfPoD + 7 days) {
-        status = Status.TokenDonationEnded;
-      }
-      if (donatedWei == ts.proofOfDonationCapOfWei) {
-        status = Status.TokenDonationEnded;
-      }
-    }
-    if (ts.proofOfDonationStrategy == 1) {
-      if (auction.stage() == DutchAuction.Stages.AuctionSetUp)
-        auction.startAuction();
-      if (auction.stage() == DutchAuction.Stages.AuctionEnded)
-        status = Status.TokenDonationEnded;
-    }
     _;
   }
 
@@ -79,7 +59,7 @@ contract RICO {
     uint256 tobAmountWei;
     uint256 proofOfDonationCapOfWei;
     uint256 proofOfDonationCapOfToken;
-    uint256 proofOfDonationStrategy;
+    address proofOfDonationStrategy;
     address po;
   }
 
@@ -100,7 +80,7 @@ contract RICO {
   uint256 public tokenPrice;
   TokenStructure public ts;
   AbsRICOToken public token;
-  PoD public pod;
+  AbsPoD public pod;
   mapping(address => uint256) weiBalances;
 
   TokenRound[] public tRounds;
@@ -158,9 +138,9 @@ contract RICO {
     
     token = AbsRICOToken(_tokenAddr);
 
-    pod = PoD(_proofOfDonationStrategy);
+    pod = AbsPoD(_proofOfDonationStrategy);
 
-    pod.setup(ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
+    pod.init(ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
     
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
 
@@ -320,11 +300,11 @@ contract RICO {
 
     require(msg.sender.send(refunds));
 
+    require(pod.start(_startTimeOfPoD));
+
     weiBalances[msg.sender] = 0;
 
     startTimeOfPoD = _startTimeOfPoD;
-    
-    require(pod.start(startTimeOfPoD));
 
     status = Status.PoDStarted;
 
@@ -369,7 +349,7 @@ contract RICO {
 
     require(tr.to != 0x0);
 
-    require(token.totalSupply() <= ts.totalSupply);
+    require(token.getTotalSupply() <= ts.totalSupply);
 
     require(token.mintable(tr.to, tr.roundSupply, now));
 
@@ -492,6 +472,6 @@ contract RICO {
    * @dev automatically execute received transactions.
    */
   function () external {
-    this.mintToken();
+    this.mintToken(msg.sender);
   }
 }

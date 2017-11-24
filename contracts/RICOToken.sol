@@ -113,6 +113,14 @@ contract RICOToken is EIP20StandardToken, Freezable {
     return true;
   }
 
+  /**  
+   * @dev constant return totalSupply.
+   */
+
+  function getTotalSupply() external constant returns (uint256) {
+    return totalSupply;
+  }
+
   /**
    * @dev constant return status whether time elapsed.
    * @param _executeTime  set a elapsed time of to be executable.
