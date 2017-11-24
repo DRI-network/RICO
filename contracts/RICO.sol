@@ -88,8 +88,8 @@ contract RICO {
     Initialized,
     TokenCreated,
     TokenStructureConfirmed,
-    TokenTobExecuted,
-    TokenDonationEnded
+    PoDStarted,
+    PoDEnded
   }
 
   Status public status;
@@ -259,9 +259,6 @@ contract RICO {
 
     require(status == Status.TokenCreated);
 
-    if (ts.proofOfDonationStrategy == 1)
-      require(auction.stage() == DutchAuction.Stages.AuctionDeployed);
-
     status = Status.TokenStructureConfirmed;
 
     return true;
@@ -313,7 +310,7 @@ contract RICO {
 
     require(status == Status.TokenStructureConfirmed);
 
-    require(_startTimeOfPoD >= block.timestamp);
+    require(_startTimeOfPoD >= block.timestamp + 1 days);
 
     require(weiBalances[msg.sender] >= ts.tobAmountWei);
 
@@ -326,54 +323,10 @@ contract RICO {
     weiBalances[msg.sender] = 0;
 
     startTimeOfPoD = _startTimeOfPoD;
-
-    if (ts.proofOfDonationStrategy == 0)
-      donatedWei = 0;
-
-    if (ts.proofOfDonationStrategy == 1) {
-
-      token.mintable(address(auction), ts.proofOfDonationCapOfToken, now);
-
-      token.mint(address(auction));
-
-      auction.setup(token);
-    }
-
-    status = Status.TokenTobExecuted;
-
-    return true;
-
-  }
-
-  /**
-   * @dev executes donate to project and call dutch auction process.
-   */
-
-  function donate() payable external updateStage() returns(bool) {
-
-    require(status == Status.TokenTobExecuted);
-
-    require(block.timestamp >= startTimeOfPoD);
-
-    if (ts.proofOfDonationStrategy == 0) {
-
-      require(donatedWei.add(msg.value) <= ts.proofOfDonationCapOfWei);
-
-      uint256 mintable = tokenPrice * msg.value;
-
-      require(token.mintable(msg.sender, mintable, startTimeOfPoD + 14 days));
-    }
-
-    if (ts.proofOfDonationStrategy == 1) {
-
-      auction.bid.value(msg.value)(msg.sender);
-
-      tokenPrice = auction.nowPrice();
-    }
     
-    donatedWei = donatedWei.add(msg.value);
+    require(pod.start(startTimeOfPoD));
 
-    Donation(block.timestamp, msg.sender, donatedWei);
+    status = Status.PoDStarted;
 
     return true;
 
@@ -383,20 +336,19 @@ contract RICO {
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken() external returns(bool) {
+  function mintToken(address _user) external returns(bool) {
 
-    if (ts.proofOfDonationStrategy == 1) { 
-      // strategy is dutchauction
-      require(auction.endTime() + 7 days <= block.timestamp);
+    require(block.timestamp > pod.getEndtime() + 7 days);
 
-      auction.claimTokens(msg.sender);
+    uint256 tokenValue = pod.getBalanceOfToken(_user);
 
-      token.mintable(msg.sender, auction.getTokenBalance(msg.sender), now);
+    require(tokenValue > 0);
 
-    }
-    
-    // strategy is both
-    token.mint(msg.sender);
+    require(token.mintable(_user, tokenValue, now));
+
+    require(token.mint(_user));
+
+    require(pod.resetTokenBalance(_user));
 
     return true;
 
@@ -539,12 +491,7 @@ contract RICO {
   /**
    * @dev automatically execute received transactions.
    */
-  function () external payable {
-    if (status == Status.TokenStructureConfirmed)
-      this.deposit();
-    if (status == Status.TokenTobExecuted)
-      this.donate();
-    if (status == Status.TokenDonationEnded)
-      this.mintToken();
+  function () external {
+    this.mintToken();
   }
 }

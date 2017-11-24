@@ -18,7 +18,6 @@ contract RICOToken is EIP20StandardToken, Freezable {
   /// declaration token decimals
   uint8 public decimals;
 
-
   enum Status {
     Deployed,
     Initialized
@@ -31,7 +30,6 @@ contract RICOToken is EIP20StandardToken, Freezable {
 
   mapping(address => Mint[]) public issuable;
   Status status;
-
 
   /**
    * Event
