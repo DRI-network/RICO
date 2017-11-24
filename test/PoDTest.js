@@ -1,5 +1,5 @@
-const RICOToken = artifacts.require("./RICOToken.sol");
-const name = "Responsible ICO Token";
+const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol");
+const name = "SimplePoD contract";
 const symbol = "RIT";
 const decimals = 18;
 

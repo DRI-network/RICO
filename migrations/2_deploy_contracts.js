@@ -1,31 +1,54 @@
-var Launcher = artifacts.require("./Launcher.sol");
-var RICO = artifacts.require("./RICO.sol");
+const Launcher = artifacts.require("./Launcher.sol");
+const RICO = artifacts.require("./RICO.sol");
+const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
+const RICOToken = artifacts.require("./RICOToken.sol");
 
 module.exports = async function (deployer, network, accounts) {
 
-  if (network === "development") return; // Don't deploy on tests
- 
-  // owner is geth accounts [0]
-  const projectOwner = accounts[0]
+  //if (network === "development") return; // Don't deploy on tests
 
-  // deploying rico.
-  const rico = await RICO.new();
+  deployer.deploy(Launcher).then(() => {
+    return deployer.deploy(RICO)
+  }).then(() => {
+    return deployer.deploy(SimplePoD)
+  }).then(() => {
+    return deployer.deploy(RICOToken)
+  }).then(async() => {
+    // certifiers
+    const addresses = [
+      accounts[0],
+      accounts[1],
+      accounts[2]
+    ]
 
-  // deploying launcher.
-  const launcher = await Launcher.new();
-  
-  // changing owner to projectOwner -> launcher.
-  const changeOwner = await rico.changeOwner(launcher.address, {
-    from: accounts[0]
-  })
+    const rico = await RICO.deployed()
+    const token = await RICOToken.deployed()
+    const launcher = await Launcher.deployed()
+    const simplePoD = await SimplePoD.deployed()
 
-  //initializing launcher.
-  const init = await launcher.init(rico.address, {
-    from: accounts[0]
+
+    // changing owner to owner -> launcher.
+    const changeOwner = await rico.transferOwnership(launcher.address, {
+      from: accounts[0]
+    })
+
+    // changing owner to owner to rico.
+    const changeOwner2 = await token.transferOwnership(rico.address, {
+      from: accounts[0]
+    })
+
+    const changeOwner3 = await simplePoD.transferOwnership(rico.address, {
+      from: accounts[0]
+    })
+
+    //initializing launcher.
+    const init = await launcher.init(rico.address, token.address, simplePoD.address, {
+      from: accounts[0]
+    });
+
+    //setup launcher
+    const setup = await launcher.setup({
+      from: accounts[0]
+    });
   });
-
-  //setup launcher
-  const setup = await launcher.setup({
-    from: accounts[0]
-  });
-};
+}

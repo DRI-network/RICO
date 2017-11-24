@@ -181,7 +181,5 @@ contract('RICOToken', function (accounts) {
     }).catch(err => {
       assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'token is not generate')
     })
-
   })
-
 })

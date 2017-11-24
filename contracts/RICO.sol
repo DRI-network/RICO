@@ -15,11 +15,13 @@ contract RICO is Ownable {
    * Events 
    */
 
+
+  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
+  event InitTokenData(string name, string symbol, uint8 decimals);
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
   event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
   event Deposit(address sender, uint256 amount);
-  event InitTokenData(string name, string symbol, uint8 decimals);
-  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
+  event Withdrawal(address receiver, uint256 amount);
 
   /**
    * Modifiers
@@ -272,6 +274,8 @@ contract RICO is Ownable {
 
     weiBalances[msg.sender] = weiBalances[msg.sender].sub(_amount);
 
+    Withdrawal(msg.sender, _amount);
+
     return true;
   }
 
@@ -313,6 +317,8 @@ contract RICO is Ownable {
   function mintToken(address _user) external returns(bool) {
 
     require(pod.isPoDEnded());
+
+    status = Status.PoDEnded;
 
     require(block.timestamp > pod.getEndtime() + 7 days);
 

@@ -97,10 +97,8 @@ contract PoD is Ownable {
   }
 
   function isPoDEnded() public constant returns(bool) {
-
     if (status == Status.PoDEnded)
       return true;
-
     return false;
   }
 

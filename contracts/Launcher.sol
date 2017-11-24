@@ -1,13 +1,13 @@
 pragma solidity ^0.4.18;
 import "./RICO.sol";
+import "./Ownable.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
 /// @author - Yusaku Senga <senga@dri.network>
 /// license let's see in LICENSE
 
 
-contract Launcher {
-  address public projectOwner;
+contract Launcher is Ownable {
   RICO public ico;
   string name = "Responsible ICO Token";
   string symbol = "RIT";
@@ -27,23 +27,18 @@ contract Launcher {
   uint256 PoDstrat = 0;      //set token strategy.
 
 
-  function Launcher() public {
-    projectOwner = msg.sender;
-  }
+  function Launcher() public {}
 
-  function init(address _rico, address _token, address _pod) public returns(bool) {
-    require(msg.sender == projectOwner);
+  function init(address _rico, address _token, address _pod) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
-    ico.init(_token, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, _pod, projectOwner);
-
+    ico.init(_token, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, _pod, owner);
     return true;
   }
 
-  function setup() public returns(bool) {
-    require(msg.sender == projectOwner);
+  function setup() public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
-    ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
-    ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);
+    ico.addTokenRound(firstSupply, firstSupplyTime, owner);
+    ico.addTokenRound(secondSupply, secondSupplyTime, owner);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
     return true;
   }
