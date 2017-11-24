@@ -2,12 +2,13 @@ pragma solidity ^0.4.18;
 import "./AbsRICOToken.sol";
 import "./AbsPoD.sol";
 import "./SafeMath.sol";
+import "./Ownable.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract RICO {
+contract RICO is Ownable {
   /// using safemath
   using SafeMath for uint256;
   /**
@@ -23,12 +24,6 @@ contract RICO {
   /**
    * Modifiers
    */
-
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    // Only owner is allowed to proceed
-    _;
-  }
 
   modifier onlyProjectOwner() {
     require(msg.sender == ts.po);
@@ -93,7 +88,6 @@ contract RICO {
    */
 
   function RICO() public {
-    owner = msg.sender;
     status = Status.Deployed;
   }
 
@@ -318,6 +312,8 @@ contract RICO {
 
   function mintToken(address _user) external returns(bool) {
 
+    require(pod.isPoDEnded());
+
     require(block.timestamp > pod.getEndtime() + 7 days);
 
     uint256 tokenValue = pod.getBalanceOfToken(_user);
@@ -403,20 +399,6 @@ contract RICO {
     return weiBalances[_sender];
   }
 
-
-  /**
-   * @dev changeable for token owner.
-   * @param _newOwner set new owner of this contract.
-   */
-  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
-    require(_newOwner != 0x0);
-
-    owner = _newOwner;
-
-    return true;
-  }
-
-
   /**
    * @dev calculate TotalReserveSupply sum of all rounds.
    */
@@ -466,7 +448,6 @@ contract RICO {
   function calcEnsureSupply() internal constant returns(uint256) {
     return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
-
 
   /**
    * @dev automatically execute received transactions.

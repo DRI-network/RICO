@@ -19,4 +19,6 @@ contract AbsPoD {
   function getEndtime() public constant returns(uint256);
 
   function getBalanceOfToken(address _user) public constant returns(uint256);
+
+  function isPoDEnded() public constant returns(bool);
 }

@@ -31,15 +31,16 @@ contract Launcher {
     projectOwner = msg.sender;
   }
 
-  function init(address _rico) returns(bool) {
+  function init(address _rico, address _token, address _pod) public returns(bool) {
     require(msg.sender == projectOwner);
     ico = RICO(_rico);
+    ico.init(_token, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, _pod, projectOwner);
+
     return true;
   }
 
-  function setup() returns(bool) {
+  function setup() public returns(bool) {
     require(msg.sender == projectOwner);
-    ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
     ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);

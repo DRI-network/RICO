@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
-
+import "./Ownable.sol";
 /// @title Freezable - Freezable contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract Freezable {
+contract Freezable is Ownable {
 
   /**
    * Storage
@@ -16,10 +16,7 @@ contract Freezable {
   /**
    * Modifier
    */
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
+
   modifier can() {
     require(executable);
     _;
@@ -30,7 +27,6 @@ contract Freezable {
    * @dev Constructor is called when contract deployed.
    */
   function Freezable() public {
-    owner = msg.sender;
     executable = true;
     cold = false;
   }

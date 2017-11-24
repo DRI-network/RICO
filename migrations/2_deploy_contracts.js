@@ -3,7 +3,7 @@ var RICO = artifacts.require("./RICO.sol");
 
 module.exports = async function (deployer, network, accounts) {
 
-  //if (network === "development") return; // Don't deploy on tests
+  if (network === "development") return; // Don't deploy on tests
  
   // owner is geth accounts [0]
   const projectOwner = accounts[0]

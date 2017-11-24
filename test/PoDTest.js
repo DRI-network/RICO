@@ -172,7 +172,7 @@ contract('RICOToken', function (accounts) {
 
     const newOwner = projectOwner
 
-    const changed = await token.transferOwnership(newOwner, {
+    const changed = await token.changeOwner(newOwner, {
       from: owner
     })
 

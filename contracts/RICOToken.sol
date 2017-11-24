@@ -9,8 +9,7 @@ import "./Freezable.sol";
 
 contract RICOToken is EIP20StandardToken, Freezable {
   /// using safemath
-  using SafeMath
-  for uint256;
+  using SafeMath for uint256;
   /// declaration token name
   string public name;
   /// declaration token symbol
@@ -42,7 +41,6 @@ contract RICOToken is EIP20StandardToken, Freezable {
    * @dev define owner when this contract deployed.
    */
   function RICOToken() public {
-    owner = msg.sender;
     status = Status.Deployed;
   }
 
@@ -82,9 +80,9 @@ contract RICOToken is EIP20StandardToken, Freezable {
 
   /**
    * @dev all minting token to user verified by owner.
-   * @param _user         call user address for minting users token.
+   * @param _user    call user address for minting users token.
    */
-  function mint(address _user) external returns(bool) {
+  function mint(address _user) external can() onlyOwner() returns(bool) {
 
     for (uint n = 0; n < issuable[_user].length; n++) {
 
@@ -100,19 +98,7 @@ contract RICOToken is EIP20StandardToken, Freezable {
     }
     return true;
   }
-
-  /**
-   * @dev changeable for token owner.
-   * @param _newOwner set new owner of this contract.
-   */
-  function changeOwner(address _newOwner) external can() onlyOwner() returns(bool) {
-    require(_newOwner != 0x0);
-
-    owner = _newOwner;
-
-    return true;
-  }
-
+  
   /**  
    * @dev constant return totalSupply.
    */

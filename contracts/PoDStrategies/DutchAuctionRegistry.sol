@@ -1,5 +1,5 @@
 pragma solidity ^0.4.18;
-import "./SafeMath.sol";
+import "../SafeMath.sol";
 /// @title Dutch auction contract - distribution of a fixed number of tokens using an auction.
 /// The contract code is inspired by the Gnosis auction contract. Main difference is that the
 /// auction ends if a fixed number of tokens was sold.

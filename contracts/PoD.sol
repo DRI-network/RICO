@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
-
+import "./Ownable.sol";
 /// @title PoDStrategy - PoDStrategy contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract PoD {
+contract PoD is Ownable {
 
   /**
    * Storage
@@ -29,11 +29,6 @@ contract PoD {
   }
   Status status;
 
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    _;
-  }
-
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -41,7 +36,6 @@ contract PoD {
 
   function PoD() public {
     status = Status.PoDDeployed;
-    owner = msg.sender;
   }
 
   function init(
@@ -102,19 +96,15 @@ contract PoD {
     return endTime;
   }
 
-  function getBalanceOfToken(address _user) public constant returns (uint256) {
-    return tokenBalances[_user];
+  function isPoDEnded() public constant returns(bool) {
+
+    if (status == Status.PoDEnded)
+      return true;
+
+    return false;
   }
 
-  /**
-   * @dev changeable for token owner.
-   * @param _newOwner set new owner of this contract.
-   */
-  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
-    require(_newOwner != 0x0);
-
-    owner = _newOwner;
-
-    return true;
+  function getBalanceOfToken(address _user) public constant returns (uint256) {
+    return tokenBalances[_user];
   }
 }
