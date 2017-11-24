@@ -1,39 +1,37 @@
 pragma solidity ^0.4.18;
-import { EIP20StandardToken } from "./EIP20StandardToken.sol";
+import "./EIP20StandardToken.sol";
 import "./SafeMath.sol";
+import "./Freezable.sol";
 
 /// @title RICOToken - RICOToken Standard
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract RICOToken is EIP20StandardToken {
+contract RICOToken is EIP20StandardToken, Freezable {
   /// using safemath
-  using SafeMath for uint256;
+  using SafeMath
+  for uint256;
   /// declaration token name
   string public name;
   /// declaration token symbol
   string public symbol;
   /// declaration token decimals
   uint8 public decimals;
-  /// declaration token owner
-  address public owner;
 
-  mapping(address => Mint[]) public issuable;
+
+  enum Status {
+    Deployed,
+    Initialized
+  }
 
   struct Mint {
     uint256 amount;
     uint256 atTime;
   }
 
-  /**
-   * Modifier
-   */
+  mapping(address => Mint[]) public issuable;
+  Status status;
 
-  modifier onlyOwner() {
-    require(msg.sender == owner);
-    /// Only owner is allowed to proceed
-    _;
-  }
 
   /**
    * Event
@@ -47,6 +45,7 @@ contract RICOToken is EIP20StandardToken {
    */
   function RICOToken() public {
     owner = msg.sender;
+    status = Status.Deployed;
   }
 
   /** 
@@ -55,11 +54,12 @@ contract RICOToken is EIP20StandardToken {
    * @param _symbol       set Token symbol.
    * @param _decimals     set Token decimals.
    */
-
   function init(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
+    require(status == Status.Deployed);
     name = _name;
     symbol = _symbol;
     decimals = _decimals;
+    status = Status.Initialized;
     return true;
   }
 
@@ -69,7 +69,7 @@ contract RICOToken is EIP20StandardToken {
    * @param _amount       set minting token quantities.
    * @param _atTime       set minting time of mintable
    */
-  function mintable(address _user, uint256 _amount, uint256 _atTime) external onlyOwner() returns(bool) {
+  function mintable(address _user, uint256 _amount, uint256 _atTime) external can() onlyOwner() returns(bool) {
 
     require(block.timestamp <= _atTime);
 
@@ -107,7 +107,7 @@ contract RICOToken is EIP20StandardToken {
    * @dev changeable for token owner.
    * @param _newOwner set new owner of this contract.
    */
-  function changeOwner(address _newOwner) external onlyOwner() returns(bool) {
+  function changeOwner(address _newOwner) external can() onlyOwner() returns(bool) {
     require(_newOwner != 0x0);
 
     owner = _newOwner;
@@ -125,5 +125,4 @@ contract RICOToken is EIP20StandardToken {
     }
     return true;
   }
-
 }

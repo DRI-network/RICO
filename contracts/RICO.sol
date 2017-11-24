@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 import "./AbsRICOToken.sol";
+import "./PoD.sol";
 import "./SafeMath.sol";
-import "./DutchAuction.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
@@ -84,24 +84,25 @@ contract RICO {
   }
 
   enum Status {
-    TokenInit,
+    Deployed,
+    Initialized,
     TokenCreated,
     TokenStructureConfirmed,
     TokenTobExecuted,
     TokenDonationEnded
   }
 
+  Status public status;
   address public owner;
   uint256 public startTimeOfPoD;
   uint256 public donatedWei;
   uint256 public sendWei;
   uint256 public tokenPrice;
   TokenStructure public ts;
-  RICOToken public token;
-  DutchAuction public auction;
+  AbsRICOToken public token;
+  PoD public pod;
   mapping(address => uint256) weiBalances;
 
-  Status public status = Status.TokenInit;
   TokenRound[] public tRounds;
   WithdrawalRound[] public wRounds;
 
@@ -113,6 +114,7 @@ contract RICO {
 
   function RICO() public {
     owner = msg.sender;
+    status = Status.Deployed;
   }
 
   /**
@@ -127,19 +129,18 @@ contract RICO {
    */
   function init(
     address _tokenAddr,
-    address _daAddr,
     uint256 _totalSupply,
     uint256 _tobAmountToken,
     uint256 _tobAmountWei,
     uint256 _proofOfDonationCapOfToken,
     uint256 _proofOfDonationCapOfWei,
-    uint256 _proofOfDonationStrategy,
+    address _proofOfDonationStrategy,
     address _po
   )
   external onlyOwner() returns(bool) 
   {
 
-    require(status == Status.TokenInit);
+    require(status == Status.Deployed);
 
     ts = TokenStructure({
       totalSupply: _totalSupply,
@@ -152,29 +153,18 @@ contract RICO {
     });
 
     require(_totalSupply >= calcEnsureSupply());
+
+    require(_tokenAddr != 0x0 && _proofOfDonationStrategy != 0x0);
     
-    if (_tokenAddr == 0x0)
-      token = new RICOToken();
-    else
-      token = RICOToken(_tokenAddr);
+    token = AbsRICOToken(_tokenAddr);
+
+    pod = PoD(_proofOfDonationStrategy);
+
+    pod.setup(ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
     
-    if (ts.proofOfDonationStrategy == 0)
-      tokenPrice = ts.proofOfDonationCapOfToken / ts.proofOfDonationCapOfWei;
-
-    //set stopPriceFactor 7500
-    if (ts.proofOfDonationStrategy == 1) {
-
-      auction = DutchAuction(_);
-
-      auction.init(this, ts.proofOfDonationCapOfToken, 2 ether, 524880000, 3);
-      //auction contract deployed.
-      InitDutchAuction(auction.wallet(), auction.numTokensAuctioned(), auction.receivedWei());
-    }
-
-
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
 
-    status = Status.TokenCreated;
+    status = Status.Initialized;
 
     return true;
   }
@@ -187,11 +177,13 @@ contract RICO {
    */
   function initTokenData(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
 
-    require(status == Status.TokenCreated);
+    require(status == Status.Initialized);
 
     token.init(_name, _symbol, _decimals);
 
     InitTokenData(_name, _symbol, _decimals);
+
+    status = Status.TokenCreated;
 
     return true;
   }

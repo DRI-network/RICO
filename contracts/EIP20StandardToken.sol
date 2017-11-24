@@ -9,7 +9,7 @@ based on the https://github.com/ConsenSys/Tokens/blob/master/contracts/StandardT
 .*/
 pragma solidity ^0.4.18;
 
-import { EIP20Token } from "./EIP20Token.sol";
+import "./EIP20Token.sol";
 
 contract EIP20StandardToken is EIP20Token {
 
