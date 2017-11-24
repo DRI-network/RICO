@@ -95,12 +95,13 @@ contract RICO is Ownable {
 
   /**
    * @dev initialize token structure for new project.
+   * @param _tokenAddr                  RICOToken contract's address.
    * @param _totalSupply                total supply of Token.
    * @param _tobAmountToken             allocation tob Supply of token total supplies.
    * @param _tobAmountWei               buying amount of project owner when tob call.
    * @param _proofOfDonationCapOfToken  donation cap of token.
    * @param _proofOfDonationCapOfWei    donation cap of ether.
-   * @param _proofOfDonationStrategy    donation strategy 0=Normal,1=DutchAuction.
+   * @param _proofOfDonationStrategy    PoD contract's address.
    * @param _po                         project owner address.
    */
   function init(

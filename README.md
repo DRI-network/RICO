@@ -78,8 +78,11 @@ RICO has several GuidLine API for ICOs. By combining these interfaces, implement
 This code is an example of an ico contract using RICO.
 
 ```js
-contract Launcher {
-  address public projectOwner;
+pragma solidity ^0.4.18;
+import "./RICO.sol";
+import "./Ownable.sol";
+
+contract Launcher is Ownable {
   RICO public ico;
   string name = "Responsible ICO Token";
   string symbol = "RIT";
@@ -94,29 +97,24 @@ contract Launcher {
   uint256 secondSupply = totalSupply * 18 / 100; // set second token supply to 18% of total supply.
   uint256 secondSupplyTime = block.timestamp + 140 days; // set second mintable time to 140 days.（after 140 days elapsed)
   address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
-  uint256 mm_1_amount = 100 ether; // set ether amount to 100 ether for first market maker.
+  uint256 mm_1_amount = 10 ether; // set ether amount to 100 ether for first market maker.
   uint256 mmCreateTime = block.timestamp + 100 days; // set ether transferable time to 100 days.
-  uint256 PoDstrat = 0;      //set token strategy.
 
 
-  function Launcher() {
-    projectOwner = msg.sender;
-  }
+  function Launcher() public {}
 
-  function init(address _rico) returns(bool) {
-    require(msg.sender == projectOwner);
+  function init(address _rico, address _token, address _pod) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
+    ico.init(_token, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, _pod, owner);
     return true;
   }
 
-  function setup() returns(bool) {
-    require(msg.sender == projectOwner);
-    ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
+  function setup() public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
-    ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
-    ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);
+    ico.addTokenRound(firstSupply, firstSupplyTime, owner);
+    ico.addTokenRound(secondSupply, secondSupplyTime, owner);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
-    ico.addWithdrawalRound(PoDCapWei, now + 7 days, projectOwner, )
+    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, owner, false);
     return true;
   }
 }
@@ -139,7 +137,7 @@ This function implement initialize RICO Framework and deploy all dependency cont
 | tobAmountWei | uint256|  Project TOB Cap o ETH. |
 | PoDCapToken | uint256| Proof of Doantaion (PoD) is a reservation of Token mint. if donate to project, ether wire defined in EVM executes. params proxy to Dutch Auction contract in RICO contract.|
 | PoDCapWei | uint256 | Project HardCap of ETH.|
-| PoDAddr | address | Proof of Donation Strategy Contract's address. sample be in /PoDs|
+| PoDAddr | address | PoD Contract's address. sample be in /PoDs|
 | projectOwner | address | projcetOwner is a params of responsible token manager in RICO concept.if Ethereum address is checksumed, it may unmatch address that unable checksumed while the EVM operate codes. |
 
 

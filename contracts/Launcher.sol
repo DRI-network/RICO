@@ -24,7 +24,6 @@ contract Launcher is Ownable {
   address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
   uint256 mm_1_amount = 10 ether; // set ether amount to 100 ether for first market maker.
   uint256 mmCreateTime = block.timestamp + 100 days; // set ether transferable time to 100 days.
-  uint256 PoDstrat = 0;      //set token strategy.
 
 
   function Launcher() public {}
@@ -40,6 +39,7 @@ contract Launcher is Ownable {
     ico.addTokenRound(firstSupply, firstSupplyTime, owner);
     ico.addTokenRound(secondSupply, secondSupplyTime, owner);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
+    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, owner, false);
     return true;
   }
 }
