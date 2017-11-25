@@ -1,10 +1,13 @@
 pragma solidity ^0.4.18;
 import "./Ownable.sol";
+import "./SafeMath.sol";
+
 /// @title PoDStrategy - PoDStrategy contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
 contract PoD is Ownable {
+  using SafeMath for uint256;
 
   /**
    * Storage

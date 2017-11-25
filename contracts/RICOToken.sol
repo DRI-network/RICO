@@ -50,7 +50,7 @@ contract RICOToken is EIP20StandardToken, Freezable {
    * @param _symbol       set Token symbol.
    * @param _decimals     set Token decimals.
    */
-  function init(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
+  function init(string _name, string _symbol, uint8 _decimals) public onlyOwner() returns(bool) {
     require(status == Status.Deployed);
     name = _name;
     symbol = _symbol;
@@ -65,7 +65,7 @@ contract RICOToken is EIP20StandardToken, Freezable {
    * @param _amount       set minting token quantities.
    * @param _atTime       set minting time of mintable
    */
-  function mintable(address _user, uint256 _amount, uint256 _atTime) external can() onlyOwner() returns(bool) {
+  function mintable(address _user, uint256 _amount, uint256 _atTime) public can() onlyOwner() returns(bool) {
 
     require(block.timestamp <= _atTime);
 
@@ -82,7 +82,7 @@ contract RICOToken is EIP20StandardToken, Freezable {
    * @dev all minting token to user verified by owner.
    * @param _user    call user address for minting users token.
    */
-  function mint(address _user) external can() onlyOwner() returns(bool) {
+  function mint(address _user) public can() onlyOwner() returns(bool) {
 
     for (uint n = 0; n < issuable[_user].length; n++) {
 
@@ -98,12 +98,12 @@ contract RICOToken is EIP20StandardToken, Freezable {
     }
     return true;
   }
-  
+
   /**  
    * @dev constant return totalSupply.
    */
 
-  function getTotalSupply() external constant returns (uint256) {
+  function getTotalSupply() public constant returns (uint256) {
     return totalSupply;
   }
 

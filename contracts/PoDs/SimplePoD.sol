@@ -1,8 +1,7 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
-import "../SafeMath.sol";
 
-/// @title PoDStrategy - PoDStrategy contract
+/// @title SimplePoD - SimplePoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 

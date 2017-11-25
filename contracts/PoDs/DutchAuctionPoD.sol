@@ -1,6 +1,5 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
-import "../SafeMath.sol";
 
 /// @title DutchAuctionPoD - DutchAuctionPoD contract
 /// @author - Yusaku Senga - <senga@dri.network>

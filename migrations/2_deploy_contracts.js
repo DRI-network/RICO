@@ -1,13 +1,14 @@
-const Launcher = artifacts.require("./Launcher.sol");
+const Launcher = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
-const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
 const RICOToken = artifacts.require("./RICOToken.sol");
+
+const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
 
 module.exports = async function (deployer, network, accounts) {
 
   //if (network === "development") return; // Don't deploy on tests
 
-  deployer.deploy(Launcher).then(() => {
+  deployer.deploy(LauncherSample).then(() => {
     return deployer.deploy(RICO)
   }).then(() => {
     return deployer.deploy(SimplePoD)
@@ -23,7 +24,7 @@ module.exports = async function (deployer, network, accounts) {
 
     const rico = await RICO.deployed()
     const token = await RICOToken.deployed()
-    const launcher = await Launcher.deployed()
+    const launcher = await LauncherSample.deployed()
     const simplePoD = await SimplePoD.deployed()
 
 

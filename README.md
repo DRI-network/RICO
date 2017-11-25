@@ -78,10 +78,6 @@ RICO has several GuidLine API for ICOs. By combining these interfaces, implement
 This code is an example of an ico contract using RICO.
 
 ```js
-pragma solidity ^0.4.18;
-import "./RICO.sol";
-import "./Ownable.sol";
-
 contract Launcher is Ownable {
   RICO public ico;
   string name = "Responsible ICO Token";

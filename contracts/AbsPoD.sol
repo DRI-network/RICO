@@ -20,5 +20,7 @@ contract AbsPoD {
 
   function getBalanceOfToken(address _user) public constant returns(uint256);
 
+  function transferOwnership(address newOwner) public;
+
   function isPoDEnded() public constant returns(bool);
 }

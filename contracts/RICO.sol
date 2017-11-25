@@ -1,8 +1,6 @@
 pragma solidity ^0.4.18;
-import "./AbsRICOToken.sol";
-import "./AbsPoD.sol";
-import "./SafeMath.sol";
-import "./Ownable.sol";
+import "./RICOToken.sol";
+import "./PoD.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
@@ -76,8 +74,8 @@ contract RICO is Ownable {
   uint256 public sendWei;
   uint256 public tokenPrice;
   TokenStructure public ts;
-  AbsRICOToken public token;
-  AbsPoD public pod;
+  RICOToken public token;
+  PoD public pod;
   mapping(address => uint256) weiBalances;
 
   TokenRound[] public tRounds;
@@ -133,9 +131,9 @@ contract RICO is Ownable {
 
     require(_tokenAddr != 0x0 && _proofOfDonationStrategy != 0x0);
     
-    token = AbsRICOToken(_tokenAddr);
+    token = RICOToken(_tokenAddr);
 
-    pod = AbsPoD(_proofOfDonationStrategy);
+    pod = PoD(_proofOfDonationStrategy);
 
     pod.init(ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
     
@@ -152,7 +150,7 @@ contract RICO is Ownable {
    * @param _symbol       set Token symbol of RICO format.
    * @param _decimals     set Token decimals of RICO format.
    */
-  function initTokenData(string _name, string _symbol, uint8 _decimals) external onlyOwner() returns(bool) {
+  function initTokenData(string _name, string _symbol, uint8 _decimals) public onlyOwner() returns(bool) {
 
     require(status == Status.Initialized);
 
@@ -172,7 +170,7 @@ contract RICO is Ownable {
    * @param _to               set token receive address.
    */
 
-  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) external onlyOwner() returns(bool) {
+  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) public onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -203,7 +201,7 @@ contract RICO is Ownable {
    * @param _isMM               set bool for marketmaker flag.
    */
 
-  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to, bool _isMM) external onlyOwner() returns(bool) {
+  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to, bool _isMM) public onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -232,7 +230,7 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function strategyConfirm() external onlyProjectOwner() returns(bool) {
+  function strategyConfirm() public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
@@ -247,7 +245,7 @@ contract RICO is Ownable {
    * @dev executes ether deposit to tob for project owner.
    */
 
-  function deposit() payable external onlyProjectOwner() returns(bool) {
+  function deposit() payable public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -265,7 +263,7 @@ contract RICO is Ownable {
    * @dev withdraw ether from this contract.
    */
 
-  function withdraw(uint256 _amount) external returns (bool) {
+  function withdraw(uint256 _amount) public returns (bool) {
 
     require(weiBalances[msg.sender] >= _amount);
 
@@ -285,7 +283,7 @@ contract RICO is Ownable {
    * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
-  function execTOB(uint256 _startTimeOfPoD) external onlyProjectOwner() returns(bool) {
+  function execTOB(uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
@@ -315,7 +313,7 @@ contract RICO is Ownable {
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken(address _user) external returns(bool) {
+  function mintToken(address _user) public returns(bool) {
 
     require(pod.isPoDEnded());
 
@@ -342,7 +340,7 @@ contract RICO is Ownable {
    * @dev executes donate to project and call dutch auction process.
    */
 
-  function execTokenRound(uint256 _index) external returns(bool) {
+  function execTokenRound(uint256 _index) public returns(bool) {
 
     require(_index < tRounds.length);
 
@@ -367,7 +365,7 @@ contract RICO is Ownable {
    * @dev executes distribute to market maker follow this token strategy.
    */
 
-  function execWithdrawalRound(uint256 _index) external returns(bool) {
+  function execWithdrawalRound(uint256 _index) public returns(bool) {
 
     require(_index < wRounds.length);
 
@@ -402,7 +400,7 @@ contract RICO is Ownable {
   /**
    * @dev get balance of total withdrawal ether for sender.
    */
-  function getBalanceOfWei(address _sender) external constant returns(uint256) {
+  function getBalanceOfWei(address _sender) public constant returns(uint256) {
     return weiBalances[_sender];
   }
 
@@ -460,6 +458,6 @@ contract RICO is Ownable {
    * @dev automatically execute received transactions.
    */
   function () external {
-    this.mintToken(msg.sender);
+    mintToken(msg.sender);
   }
 }

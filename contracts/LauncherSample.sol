@@ -1,13 +1,11 @@
 pragma solidity ^0.4.18;
 import "./RICO.sol";
-import "./Ownable.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
 /// @author - Yusaku Senga <senga@dri.network>
 /// license let's see in LICENSE
 
-
-contract Launcher is Ownable {
+contract LauncherSample is Ownable {
   RICO public ico;
   string name = "Responsible ICO Token";
   string symbol = "RIT";
@@ -23,10 +21,9 @@ contract Launcher is Ownable {
   uint256 secondSupplyTime = block.timestamp + 140 days; // set second mintable time to 140 days.（after 140 days elapsed)
   address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
   uint256 mm_1_amount = 10 ether; // set ether amount to 100 ether for first market maker.
-  uint256 mmCreateTime = block.timestamp + 100 days; // set ether transferable time to 100 days.
+  uint256 mmCreateTime = block.timestamp + 20 days; // set ether transferable time to 100 days.
 
-
-  function Launcher() public {}
+  function LauncherSample() public {}
 
   function init(address _rico, address _token, address _pod) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
