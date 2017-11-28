@@ -14,17 +14,12 @@ contract DutchAuctionPoD is PoD {
    * Storage
    */
 
-  address public owner;
-  address public wallet;
-  address public caller;
   uint8 public tokenDecimals;
   // Price decay function parameters to be changed depending on the desired outcome
 
   // Starting price in WEI; e.g. 2 * 10 ** 18
   uint256 public priceStart;
   uint256 public startBlock;
-  uint256 public startTime;
-  uint256 public endTime;
   uint256 public finalPrice;
 
   // Divisor constant; e.g. 524880000
@@ -66,12 +61,10 @@ contract DutchAuctionPoD is PoD {
   function DutchAuctionPoD() public { 
     status = Status.PoDDeployed;
   }
-  
+
   /// @param _wallet Wallet address to which all contributed ETH will be forwarded.
 
   function init(
-    address _wallet,
-    address _caller,
     uint8 _tokenDecimals,
     uint _priceStart,
     uint _priceConstant,
@@ -79,11 +72,9 @@ contract DutchAuctionPoD is PoD {
   )
   public onlyOwner() atStage(Status.PoDDeployed) returns(bool)
   {
-    require(_wallet != 0x0 && _caller != 0x0 && _tokenDecimals != 0);
+    require(_tokenDecimals != 0);
     require(_priceStart > 0);
     require(_priceConstant > 0);
-    wallet = _wallet;
-    caller = _caller;
     numTokensAuctioned = proofOfDonationCapOfToken;
     tokenMultiplier = 10 ** uint256(tokenDecimals);
     priceStart = _priceStart;
@@ -143,7 +134,7 @@ contract DutchAuctionPoD is PoD {
     assert(totalReceivedWei >= msg.value);
   }
 
-  function getTokenBalance(address _user) constant public returns(uint) {
+  function getTokenBalance(address _user) public constant returns(uint) {
     
     uint num = (tokenMultiplier * weiBalances[_user]) / finalPrice;
 
