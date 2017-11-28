@@ -40,14 +40,11 @@ contract DutchAuctionPoD is PoD {
   // Total number of Rei (RDN * token_multiplier) that will be auctioned
   uint256 public numTokensAuctioned;
 
-  // Bidder address => bid value
-  mapping(address => uint) public bids;
-
   /*
    * Modifiers
    */
   modifier atStage(Status _status) {
-    require(stage == _status);
+    require(status == _status);
     _;
   }
 
@@ -69,62 +66,42 @@ contract DutchAuctionPoD is PoD {
   function DutchAuctionPoD() public { 
     status = Status.PoDDeployed;
   }
-
-
+  
   /// @param _wallet Wallet address to which all contributed ETH will be forwarded.
 
   function init(
     address _wallet,
     address _caller,
-    uint256 _tokenSupply,
-    uint8 _tokenDecimals
+    uint8 _tokenDecimals,
+    uint _priceStart,
+    uint _priceConstant,
+    uint32 _priceExponent
   )
   public onlyOwner() atStage(Status.PoDDeployed) returns(bool)
   {
-    require(_wallet != 0x0 && _caller != 0x0 && _tokenSupply != 0 && _tokenDecimals != 0);
-    wallet = _wallet;
-    caller = _caller;
-    numTokensAuctioned = _tokenSupply;
-    tokenMultiplier = 10 ** uint256(tokenDecimals);
-
-    stage = Stages.AuctionDeployed;
-    return true;
-  }
-
-  /// @notice setup to be used in the auction.
-  /// @dev Sets the starting price, divisor constant and
-  /// divisor exponent for calculating the Dutch Auction price.
-  /// @param _priceStart High price in WEI at which the auction starts.
-  /// @param _priceConstant Auction price divisor constant.
-  /// @param _priceExponent Auction price divisor exponent.
-  function setup(uint _priceStart, uint _priceConstant, uint32 _priceExponent) public onlyOwner() {
-    require(stage == Stages.AuctionDeployed);
+    require(_wallet != 0x0 && _caller != 0x0 && _tokenDecimals != 0);
     require(_priceStart > 0);
     require(_priceConstant > 0);
-
+    wallet = _wallet;
+    caller = _caller;
+    numTokensAuctioned = proofOfDonationCapOfToken;
+    tokenMultiplier = 10 ** uint256(tokenDecimals);
     priceStart = _priceStart;
     priceConstant = _priceConstant;
     priceExponent = _priceExponent;
-    // Set the number of the token multiplier for its decimals
-    stage = Stages.AuctionSetUp;
+
+    status = Status.PoDInitialized;
     Setup(_priceStart, _priceConstant, _priceExponent);
+    
+    return true;
   }
 
   /// --------------------------------- Auction Functions ------------------
 
-  /// @notice Start the auction.
-  /// @dev Starts auction and sets start_time.
-  function startAuction() public onlyOwner() atStage(Stages.AuctionSetUp) {
-    stage = Stages.AuctionStarted;
-    startTime = now;
-    startBlock = block.number;
-    AuctionStarted(startTime, startBlock);
-  }
-
   /// @notice Finalize the auction - sets the final RDN token price and changes the auction
   /// stage after no bids are allowed anymore.
   /// @dev Finalize auction and set the final RDN token price.
-  function finalizeAuction() public atStage(Stages.AuctionStarted) {
+  function finalizeAuction() public atStage(Status.PoDStarted) {
     // Missing funds should be 0 at this point
     uint missingFunds = missingFundsToEndAuction();
     require(missingFunds == 0);
@@ -134,21 +111,22 @@ contract DutchAuctionPoD is PoD {
     finalPrice = tokenMultiplier * receivedWei / numTokensAuctioned;
 
     endTime = now;
-    stage = Stages.AuctionEnded;
+
+    tokenPrice = finalPrice;
+
     AuctionEnded(finalPrice);
+
+    status = Status.PoDEnded;
 
     assert(finalPrice > 0);
   }
 
-
-
   /// @notice Send `msg.value` WEI to the auction from the `msg.sender` account.
   /// @dev Allows to send a bid to the auction.
-  function bid(address _receiver) public payable atStage(Stages.AuctionStarted) {
-    require(msg.sender == caller);
+  function processDonate(address _user) internal returns (bool) {
     require(msg.value > 0);
-    require(_receiver != 0x0);
-    assert(bids[msg.sender] + msg.value >= msg.value);
+    require(_user != 0x0);
+    assert(weiBalances[_user] + msg.value >= msg.value);
 
     // Missing funds without the current bid value
     uint missingFunds = missingFundsToEndAuction();
@@ -157,46 +135,19 @@ contract DutchAuctionPoD is PoD {
     // at the current price.
     require(msg.value <= missingFunds);
 
-    bids[msg.sender] += msg.value;
-    receivedWei += msg.value;
+    weiBalances[_user] += msg.value;
 
     // Send bid amount to wallet
-    wallet.transfer(msg.value);
-
     BidSubmission(msg.sender, msg.value, missingFunds);
 
-    assert(receivedWei >= msg.value);
-  }
-
-  /// @notice Claim auction tokens for `msg.sender` after the auction has ended.
-  /// @dev Claims tokens for `msg.sender` after auction. To be used if tokens can
-  /// be claimed by beneficiaries, individually.
-  function claimTokens(address _receiver) public atStage(Stages.AuctionEnded) returns(bool) {
-
-    require(_receiver != 0x0);
-
-    if (bids[_receiver] == 0) {
-      return false;
-    }
-
-    // Number of Rei = bid_wei / Rei = bid_wei / (wei_per_RDN * token_multiplier)
-    uint num = (tokenMultiplier * bids[_receiver]) / finalPrice;
-
-    // Update the total amount of funds for which tokens have been claimed
-    fundsClaimed += bids[_receiver];
-
-    tokenBalances[_receiver] = tokenBalances[_receiver].add(num);
-
-    // Set receiver bid to 0 before assigning tokens
-    bids[_receiver] = 0;
-
-    ClaimedTokens(_receiver, num);
-
-    return true;
+    assert(totalReceivedWei >= msg.value);
   }
 
   function getTokenBalance(address _user) constant public returns(uint) {
-    return tokenBalances[_user];
+    
+    uint num = (tokenMultiplier * weiBalances[_user]) / finalPrice;
+
+    return num;
   }
 
 
@@ -206,7 +157,7 @@ contract DutchAuctionPoD is PoD {
   /// @dev Calculates the current RDN token price in WEI.
   /// @return Returns WEI per RDN (token_multiplier * Rei).
   function price() public constant returns(uint) {
-    if (stage == Stages.AuctionEnded) {
+    if (status == Status.PoDEnded) {
       return 0;
     }
     return calcTokenPrice();
@@ -242,7 +193,7 @@ contract DutchAuctionPoD is PoD {
   /// @return Returns the token price - Wei per RDN.
   function calcTokenPrice() constant private returns(uint) {
     uint elapsed;
-    if (stage == Stages.AuctionStarted) {
+    if (status == Status.PoDStarted) {
       elapsed = now - startTime;
     }
 

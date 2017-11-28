@@ -17,17 +17,21 @@ contract SimplePoD is PoD {
   function processDonate(address _user) internal returns (bool) {
 
     if (totalReceivedWei.add(msg.value) > proofOfDonationCapOfWei) {
-      status = Status.PoDEnded;
+      require(msg.sender.send(msg.value));
       return false;
     }
 
     tokenPrice = proofOfDonationCapOfToken / proofOfDonationCapOfWei;
-
-    uint256 tokenValue = tokenPrice.mul(msg.value);
-
-    tokenBalances[_user] = tokenBalances[_user].add(tokenValue);
+    
+    weiBalances[_user] = msg.value;
 
     return true;
+  }
+
+
+  function getTokenBalance(address _user) public constant returns (uint256) {
+  
+    return weiBalances[_user].div(tokenPrice);
   }
 
   function () payable public {
