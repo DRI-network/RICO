@@ -16,9 +16,16 @@ contract SimplePoD is PoD {
 
   function processDonate(address _user) internal returns (bool) {
 
+    if (totalReceivedWei.add(msg.value) > proofOfDonationCapOfWei) {
+      status = Status.PoDEnded;
+      return false;
+    }
+
     tokenPrice = proofOfDonationCapOfToken / proofOfDonationCapOfWei;
 
-    tokenBalances[_user] = tokenBalances[_user].add(tokenPrice * msg.value);
+    uint256 tokenValue = tokenPrice.mul(msg.value);
+
+    tokenBalances[_user] = tokenBalances[_user].add(tokenValue);
 
     return true;
   }

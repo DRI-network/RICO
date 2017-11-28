@@ -22,6 +22,7 @@ contract PoD is Ownable {
   uint256 tokenPrice;
   uint256 proofOfDonationCapOfToken;
   uint256 proofOfDonationCapOfWei;
+  uint256 totalReceivedWei;
   mapping (address => uint256) tokenBalances;
 
   enum Status {
@@ -51,6 +52,7 @@ contract PoD is Ownable {
     proofOfDonationCapOfToken = _proofOfDonationCapOfToken;
     proofOfDonationCapOfWei = _proofOfDonationCapOfWei;
     status = Status.PoDInitialized;
+    totalReceivedWei = 0;
     return true;
   }
 
@@ -74,10 +76,11 @@ contract PoD is Ownable {
       require(msg.sender.send(msg.value));
       return true;
     }
-    require(processDonate(msg.sender));
 
-    require(owner.send(msg.value));
-
+    if (processDonate(msg.sender)) {
+      totalReceivedWei = totalReceivedWei.add(msg.value);
+      require(owner.send(msg.value));
+    }
     return true;
   }
 

@@ -31,12 +31,12 @@ contract LauncherSample is Ownable {
     return true;
   }
 
-  function setup() public onlyOwner() returns(bool) {
+  function setup(address _wallet) public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
-    ico.addTokenRound(firstSupply, firstSupplyTime, owner);
-    ico.addTokenRound(secondSupply, secondSupplyTime, owner);
+    ico.addTokenRound(firstSupply, firstSupplyTime, _wallet);
+    ico.addTokenRound(secondSupply, secondSupplyTime, _wallet);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
-    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, owner, false);
+    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
     return true;
   }
 }

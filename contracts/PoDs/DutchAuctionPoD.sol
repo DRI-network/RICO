@@ -42,31 +42,12 @@ contract DutchAuctionPoD is PoD {
 
   // Bidder address => bid value
   mapping(address => uint) public bids;
-  mapping(address => uint256) tokenBalances;
-
-  Stages public stage;
-
-  /*
-   * Enums
-   */
-  enum Stages {
-    AuctionInit,
-    AuctionDeployed,
-    AuctionSetUp,
-    AuctionStarted,
-    AuctionEnded
-  }
 
   /*
    * Modifiers
    */
-  modifier atStage(Stages _stage) {
-    require(stage == _stage);
-    _;
-  }
-
-  modifier isOwner() {
-    require(msg.sender == owner);
+  modifier atStage(Status _status) {
+    require(stage == _status);
     _;
   }
 
@@ -85,8 +66,8 @@ contract DutchAuctionPoD is PoD {
    */
 
   /// @dev Contract constructor function 
-  function DutchAuctionPoD() public {
-    owner = msg.sender;
+  function DutchAuctionPoD() public { 
+    status = Status.PoDDeployed;
   }
 
 
@@ -98,7 +79,7 @@ contract DutchAuctionPoD is PoD {
     uint256 _tokenSupply,
     uint8 _tokenDecimals
   )
-  public isOwner() atStage(Stages.AuctionInit) returns(bool)
+  public onlyOwner() atStage(Status.PoDDeployed) returns(bool)
   {
     require(_wallet != 0x0 && _caller != 0x0 && _tokenSupply != 0 && _tokenDecimals != 0);
     wallet = _wallet;
@@ -116,7 +97,7 @@ contract DutchAuctionPoD is PoD {
   /// @param _priceStart High price in WEI at which the auction starts.
   /// @param _priceConstant Auction price divisor constant.
   /// @param _priceExponent Auction price divisor exponent.
-  function setup(uint _priceStart, uint _priceConstant, uint32 _priceExponent) public isOwner() {
+  function setup(uint _priceStart, uint _priceConstant, uint32 _priceExponent) public onlyOwner() {
     require(stage == Stages.AuctionDeployed);
     require(_priceStart > 0);
     require(_priceConstant > 0);
@@ -133,7 +114,7 @@ contract DutchAuctionPoD is PoD {
 
   /// @notice Start the auction.
   /// @dev Starts auction and sets start_time.
-  function startAuction() public isOwner() atStage(Stages.AuctionSetUp) {
+  function startAuction() public onlyOwner() atStage(Stages.AuctionSetUp) {
     stage = Stages.AuctionStarted;
     startTime = now;
     startBlock = block.number;

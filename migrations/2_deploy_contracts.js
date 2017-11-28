@@ -1,4 +1,4 @@
-const Launcher = artifacts.require("./LauncherSample.sol");
+const LauncherSample = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
 
