@@ -1,19 +1,22 @@
-const DutchAuctionRegistry = artifacts.require("./DutchAuctionRegistry.sol");
+const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol");
 
-
-contract('DutchAuctionRegistry', function (accounts) {
+contract('DutchAuctionPoD', function (accounts) {
   const owner = accounts[0]
-  const wallet = accounts[1]
+  const tokenDecimals = 18
   const caller = accounts[2]
   const tokenDecimals = 18;
   const supply = 40000000;
 
-  it("should be deployed and init token for DutchAuctionRegistry", async function () {
+  const _priceConstant = 524880000
+  const _priceExponent = 3
+  const _priceStart = 2 * 10 ** 18
 
-    DAR = await DutchAuctionRegistry.new();
+  it("should be deployed and init token for DutchAuctionPoD", async function () {
+
+    dap = await DutchAuctionPoD.new();
 
     //deploy contracts and initialize ico.
-    const init = await DAR.init(wallet, caller, supply, tokenDecimals, {
+    const init = await dap.init(tokenDecimals, _priceConstant, supply, tokenDecimals, {
       from: owner
     });
 
@@ -34,12 +37,12 @@ contract('DutchAuctionRegistry', function (accounts) {
     const _priceExponent = 3
     const _priceStart = 2 * 10 ** 18
 
-    const setup = await DAR.seup(wallet, caller, supply, tokenDecimals, {
+    const setup = await DAR.seup(tokenDecimals, _priceStart, _priceConstant, _priceExponent, {
       from: owner
     })
   })
   it("should be started DutchAuction", async function () {
     const start = await DAR.startAuction()
   })
-      
+
 })

@@ -113,7 +113,6 @@ contract RICO is Ownable {
   )
   external onlyOwner() returns(bool) 
   {
-
     require(status == Status.Deployed);
 
     ts = TokenStructure({

@@ -6,7 +6,6 @@ import "../PoD.sol";
 /// license let's see in LICENSE
 
 contract SimplePoD is PoD {
-  using SafeMath for uint256;
 
   function SimplePoD() public {
     name = "SimplePoD strategy token price = capToken/capWei ";
@@ -29,8 +28,7 @@ contract SimplePoD is PoD {
   }
 
 
-  function getTokenBalance(address _user) public constant returns (uint256) {
-  
+  function getBalanceOfToken(address _user) public constant returns (uint256) {
     return weiBalances[_user].div(tokenPrice);
   }
 

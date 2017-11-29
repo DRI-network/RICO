@@ -48,7 +48,7 @@ module.exports = async function (deployer, network, accounts) {
     });
 
     //setup launcher
-    const setup = await launcher.setup({
+    const setup = await launcher.setup(accounts[0], {
       from: accounts[0]
     });
   });

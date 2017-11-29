@@ -60,6 +60,7 @@ contract PoD is Ownable {
     require(status == Status.PoDInitialized);
     startTime = _startTimeOfPoD;
     status = Status.PoDStarted;
+    return true;
   }
 
   function donate() payable public returns (bool) {

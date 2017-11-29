@@ -1,7 +1,7 @@
-const Launcher = artifacts.require("./Launcher.sol");
+const Launcher = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
-
+const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
 
 const now = Math.floor(new Date().getTime() / 1000);
 
@@ -30,23 +30,34 @@ contract('RICO', function (accounts) {
 
     const projectOwner = accounts[0]
 
-    rico = await RICO.new();
+    const rico = await RICO.deployed()
+    const token = await RICOToken.deployed()
+    const launcher = await LauncherSample.deployed()
+    const simplePoD = await SimplePoD.deployed()
 
-    launcher = await Launcher.new();
 
-    token = await RICOToken.at(await rico.token())
-    
-
-    const changeOwner = await rico.changeOwner(launcher.address, {
-      from: projectOwner
+    // changing owner to owner -> launcher.
+    const changeOwner = await rico.transferOwnership(launcher.address, {
+      from: accounts[0]
     })
 
-    const init = await launcher.init(rico.address, {
-      from: projectOwner
+    // changing owner to owner to rico.
+    const changeOwner2 = await token.transferOwnership(rico.address, {
+      from: accounts[0]
+    })
+
+    const changeOwner3 = await simplePoD.transferOwnership(rico.address, {
+      from: accounts[0]
+    })
+
+    //initializing launcher.
+    const init = await launcher.init(rico.address, token.address, simplePoD.address, {
+      from: accounts[0]
     });
 
+    //setup launcher
     const setup = await launcher.setup({
-      from: projectOwner
+      from: accounts[0]
     });
 
 

@@ -62,7 +62,7 @@ contract DutchAuctionPoD is PoD {
     status = Status.PoDDeployed;
   }
 
-  function init(
+  function setup(
     uint8 _tokenDecimals,
     uint _priceStart,
     uint _priceConstant,
