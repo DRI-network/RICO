@@ -62,8 +62,6 @@ contract DutchAuctionPoD is PoD {
     status = Status.PoDDeployed;
   }
 
-  /// @param _wallet Wallet address to which all contributed ETH will be forwarded.
-
   function init(
     uint8 _tokenDecimals,
     uint _priceStart,

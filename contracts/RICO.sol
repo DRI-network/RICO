@@ -13,7 +13,6 @@ contract RICO is Ownable {
    * Events 
    */
 
-
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
   event InitTokenData(string name, string symbol, uint8 decimals);
   event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
@@ -253,7 +252,7 @@ contract RICO is Ownable {
 
     weiBalances[msg.sender] = weiBalances[msg.sender].add(msg.value);
 
-    Deposit(msg.sender, this.getBalanceOfWei(msg.sender));
+    Deposit(msg.sender, getBalanceOfWei(msg.sender));
 
     return true;
 
@@ -329,7 +328,7 @@ contract RICO is Ownable {
 
     require(token.mint(_user));
 
-    require(pod.resetTokenBalance(_user));
+    require(pod.resetWeiBalance(_user));
 
     return true;
 
@@ -457,7 +456,7 @@ contract RICO is Ownable {
   /**
    * @dev automatically execute received transactions.
    */
-  function () external {
+  function () public {
     mintToken(msg.sender);
   }
 }
