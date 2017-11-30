@@ -8,15 +8,18 @@ import "../PoD.sol";
 contract SimplePoD is PoD {
 
   function SimplePoD() public {
-    name = "SimplePoD strategy token price = capToken/capWei ";
-    version = 1;
-    term = 7 days;
+    name = "SimplePoD strategy token price = capToken/capWei";
+    version = "0.1";
+    period = 7 days;
   }
 
   function processDonate(address _user) internal returns (bool) {
 
     if (totalReceivedWei.add(msg.value) > proofOfDonationCapOfWei) {
-      require(msg.sender.send(msg.value));
+      return false;
+    }
+    
+    if (block.timestamp > startTime + period) {
       return false;
     }
 

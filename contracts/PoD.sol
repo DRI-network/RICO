@@ -13,13 +13,13 @@ contract PoD is Ownable {
    * Storage
    */
 
-  string name;
-  address owner;
-  uint256 version;
-  uint256 term;
-  uint256 startTime;
-  uint256 endTime;
-  uint256 tokenPrice;
+  string public name;
+  string public version;
+  address public wallet;
+  uint256 public period;
+  uint256 public startTime;
+  uint256 public endTime;
+  uint256 public tokenPrice;
   uint256 proofOfDonationCapOfToken;
   uint256 proofOfDonationCapOfWei;
   uint256 totalReceivedWei;
@@ -31,7 +31,7 @@ contract PoD is Ownable {
     PoDStarted,
     PoDEnded
   }
-  Status status;
+  Status public status;
 
   /**
    * constructor
@@ -43,12 +43,14 @@ contract PoD is Ownable {
   }
 
   function init(
+    address _wallet,
     uint256 _proofOfDonationCapOfToken,
     uint256 _proofOfDonationCapOfWei
   )
-  public onlyOwner() returns(bool) 
+  public onlyOwner() returns (bool) 
   {
     require(status == Status.PoDDeployed);
+    wallet = _wallet;
     proofOfDonationCapOfToken = _proofOfDonationCapOfToken;
     proofOfDonationCapOfWei = _proofOfDonationCapOfWei;
     status = Status.PoDInitialized;
@@ -71,17 +73,12 @@ contract PoD is Ownable {
 
     require(tx.gasprice <= 50000000000);
 
-    if (block.timestamp > startTime + term) {
-      status = Status.PoDEnded;
-      endTime = now;
-      require(msg.sender.send(msg.value));
-      return true;
-    }
-
     if (processDonate(msg.sender)) {
       totalReceivedWei = totalReceivedWei.add(msg.value);
-      require(owner.send(msg.value));
+      require(wallet.send(msg.value));
     }else {
+      require(msg.sender.send(msg.value));
+      endTime = now;
       status = Status.PoDEnded;
     }
     return true;
@@ -112,6 +109,7 @@ contract PoD is Ownable {
     return false;
   }
 
+  //inherit functions 
 
   function processDonate(address _user) internal returns (bool);
 

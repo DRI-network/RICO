@@ -133,7 +133,7 @@ contract RICO is Ownable {
 
     pod = PoD(_proofOfDonationStrategy);
 
-    pod.init(ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
+    pod.init(this, ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
     
     InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
 
