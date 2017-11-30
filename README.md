@@ -4,6 +4,9 @@
 
 This framework is a decentralized framework, that makeing the initial coin offering more responsible and decentralized.
 
+## Docs
+- [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial%EF%BC%88%E3%83%AA%E3%82%B3%E3%83%BC%E3%81%AE%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%EF%BC%89)
+
 ## Design Concept
 
 In the case of the conventional ICO, the project owner can freely decide the process of generating the token. That is, the token design and token holding ratio is determined by the project owner. The sale of the token is done after issuance, and the project supporter purchases the issued token.
@@ -15,6 +18,7 @@ In our approach, all execution processes of issuing tokens are strictly defined 
 - Decentralizing
 - Equitable
 - Mintable
+
 
 ## Dependencies
 

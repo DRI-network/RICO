@@ -25,7 +25,7 @@ contract SimplePoD is PoD {
 
     tokenPrice = proofOfDonationCapOfToken / proofOfDonationCapOfWei;
     
-    weiBalances[_user] = msg.value;
+    weiBalances[_user] = weiBalances[_user].add(msg.value);
 
     return true;
   }
