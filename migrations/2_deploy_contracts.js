@@ -3,10 +3,11 @@ const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
 
 const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
+const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
 
 module.exports = async function (deployer, network, accounts) {
 
-  if (network === "development") return; // Don't deploy on tests
+  //if (network === "development") return; // Don't deploy on tests
 
   deployer.deploy(LauncherSample).then(() => {
     return deployer.deploy(RICO)
@@ -14,6 +15,8 @@ module.exports = async function (deployer, network, accounts) {
     return deployer.deploy(SimplePoD)
   }).then(() => {
     return deployer.deploy(RICOToken)
+  }).then(() => {
+    return deployer.deploy(DutchAuctionPoD)
   }).then(async() => {
     // certifiers
     const addresses = [
@@ -26,6 +29,7 @@ module.exports = async function (deployer, network, accounts) {
     const token = await RICOToken.deployed()
     const launcher = await LauncherSample.deployed()
     const simplePoD = await SimplePoD.deployed()
+    const da = await DutchAuctionPoD.deployed()
 
 
     // changing owner to owner -> launcher.

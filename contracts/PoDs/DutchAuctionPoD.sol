@@ -23,8 +23,6 @@ contract DutchAuctionPoD is PoD {
   uint256 public priceConstant;
   // Divisor exponent; e.g. 3
   uint32 public priceExponent;
-  // Keep track of cumulative ETH funds for which the tokens have been claimed
-  uint256 public fundsClaimed;
   // Token tokenMultiplier; e.g. 18
   uint256 public tokenMultiplier;
 
@@ -182,7 +180,10 @@ contract DutchAuctionPoD is PoD {
   function getBalanceOfToken(address _user) public constant returns(uint) {
     
     uint num = (tokenMultiplier * weiBalances[_user]) / finalPrice;
-
     return num;
+  }
+
+  function () payable public {
+    donate();
   }
 }

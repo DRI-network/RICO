@@ -19,10 +19,10 @@ contract PoD is Ownable {
   uint256 public period;
   uint256 public startTime;
   uint256 public endTime;
-  uint256 public tokenPrice;
+  uint256 tokenPrice;
   uint256 proofOfDonationCapOfToken;
   uint256 proofOfDonationCapOfWei;
-  uint256 totalReceivedWei;
+  uint256 public totalReceivedWei;
   mapping (address => uint256) weiBalances;
 
   enum Status {
@@ -94,6 +94,9 @@ contract PoD is Ownable {
 
   }
 
+  function getBalanceOfWei(address _user) public constant returns(uint) {
+    return weiBalances[_user];
+  }
 
   function getTokenPrice() public constant returns(uint256) {
     return tokenPrice;
