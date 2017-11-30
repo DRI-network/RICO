@@ -16,8 +16,6 @@ contract DutchAuctionPoD is PoD {
 
   // Starting price in WEI; e.g. 2 * 10 ** 18
   uint256 public priceStart;
-  uint256 public startBlock;
-  uint256 public finalPrice;
 
   // Divisor constant; e.g. 524880000
   uint256 public priceConstant;
@@ -86,13 +84,11 @@ contract DutchAuctionPoD is PoD {
 
     // Calculate the final price = WEI / RDN = WEI / (Rei / token_multiplier)
     // Reminder: num_tokens_auctioned is the number of Rei (RDN * token_multiplier) that are auctioned
-    finalPrice = tokenMultiplier * totalReceivedWei / proofOfDonationCapOfToken;
+    tokenPrice = tokenMultiplier * totalReceivedWei / proofOfDonationCapOfToken;
 
     endTime = now;
 
-    tokenPrice = finalPrice;
-
-    AuctionEnded(finalPrice);
+    AuctionEnded(tokenPrice);
 
     status = Status.PoDEnded;
 
@@ -179,11 +175,7 @@ contract DutchAuctionPoD is PoD {
 
   function getBalanceOfToken(address _user) public constant returns(uint) {
     
-    uint num = (tokenMultiplier * weiBalances[_user]) / finalPrice;
+    uint num = (tokenMultiplier * weiBalances[_user]) / tokenPrice;
     return num;
-  }
-
-  function () payable public {
-    donate();
   }
 }

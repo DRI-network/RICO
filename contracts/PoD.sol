@@ -19,7 +19,7 @@ contract PoD is Ownable {
   uint256 public period;
   uint256 public startTime;
   uint256 public endTime;
-  uint256 tokenPrice;
+  uint256 public tokenPrice;
   uint256 proofOfDonationCapOfToken;
   uint256 proofOfDonationCapOfWei;
   uint256 public totalReceivedWei;
@@ -110,6 +110,11 @@ contract PoD is Ownable {
     if (status == Status.PoDEnded)
       return true;
     return false;
+  }
+
+
+  function () payable public {
+    donate();
   }
 
   //inherit functions 
