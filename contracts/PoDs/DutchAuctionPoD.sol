@@ -92,7 +92,7 @@ contract DutchAuctionPoD is PoD {
 
     status = Status.PoDEnded;
 
-    assert(finalPrice > 0);
+    assert(tokenPrice > 0);
   }
 
 

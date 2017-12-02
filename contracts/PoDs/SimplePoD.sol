@@ -34,8 +34,4 @@ contract SimplePoD is PoD {
   function getBalanceOfToken(address _user) public constant returns (uint256) {
     return weiBalances[_user].div(tokenPrice);
   }
-
-  function () payable public {
-    donate();
-  }
 }

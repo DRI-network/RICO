@@ -7,7 +7,7 @@ const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
 
 module.exports = async function (deployer, network, accounts) {
 
-  //if (network === "development") return; // Don't deploy on tests
+  if (network === "development") return; // Don't deploy on tests
 
   deployer.deploy(LauncherSample).then(() => {
     return deployer.deploy(RICO)

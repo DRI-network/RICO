@@ -55,7 +55,7 @@ contract('DutchAuctionPoD', function (accounts) {
     const price = await dap.price()
     const missing = await dap.missingFundsToEndAuction.call()
 
-   // console.log(price.toNumber() / 10 ** 18, missing.toNumber() / 10 ** 18)
+    //console.log(price.toNumber() / 10 ** 18, missing.toNumber() / 10 ** 18)
 
     const donate = await dap.donate({
       gasPrice: 50000000000,
@@ -112,6 +112,4 @@ contract('DutchAuctionPoD', function (accounts) {
     assert.equal(status.toNumber(), 3, "Error: status is not 'AuctionEnded'")
 
   })
-
-
 })
