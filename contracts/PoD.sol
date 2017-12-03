@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 
-/// @title PoDStrategy - PoDStrategy contract
+/// @title PoD - PoD Strategy contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
@@ -117,7 +117,7 @@ contract PoD is Ownable {
     donate();
   }
 
-  //inherit functions 
+  //Interface functions 
 
   function processDonate(address _user) internal returns (bool);
 

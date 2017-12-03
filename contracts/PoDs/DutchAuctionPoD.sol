@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
 
-/// @title DutchAuctionPoD - DutchAuctionPoD contract
+/// @title DutchAuctionPoD - DutchAuction module contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
@@ -10,9 +10,6 @@ contract DutchAuctionPoD is PoD {
   /*
    * Storage
    */
-
-  uint8 public tokenDecimals;
-  // Price decay function parameters to be changed depending on the desired outcome
 
   // Starting price in WEI; e.g. 2 * 10 ** 18
   uint256 public priceStart;
@@ -39,7 +36,6 @@ contract DutchAuctionPoD is PoD {
   event Setup(uint indexed _startPrice, uint indexed _priceConstant, uint32 indexed _priceExponent);
   event AuctionStarted(uint indexed _startTime, uint indexed _blockNumber);
   event BidSubmission(address indexed _sender, uint _amount, uint _missingFunds);
-  event ClaimedTokens(address indexed _recipient, uint _sentAmount);
   event AuctionEnded(uint _finalPrice);
 
   /*
@@ -74,16 +70,16 @@ contract DutchAuctionPoD is PoD {
 
   /// --------------------------------- Auction Functions ------------------
 
-  /// @notice Finalize the auction - sets the final RDN token price and changes the auction
+  /// @notice Finalize the auction - sets the final Token price and changes the auction
   /// stage after no bids are allowed anymore.
-  /// @dev Finalize auction and set the final RDN token price.
+  /// @dev Finalize auction and set the final Token price.
   function finalizeAuction() public atStatus(Status.PoDStarted) {
     // Missing funds should be 0 at this point
     uint missingFunds = missingFundsToEndAuction();
     require(missingFunds == 0);
 
-    // Calculate the final price = WEI / RDN = WEI / (Rei / token_multiplier)
-    // Reminder: num_tokens_auctioned is the number of Rei (RDN * token_multiplier) that are auctioned
+    // Calculate the final price = WEI / Token
+    // Reminder: num_tokens_auctioned is the number of Rei (Token * token_multiplier) that are auctioned
     tokenPrice = tokenMultiplier * totalReceivedWei / proofOfDonationCapOfToken;
 
     endTime = now;
@@ -97,11 +93,11 @@ contract DutchAuctionPoD is PoD {
 
 
 
-  /// @notice Get the RDN price in WEI during the auction, at the time of
+  /// @notice Get the Token price in WEI during the auction, at the time of
   /// calling this function. Returns `0` if auction has ended.
   /// Returns `price_start` before auction has started.
-  /// @dev Calculates the current RDN token price in WEI.
-  /// @return Returns WEI per RDN (token_multiplier * Rei).
+  /// @dev Calculates the current Token price in WEI.
+  /// @return Returns WEI per Token (token_multiplier * Rei).
   function price() public constant returns(uint) {
     if (status == Status.PoDEnded) {
       return 0;
@@ -110,12 +106,12 @@ contract DutchAuctionPoD is PoD {
   }
 
   /// @notice Get the missing funds needed to end the auction,
-  /// calculated at the current RDN price in WEI.
-  /// @dev The missing funds amount necessary to end the auction at the current RDN price in WEI.
+  /// calculated at the current Token price in WEI.
+  /// @dev The missing funds amount necessary to end the auction at the current Token price in WEI.
   /// @return Returns the missing funds amount in WEI.
   function missingFundsToEndAuction() public constant returns(uint) {
 
-    // num_tokens_auctioned = total number of Rei (RDN * token_multiplier) that is auctioned
+    // num_tokens_auctioned = total number of Rei (Token * token_multiplier) that is auctioned
     uint requiredWeiAtPrice = proofOfDonationCapOfToken * price() / tokenMultiplier;
     if (requiredWeiAtPrice <= totalReceivedWei) {
       return 0;
@@ -129,14 +125,14 @@ contract DutchAuctionPoD is PoD {
    *  Private functions
    */
 
-  /// @dev Calculates the token price (WEI / RDN) at the current timestamp
+  /// @dev Calculates the token price (WEI / Token) at the current timestamp
   /// during the auction; elapsed time = 0 before auction starts.
   /// Based on the provided parameters, the price does not change in the first
   /// `price_constant^(1/price_exponent)` seconds due to rounding.
   /// Rounding in `decay_rate` also produces values that increase instead of decrease
   /// in the beginning; these spikes decrease over time and are noticeable
   /// only in first hours. This should be calculated before usage.
-  /// @return Returns the token price - Wei per RDN.
+  /// @return Returns the token price - Wei per Token.
   function calcTokenPrice() constant private returns(uint) {
     uint elapsed;
     if (status == Status.PoDStarted) {
@@ -147,7 +143,7 @@ contract DutchAuctionPoD is PoD {
     return priceStart * (1 + elapsed) / (1 + elapsed + decayRate);
   }
 
-  /// inherit functions
+  /// Inherited functions
 
 
   /// @notice Send `msg.value` WEI to the auction from the `msg.sender` account.

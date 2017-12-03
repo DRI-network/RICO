@@ -6,7 +6,7 @@ module.exports = async function (deployer, network, accounts) {
 
   const start = await dap.donate({
     gasPrice: 50000000000,
-    value: web3.toWei(0.1, 'ether')
+    value: web3.toWei(0.8, 'ether')
   }).catch((err) => {
     console.log(err)
   })
