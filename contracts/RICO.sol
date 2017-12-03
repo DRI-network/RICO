@@ -1,5 +1,5 @@
 pragma solidity ^0.4.18;
-import "./RICOToken.sol";
+import "./AbsRICOToken.sol";
 import "./PoD.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
@@ -67,13 +67,11 @@ contract RICO is Ownable {
   }
 
   Status public status;
-  address public owner;
   uint256 public startTimeOfPoD;
   uint256 public donatedWei;
   uint256 public sendWei;
-  uint256 public tokenPrice;
   TokenStructure public ts;
-  RICOToken public token;
+  AbsRICOToken public token;
   PoD public pod;
   mapping(address => uint256) weiBalances;
 
@@ -129,7 +127,7 @@ contract RICO is Ownable {
 
     require(_tokenAddr != 0x0 && _proofOfDonationStrategy != 0x0);
     
-    token = RICOToken(_tokenAddr);
+    token = AbsRICOToken(_tokenAddr);
 
     pod = PoD(_proofOfDonationStrategy);
 

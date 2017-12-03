@@ -20,8 +20,8 @@ contract PoD is Ownable {
   uint256 public startTime;
   uint256 public endTime;
   uint256 public tokenPrice;
-  uint256 proofOfDonationCapOfToken;
-  uint256 proofOfDonationCapOfWei;
+  uint256 public proofOfDonationCapOfToken;
+  uint256 public proofOfDonationCapOfWei;
   uint256 public totalReceivedWei;
   mapping (address => uint256) weiBalances;
 
