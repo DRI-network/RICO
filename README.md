@@ -22,7 +22,7 @@ In our approach, all execution processes of issuing tokens are strictly defined 
 
 ## Dependencies
 
-- Node v8.4.0
+- Node v9.0.0
 - Truffle v4.0.1
 - solidty-compiler v0.4.18
 
