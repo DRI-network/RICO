@@ -5,11 +5,8 @@
  */
 
 var program = require('commander');
-
 var pkg = require('./package.json')
-
 var path = require('path');
-
 var version = pkg.version
 var mkdirp = require('mkdirp');
 var copydir = require('copy-dir');
@@ -17,36 +14,51 @@ var copydir = require('copy-dir');
 
 program
   .version(version)
-  .option('-i, --init <dir>', 'generate a new rico project')
-  .usage('<keywords>')
-  .usage('[options]')
-  .parse(process.argv);
+//.option("-m, --pod_mode <mode>", "Which setup pod mode to use")  
+
+program
+  .command('new <dir>')
+  .description('Generate a new rico project')
+  .option("-m, --pod_mode <mode>", "Which setup pod mode to use")
+  .action(function (dir, options) {
+    //console.log(options.pod_mode)
+    newProject(dir)
+  });
+
+program.on('--help', function () {
+  console.log('');
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ rico new ./test');
+  console.log('    $ rico new ./test -m DutchAuction');
+  console.log('');
+});
 
 
-if (program.init) {
-  gen(`${program.init}`)
-} else {
-  program.help();
-}
+program.parse(process.argv);
 
-function gen(pathDir) {
+if (!program.args.length) program.help();
+
+function newProject(pathDir) {
   mkdirp(pathDir, function (err) {
     if (err) console.error(err)
     else {
-      copydir.sync("./", pathDir, function (stat, filepath, filename) {
-        if (stat === 'file' && path.extname(filepath) === '.key') {
-          return false;
+      copydir.sync(__dirname, pathDir, function (stat, filepath, filename) {
+
+        if (filepath.indexOf(__dirname + "/contracts") !== -1) {
+          return true;
         }
-        if (stat === 'directory' && path.extname(filepath) === '.git') {
-          return false;
+        if (filepath.indexOf(__dirname + "/exec") !== -1) {
+          return true;
         }
-        if (stat === 'directory' && filename === 'init') {
-          return false;
+        if (filepath.indexOf(__dirname + "/migrations") !== -1) {
+          return true;
         }
-        if (stat === 'directory' && filename === 'node_modules') {
-          return false;
+        if (stat === 'file' && filename === 'truffle.js') {
+          return true;
         }
-        return true;
+
+        return false;
 
       }, function (err) {
         //console.log('ok');

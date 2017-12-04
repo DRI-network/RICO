@@ -1,8 +1,8 @@
 {
   "name": "rico-core",
-  "version": "0.9.1-alpha",
+  "version": "0.8.5-alpha",
   "description": "",
-  "main": "truffle.js",
+  "main": "truffle-config.js",
   "directories": {
     "test": "test"
   },
@@ -24,7 +24,11 @@
   },
   "homepage": "https://github.com/DRI-project/RICO#readme",
   "dependencies": {
+    "commander": "^2.12.2",
     "copy-dir": "^0.3.0",
+    "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
     "truffle": "4.0.1",
     "truffle-hdwallet-provider": "0.0.3"
   }
