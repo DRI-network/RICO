@@ -7,28 +7,26 @@
 var program = require('commander');
 
 var pkg = require('./package.json')
+
 var path = require('path');
 
 var version = pkg.version
 var mkdirp = require('mkdirp');
-
-var fs = require("fs-extra");
 var copydir = require('copy-dir');
 
 
 program
   .version(version)
+  .option('-i, --init <dir>', 'generate a new rico project')
   .usage('<keywords>')
+  .usage('[options]')
   .parse(process.argv);
 
-if (!program.args.length) {
-  program.help();
-} else {
-  //console.log('Keywords: ' + program.args);
 
-  if (process.argv[2] == 'init') {
-    gen(`${process.argv[3]}`)
-  }
+if (program.init) {
+  gen(`${program.init}`)
+} else {
+  program.help();
 }
 
 function gen(pathDir) {
@@ -49,13 +47,11 @@ function gen(pathDir) {
           return false;
         }
         return true;
-        
-      }, function (err) {
-        console.log('ok');
-      });
-      console.log('new Project Generated:', process.argv[3]);
-      
 
+      }, function (err) {
+        //console.log('ok');
+      });
+      console.log('Success! project generated! Path:', process.argv[3]);
     }
   });
 }
