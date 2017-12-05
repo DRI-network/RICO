@@ -3,11 +3,11 @@ jobs:
   build:
     docker:
       - image: circleci/node:9.0.0
-      steps:
-        - checkout
-        - run:
-          name: Run RPC-cli
-          command: bash ./rpcrun.bash
-        - run:
-          name: Migration
-          command: npm run migrate
+    steps:
+      - checkout
+      - run:
+        name: Run RPC-cli
+        command: bash ./rpcrun.bash
+      - run:
+        name: Migration
+        command: npm run migrate
