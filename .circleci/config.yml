@@ -5,6 +5,4 @@ jobs:
       - image: circleci/node:9.0.0
     steps:
       - checkout
-      - run:
-        name: Running Rpc
-        command: 'bash ./rpcrun.bash'
+      - run: echo "hello world"
