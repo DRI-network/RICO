@@ -8,6 +8,4 @@ jobs:
       - run:   
         name: Install npm packages
         command: npm install
-      - run:   
-        name: Running rpc
-        command: "./rpcrun.bash"
+      - run: npm run migrate
