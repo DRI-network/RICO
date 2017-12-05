@@ -10,7 +10,6 @@
     "rico": "./index.js"
   },
   "scripts": {
-    "migrate": "truffle migrate",
     "test": "truffle test",
     "console": "truffle console"
   },

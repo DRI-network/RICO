@@ -16,8 +16,8 @@ jobs:
       - run:   
           name: Run test-rpc
           command: |
-            ./rpcrun.bash & 
+            ./rpcrun.bash 
       - run:
           name: Update npm
           command: |
-            npm run migrate
+            truffle migrate
