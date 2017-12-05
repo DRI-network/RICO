@@ -19,6 +19,10 @@ jobs:
           command: |
             ./rpcrun.bash 
       - run:
-          name: Update npm
+          name: Testing DutchAuctionPoD
           command: |
-            truffle migrate
+            truffle test ./test/DutchAuctionPoD.js
+      - run:
+          name: Testing RICOToken
+          command: |
+            truffle test ./test/RICOTokenTest.js
