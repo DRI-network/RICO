@@ -1,6 +1,6 @@
 # Responsible Initial Coin Offering ( RICO ) Framework 
 [![npm version](https://badge.fury.io/js/rico-core.svg)](https://badge.fury.io/js/rico-core)
-[![CircleCI](https://circleci.com/gh/DRI-project/RICO/tree/master.svg?style=svg)](https://circleci.com/gh/DRI-project/RICO/tree/master)
+[![CircleCI](https://circleci.com/gh/DRI-project/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
 
 **Please be careful. This Version is Alpha. application may contain bugs.We are not responsible for any losses caused by this version.**
 
