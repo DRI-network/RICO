@@ -10,7 +10,8 @@
     "rico": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate":"truffle migrate",
+    "test": "truffle test",
     "console": "truffle console"
   },
   "repository": {
@@ -29,6 +30,7 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
+    "truffle": "4.0.1",
     "truffle-hdwallet-provider": "0.0.3"
   }
 }
