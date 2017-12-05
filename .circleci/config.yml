@@ -8,11 +8,15 @@ jobs:
       - run:   
           name: Install npm packages
           command: |
-            npm install --dev
+            npm install
       - run:   
           name: Run test-rpc
           command: |
-            ./rpcrun.bash
+            npm install -g truffle && npm install -g ganache-cli
+      - run:   
+          name: Run test-rpc
+          command: |
+            ./rpcrun.bash & 
       - run:
           name: Update npm
           command: |

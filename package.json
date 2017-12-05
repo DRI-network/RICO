@@ -30,8 +30,8 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
+    "ganache-cli": "^6.0.3",
     "truffle": "4.0.1",
-    "truffle-hdwallet-provider": "0.0.3",
-    "ganache-cli": "^6.0.3" 
+    "truffle-hdwallet-provider": "0.0.3"
   }
 }
