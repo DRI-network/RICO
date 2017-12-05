@@ -10,4 +10,4 @@ jobs:
         command: npm install
       - run:   
         name: Running rpc
-        command: bash ./rpcrun.bash
+        command: ./rpcrun.bash
