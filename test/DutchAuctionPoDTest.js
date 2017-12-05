@@ -75,7 +75,7 @@ contract('DutchAuctionPoD', function (accounts) {
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
     const start = await dap.start(now).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'start is executable yet.')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'start is executable yet.')
     })
 
   })
@@ -100,7 +100,7 @@ contract('DutchAuctionPoD', function (accounts) {
       gasPrice: 50000000000,
       value: web3.toWei(1, 'ether')
     }).catch((err) => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'start is executable yet.')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'start is executable yet.')
     })
   })
   it("contract should be finalized auction process that reached top price", async function () {

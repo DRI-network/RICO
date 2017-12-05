@@ -166,7 +166,7 @@ contract('RICOToken', function (accounts) {
     assert.strictEqual(balance.toNumber(), 9000 * 10 ** decimals, 'balance of projectOwner != 9000 * 10 ** decimals')
   })
 
-  it("should be changed owner by oldOwner", async function () {
+  it("should be changed owner by Old Owner", async function () {
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
@@ -179,7 +179,7 @@ contract('RICOToken', function (accounts) {
     const mintable = await token.mintable(projectOwner, 3000 * 10 ** decimals, now, {
       from: owner
     }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'token is not generate')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'token is not generate')
     })
   })
 })
