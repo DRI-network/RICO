@@ -10,11 +10,12 @@ jobs:
           command: |
             npm install
       - run:   
-          name: Run test-rpc
+          name: Install truffle and ganache-cli
           command: |
             sudo npm install -g truffle && sudo npm install -g ganache-cli
       - run:   
           name: Run test-rpc
+          background: true
           command: |
             ./rpcrun.bash 
       - run:
