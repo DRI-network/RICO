@@ -21,8 +21,8 @@ jobs:
       - run:
           name: Testing DutchAuctionPoD
           command: |
-            truffle test ./test/DutchAuctionPoD.js
+            truffle test test/DutchAuctionPoDTest.js 
       - run:
           name: Testing RICOToken
           command: |
-            truffle test ./test/RICOTokenTest.js
+            truffle test test/RICOTokenTest.js
