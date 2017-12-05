@@ -9,6 +9,10 @@ jobs:
           name: Install npm packages
           command: |
             npm install
+      - run:   
+          name: Run test-rpc
+          command: |
+            ./rpcrun.bash
       - run:
           name: Update npm
           command: |
