@@ -6,8 +6,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Run RPC-cli
-        command: bash ./rpcrun.bash
+       name: Run RPC-cli
+       command: "bash ./rpcrun.bash"
       - run:
-        name: Migration
-        command: npm run migrate
+       name: Migration
+       command: "npm run migrate"
