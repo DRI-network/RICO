@@ -8,4 +8,6 @@ jobs:
       - run:   
         name: Install npm packages
         command: npm install
-      - run: npm run migrate
+      - run:
+        name: Update npm
+        command: 'sudo npm install -g npm@latest'
