@@ -1,4 +1,4 @@
-# Responsible Initial Coin Offering ( RICO ) Framework 
+![](https://dri.network/static/images/rico-banner.png)
 [![npm version](https://badge.fury.io/js/rico-core.svg)](https://badge.fury.io/js/rico-core)
 [![CircleCI](https://circleci.com/gh/DRI-project/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
 

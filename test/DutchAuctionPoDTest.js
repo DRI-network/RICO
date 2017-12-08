@@ -12,7 +12,7 @@ contract('DutchAuctionPoD', function (accounts) {
   const priceConstant = 524880000
   const priceExponent = 3
 
-  it("contract should be deployed and initializing token for DutchAuctionPoD", async function () {
+  it("contract should be deployed and setConfig for DutchAuctionPoD", async function () {
 
     dap = await DutchAuctionPoD.new();
     //deploy contracts and initialize ico.

@@ -25,9 +25,9 @@ contract LauncherSample is Ownable {
 
   function LauncherSample() public {}
 
-  function init(address _rico, address _token, address[] _pods) public onlyOwner() returns(bool) {
+  function init(address _rico, uint256 _totalSupply, address _token, address[] _pods) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
-    ico.init(_token, totalSupply, _pods, owner);
+    ico.init(_token, _totalSupply, _pods, owner);
     return true;
   }
 

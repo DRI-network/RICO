@@ -3,7 +3,15 @@ const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
 
 const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
+const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
 const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
+
+const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
+const tobTokenSupply = totalTokenSupply * 3 / 100
+const tobWeiLimit = 100 * 10 ** 18
+const podTokenSupply = totalTokenSupply * 20 / 100
+const podWeiLimit = 1000 * 10 ** 18
+
 
 module.exports = async function (deployer, network, accounts) {
 
@@ -12,11 +20,11 @@ module.exports = async function (deployer, network, accounts) {
   deployer.deploy(LauncherSample).then(() => {
     return deployer.deploy(RICO)
   }).then(() => {
-    //return deployer.deploy(SimplePoD)
-  }).then(() => {
     return deployer.deploy(RICOToken)
   }).then(() => {
-    return deployer.deploy(DutchAuctionPoD)
+    return deployer.deploy(KaitsukePoD)
+  }).then(() => {
+    return deployer.deploy(SimplePoD)
   }).then(async() => {
     // certifiers
     const addresses = [
@@ -28,26 +36,32 @@ module.exports = async function (deployer, network, accounts) {
     const rico = await RICO.deployed()
     const token = await RICOToken.deployed()
     const launcher = await LauncherSample.deployed()
-    //const simplePoD = await SimplePoD.deployed()
-    const da = await DutchAuctionPoD.deployed()
-    // changing owner to owner -> launcher.
-    const changeOwner = await rico.transferOwnership(launcher.address, {
-      from: accounts[0]
-    })
+    const tob = await KaitsukePoD.deployed()
+    const pod = await SimplePoD.deployed()
+
+    const pods = [
+      tob.address,
+      pod.address,
+    ]
+
+    const setConfigToB = await tob.setConfig(tobTokenSupply, tobWeiLimit)
+    const changeOwnerToB = await tob.transferOwnership(rico.address)
+
+    const setConfigPoD = await pod.setConfig(podTokenSupply, podWeiLimit)
+    const changeOwnerPoD = await pod.transferOwnership(rico.address)
+
 
     // changing owner to owner to rico.
-    const changeOwner2 = await token.transferOwnership(rico.address, {
-      from: accounts[0]
-    })
+    const changeOwnerToken = await token.transferOwnership(rico.address)
 
-    const changeOwner3 = await da.transferOwnership(rico.address, {
-      from: accounts[0]
-    })
-
+    const changeOwnerRICO = await token.transferOwnership(launcher.address)
+    
     //initializing launcher.
-    const init = await launcher.init(rico.address, token.address, da.address, {
+    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods, {
       from: accounts[0]
-    });
+    }).catch((err) => {
+      console.log(err)
+    })
 
     //setup launcher
     const setup = await launcher.setup(accounts[0], {

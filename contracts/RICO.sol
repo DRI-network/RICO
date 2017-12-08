@@ -86,6 +86,10 @@ contract RICO is Ownable {
     totalSupply = _totalSupply;
 
     nowSupply = 0;
+
+    tobLimitWei = 0;
+
+    nowReserveWei = 0;
      
     po = _po;
     
