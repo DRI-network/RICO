@@ -1,4 +1,4 @@
-# Responsible Initial Coin Offering ( RICO ) Framework 
+![](https://dri.network/static/images/rico-banner.png)
 
 **Please be careful. This Version is Alpha. application may contain bugs.We are not responsible for any losses caused by this version.**
 
