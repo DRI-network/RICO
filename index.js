@@ -30,7 +30,7 @@ program.on('--help', function () {
   console.log('  Examples:');
   console.log('');
   console.log('    $ rico new ./test');
-  console.log('    $ rico new ./test -m DutchAuction');
+  //console.log('    $ rico new ./test -m DutchAuction');
   console.log('');
 });
 

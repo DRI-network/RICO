@@ -21,6 +21,8 @@ contract DutchAuctionPoD is PoD {
   // Token tokenMultiplier; e.g. 18
   uint256 public tokenMultiplier;
 
+  uint256 proofOfDonationCapOfToken;
+  uint256 proofOfDonationCapOfWei;
   /*
    * Modifiers
    */
@@ -52,9 +54,10 @@ contract DutchAuctionPoD is PoD {
     uint8 _tokenDecimals,
     uint _priceStart,
     uint _priceConstant,
-    uint32 _priceExponent
+    uint32 _priceExponent,
+    uint256 _capOfToken
   )
-  public onlyOwner() atStatus(Status.PoDInitialized) returns(bool)
+  public onlyOwner() atStatus(Status.PoDDeployed) returns(bool)
   {
     require(_tokenDecimals != 0);
     require(_priceStart > 0);
@@ -63,6 +66,7 @@ contract DutchAuctionPoD is PoD {
     priceStart = _priceStart;
     priceConstant = _priceConstant;
     priceExponent = _priceExponent;
+    proofOfDonationCapOfToken = _capOfToken;
     Setup(_priceStart, _priceConstant, _priceExponent);
     
     return true;

@@ -15,7 +15,7 @@ contract RICO is Ownable {
 
   event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
   event InitTokenData(string name, string symbol, uint8 decimals);
-  event AddTokenRound(uint256 supply, uint256 execTime, address to, uint256 totalReserve);
+  event AddTokenRound(address pod);
   event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
   event Deposit(address sender, uint256 amount);
   event Withdrawal(address receiver, uint256 amount);
@@ -25,7 +25,7 @@ contract RICO is Ownable {
    */
 
   modifier onlyProjectOwner() {
-    require(msg.sender == ts.po);
+    require(msg.sender == po);
     // Only projectOwner is allowed to proceed
     _;
   }
@@ -34,50 +34,24 @@ contract RICO is Ownable {
    * Storage
    */
 
-  struct TokenRound {
-    uint256 roundSupply;
-    uint256 execTime;
-    address to;
-  }
-
-  struct WithdrawalRound {
-    uint256 distributeWei;
-    uint256 execTime;
-    address to;
-    bool isMarketMaker;
-  }
-
-  struct TokenStructure {
-    uint256 totalSupply;
-    uint256 tobAmountToken;
-    uint256 tobAmountWei;
-    uint256 proofOfDonationCapOfWei;
-    uint256 proofOfDonationCapOfToken;
-    address proofOfDonationStrategy;
-    address po;
-  }
-
   enum Status {
     Deployed,
     Initialized,
     TokenCreated,
     TokenStructureConfirmed,
-    PoDStarted,
-    PoDEnded
+    RICOStarted,
+    RICOEnded
   }
 
+  address public po;
+  uint256 public totalSupply;
+  uint256 public tobLimitWei;
+  uint256 public nowReserveWei;
+  uint256 public nowSupply;
   Status public status;
-  uint256 public startTimeOfPoD;
-  uint256 public donatedWei;
-  uint256 public sendWei;
-  TokenStructure public ts;
   AbsRICOToken public token;
-  PoD public pod;
-  mapping(address => uint256) weiBalances;
-
-  TokenRound[] public tRounds;
-  WithdrawalRound[] public wRounds;
-
+  address[] public pods;
+  mapping(address => mapping(uint256 => uint256)) wLimitWei;
 
   /**
    * constructor
@@ -92,48 +66,30 @@ contract RICO is Ownable {
    * @dev initialize token structure for new project.
    * @param _tokenAddr                  RICOToken contract's address.
    * @param _totalSupply                total supply of Token.
-   * @param _tobAmountToken             allocation tob Supply of token total supplies.
-   * @param _tobAmountWei               buying amount of project owner when tob call.
-   * @param _proofOfDonationCapOfToken  donation cap of token.
-   * @param _proofOfDonationCapOfWei    donation cap of ether.
-   * @param _proofOfDonationStrategy    PoD contract's address.
+   * @param _pods                       array of Pod's addresses
    * @param _po                         project owner address.
    */
   function init(
     address _tokenAddr,
     uint256 _totalSupply,
-    uint256 _tobAmountToken,
-    uint256 _tobAmountWei,
-    uint256 _proofOfDonationCapOfToken,
-    uint256 _proofOfDonationCapOfWei,
-    address _proofOfDonationStrategy,
+    address[] _pods,
     address _po
   )
   external onlyOwner() returns(bool) 
   {
     require(status == Status.Deployed);
 
-    ts = TokenStructure({
-      totalSupply: _totalSupply,
-      tobAmountToken: _tobAmountToken,
-      tobAmountWei: _tobAmountWei,
-      proofOfDonationCapOfWei: _proofOfDonationCapOfWei,
-      proofOfDonationCapOfToken: _proofOfDonationCapOfToken,
-      proofOfDonationStrategy: _proofOfDonationStrategy,
-      po: _po
-    });
+    require(_tokenAddr != 0x0 && _totalSupply > 0 && _po != 0x0);
 
-    require(_totalSupply >= calcEnsureSupply());
-
-    require(_tokenAddr != 0x0 && _proofOfDonationStrategy != 0x0);
-    
     token = AbsRICOToken(_tokenAddr);
 
-    pod = PoD(_proofOfDonationStrategy);
+    totalSupply = _totalSupply;
 
-    pod.init(this, ts.proofOfDonationCapOfToken, ts.proofOfDonationCapOfWei);
+    nowSupply = 0;
+     
+    po = _po;
     
-    InitStructure(ts.totalSupply, ts.po, ts.tobAmountWei, ts.tobAmountToken);
+    pods = _pods;
 
     status = Status.Initialized;
 
@@ -161,30 +117,25 @@ contract RICO is Ownable {
 
   /**
    * @dev define a token supply by token creation strategy.
-   * @param _roundSupply      set token mintable amount for this round.
-   * @param _execTime         set unlocking time and token creation time.
-   * @param _to               set token receive address.
+   * @param _index      check the one address index of array of pods.
    */
 
-  function addTokenRound(uint256 _roundSupply, uint256 _execTime, address _to) public onlyOwner() returns(bool) {
+  function addTokenRound(uint _index) public onlyOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
-    require(_execTime >= block.timestamp);
+    PoD pod = PoD(pods[_index]);
 
-    uint256 mintableOfRound = ts.totalSupply - calcEnsureSupply() - calcTotalReserveSupply();
+    if (pod.podType() == 110)   //TOB pod
+      tobLimitWei = tobLimitWei.add(pod.proofOfDonationCapOfWei());
+      
+    pod.init();
 
-    require(mintableOfRound >= _roundSupply);
+    nowSupply = nowSupply.add(pod.proofOfDonationCapOfToken());
 
-    TokenRound memory tr = TokenRound({
-      roundSupply: _roundSupply,
-      execTime: _execTime,
-      to: _to
-    });
+    require(nowSupply <= totalSupply);
 
-    tRounds.push(tr);
-
-    AddTokenRound(tr.roundSupply, tr.execTime, tr.to, calcTotalReserveSupply());
+    AddTokenRound(address(pod));
 
     return true;
   }
@@ -203,21 +154,16 @@ contract RICO is Ownable {
 
     require(_execTime >= block.timestamp);  
 
+    require(wLimitWei[_to][_distributeWei] == 0);  
+
     if (_isMM)
-      require(calcTotalWithdrawalWei(_isMM).add(_distributeWei) <= ts.tobAmountWei);
-    else
-      require(calcTotalWithdrawalWei(_isMM).add(_distributeWei) <= ts.proofOfDonationCapOfWei);
+      require(tobLimitWei >= nowReserveWei.add(_distributeWei));
 
-    WithdrawalRound memory wr = WithdrawalRound({
-      distributeWei: _distributeWei,
-      execTime: _execTime,
-      to: _to,
-      isMarketMaker: _isMM
-    });
+    wLimitWei[_to][_distributeWei] = _execTime;
 
-    wRounds.push(wr);
+    nowReserveWei = nowReserveWei.add(_distributeWei);
 
-    AddWithdrawalRound(wr.distributeWei, wr.execTime, wr.to, wr.isMarketMaker, calcTotalWithdrawalWei(_isMM));
+    AddWithdrawalRound(_distributeWei, _execTime, _to, _isMM, nowReserveWei);
 
     return true;
   }
@@ -235,41 +181,27 @@ contract RICO is Ownable {
     return true;
 
   }
-
-
-  /**
-   * @dev executes ether deposit to tob for project owner.
-   */
-
-  function deposit() payable public onlyProjectOwner() returns(bool) {
-
-    require(status == Status.TokenStructureConfirmed);
-
-    require(msg.value > 0);
-
-    weiBalances[msg.sender] = weiBalances[msg.sender].add(msg.value);
-
-    Deposit(msg.sender, getBalanceOfWei(msg.sender));
-
-    return true;
-
-  }
-
+  
   /**
    * @dev withdraw ether from this contract.
    */
 
   function withdraw(uint256 _amount) public returns (bool) {
 
-    require(weiBalances[msg.sender] >= _amount);
+    require(wLimitWei[msg.sender][_amount] > block.timestamp);
 
-    require(this.balance >= _amount);
+    uint256 amount = 0;
+    if (_amount >= this.balance) {
+      amount = this.balance;
+    } else {
+      amount = _amount;
+    }
 
-    require(msg.sender.send(_amount));
+    require(msg.sender.send(amount));
 
-    weiBalances[msg.sender] = weiBalances[msg.sender].sub(_amount);
+    wLimitWei[msg.sender][_amount] = 0;
 
-    Withdrawal(msg.sender, _amount);
+    Withdrawal(msg.sender, amount);
 
     return true;
   }
@@ -279,27 +211,21 @@ contract RICO is Ownable {
    * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
-  function execTOB(uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
+  function execTOB(uint _podToB, uint _podPoD, uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
-    require(_startTimeOfPoD >= block.timestamp + 1 days);
+    PoD tob = PoD(pods[_podToB]);
 
-    require(weiBalances[msg.sender] >= ts.tobAmountWei);
+    require(tob.podType() == 110);   //TOB pod
 
-    require(token.mintable(ts.po, ts.tobAmountToken, now + 180 days));
+    require(tob.isPoDEnded());
 
-    uint256 refunds = weiBalances[msg.sender].sub(ts.tobAmountWei);
-
-    require(msg.sender.send(refunds));
+    PoD pod = PoD(pods[_podPoD]);
 
     require(pod.start(_startTimeOfPoD));
 
-    weiBalances[msg.sender] = 0;
-
-    startTimeOfPoD = _startTimeOfPoD;
-
-    status = Status.PoDStarted;
+    status = Status.RICOStarted;
 
     return true;
 
@@ -309,13 +235,11 @@ contract RICO is Ownable {
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken(address _user) public returns(bool) {
+  function mintToken(uint _index, address _user) public returns(bool) {
+
+    PoD pod = PoD(pods[_index]);
 
     require(pod.isPoDEnded());
-
-    status = Status.PoDEnded;
-
-    require(block.timestamp > pod.getEndtime() + 7 days);
 
     uint256 tokenValue = pod.getBalanceOfToken(_user);
 
@@ -327,133 +251,14 @@ contract RICO is Ownable {
 
     require(pod.resetWeiBalance(_user));
 
+    status = Status.RICOEnded;
     return true;
-
-  }
-
-
-  /**
-   * @dev executes donate to project and call dutch auction process.
-   */
-
-  function execTokenRound(uint256 _index) public returns(bool) {
-
-    require(_index < tRounds.length);
-
-    TokenRound memory tr = tRounds[_index];
-
-    require(block.timestamp >= tr.execTime);
-
-    require(tr.to != 0x0);
-
-    require(token.getTotalSupply() <= ts.totalSupply);
-
-    require(token.mintable(tr.to, tr.roundSupply, now));
-
-    require(token.mint(tr.to));
-
-    delete tRounds[_index];
-
-    return true;
-  }
-
-  /**
-   * @dev executes distribute to market maker follow this token strategy.
-   */
-
-  function execWithdrawalRound(uint256 _index) public returns(bool) {
-
-    require(_index < wRounds.length);
-
-    WithdrawalRound memory wr = wRounds[_index];
-
-    if (wr.isMarketMaker) 
-      require(msg.sender == ts.po);    //only call by projectOwner 
-    else
-      require(msg.sender == wr.to);
-    
-
-    require(block.timestamp >= wr.execTime);
-   
-    uint256 amount = 0;
-
-    if (donatedWei >= sendWei.add(wr.distributeWei)) {
-       amount = wr.distributeWei;
-    } else {
-       amount = donatedWei - sendWei;
-    }
-
-    weiBalances[wr.to] = weiBalances[wr.to].add(amount);
-
-    sendWei = sendWei.add(wr.distributeWei);
-
-    delete wRounds[_index];
-
-    return true;
-
-  }
-
-  /**
-   * @dev get balance of total withdrawal ether for sender.
-   */
-  function getBalanceOfWei(address _sender) public constant returns(uint256) {
-    return weiBalances[_sender];
-  }
-
-  /**
-   * @dev calculate TotalReserveSupply sum of all rounds.
-   */
-
-  function calcTotalReserveSupply() internal constant returns(uint256) {
-
-    uint256 totalReserveSupply = 0;
-
-    for (uint i = 0; i < tRounds.length; i++) {
-
-      TokenRound memory round = tRounds[i];
-
-      totalReserveSupply = totalReserveSupply.add(round.roundSupply);
-
-    }
-    return totalReserveSupply;
-  }
-
-  /**
-   * @dev calculate total withdrawal ether sum of all rounds.
-   */
-
-  function calcTotalWithdrawalWei(bool _isMM) internal constant returns(uint256) {
-
-    uint256 totalWithdrawalWei = 0;
-    uint256 totalWithdrawalWeiToMM = 0;
-
-    for (uint i = 0; i < wRounds.length; i++) {
-
-      WithdrawalRound memory wr = wRounds[i];
-
-      if (wr.isMarketMaker)
-        totalWithdrawalWeiToMM = totalWithdrawalWei.add(wr.distributeWei);
-      else
-        totalWithdrawalWei = totalWithdrawalWei.add(wr.distributeWei);
-
-    }
-    if (_isMM) 
-        return totalWithdrawalWeiToMM;
-    return totalWithdrawalWei;
-  }
-
-  /**
-   * @dev calculate token EnsureSupply sum of all supply before confirm strategy.
-   */
-
-  function calcEnsureSupply() internal constant returns(uint256) {
-    return ts.tobAmountToken + ts.proofOfDonationCapOfToken;
   }
 
   /**
    * @dev automatically execute received transactions.
    */
   function () public {
-    mintToken(msg.sender);
+    mintToken(1, msg.sender);
   }
 }

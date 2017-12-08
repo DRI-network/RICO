@@ -16,18 +16,19 @@ contract('DutchAuctionPoD', function (accounts) {
 
     dap = await DutchAuctionPoD.new();
     //deploy contracts and initialize ico.
-    const init = await dap.init(owner, podCapOfToken, podCapofWei, {
+
+    const setup = await dap.setConfig(tokenDecimals, priceStart, priceConstant, priceExponent, podCapOfToken, {
       from: owner
-    });
+    })
 
     //assert.strictEqual(balance.toNumber(), 5000 * 10 ** decimals, 'balance of projectOwner != 5000 * 10 ** decimals')
 
   })
   it("contract should be initialized with parameters for DutchAuctionPoD", async function () {
 
-    const setup = await dap.setConfig(tokenDecimals, priceStart, priceConstant, priceExponent, {
+    const init = await dap.init({
       from: owner
-    })
+    });
   })
 
   it("contract should be started DutchAuction", async function () {
@@ -61,6 +62,7 @@ contract('DutchAuctionPoD', function (accounts) {
       gasPrice: 50000000000,
       value: web3.toWei(100, 'ether')
     })
+    //console.log(donate)
     const missing2 = await dap.missingFundsToEndAuction.call()
     const price2 = await dap.price()
     //console.log(price2.toNumber() / 10 ** 18, missing2.toNumber() / 10 ** 18)

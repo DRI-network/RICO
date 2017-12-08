@@ -5,13 +5,15 @@ import "../PoD.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
-contract SimplePoD is PoD {
+contract KaitsukePoD is PoD {
 
-  function SimplePoD() public {
+  uint256 public lockTime;
+
+  function KaitsukePoD() public {
     name = "KaitsukePoD strategy token price = capToken/capWei";
     version = "0.1";
-    period = 7 days;
-    podType = 111;
+    podType = 110;
+    lockTime = 180 days;
   }
 
   function setConfig(uint256 _capOfToken, uint256 _capOfWei) public onlyOwner() returns (bool) {
@@ -41,6 +43,8 @@ contract SimplePoD is PoD {
 
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
+    if (block.timestamp < startTime.add(lockTime))
+      return 0;
     
     return weiBalances[_user].div(tokenPrice);
   }

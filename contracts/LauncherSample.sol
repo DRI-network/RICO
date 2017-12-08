@@ -25,16 +25,16 @@ contract LauncherSample is Ownable {
 
   function LauncherSample() public {}
 
-  function init(address _rico, address _token, address _pod) public onlyOwner() returns(bool) {
+  function init(address _rico, address _token, address[] _pods) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
-    ico.init(_token, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, _pod, owner);
+    ico.init(_token, totalSupply, _pods, owner);
     return true;
   }
 
   function setup(address _wallet) public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
-    ico.addTokenRound(firstSupply, firstSupplyTime, _wallet);
-    ico.addTokenRound(secondSupply, secondSupplyTime, _wallet);
+    ico.addTokenRound(0);
+    ico.addTokenRound(1);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
     ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
     return true;

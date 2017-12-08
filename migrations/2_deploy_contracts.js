@@ -30,8 +30,6 @@ module.exports = async function (deployer, network, accounts) {
     const launcher = await LauncherSample.deployed()
     //const simplePoD = await SimplePoD.deployed()
     const da = await DutchAuctionPoD.deployed()
-
-
     // changing owner to owner -> launcher.
     const changeOwner = await rico.transferOwnership(launcher.address, {
       from: accounts[0]

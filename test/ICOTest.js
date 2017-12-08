@@ -1,6 +1,7 @@
-const Launcher = artifacts.require("./LauncherSample.sol");
+const LauncherSample = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
+
 const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
 
 const now = Math.floor(new Date().getTime() / 1000);
@@ -30,12 +31,11 @@ contract('RICO', function (accounts) {
 
     const projectOwner = accounts[0]
 
-    const rico = await RICO.deployed()
-    const token = await RICOToken.deployed()
-    const launcher = await LauncherSample.deployed()
-    const simplePoD = await SimplePoD.deployed()
-
-
+    rico = await RICO.new()
+    token = await RICOToken.new()
+    launcher = await LauncherSample.new()
+    //const simplePoD = await SimplePoD.deployed()
+    pod = await SimplePoD.new()
     // changing owner to owner -> launcher.
     const changeOwner = await rico.transferOwnership(launcher.address, {
       from: accounts[0]
@@ -46,29 +46,28 @@ contract('RICO', function (accounts) {
       from: accounts[0]
     })
 
-    const changeOwner3 = await simplePoD.transferOwnership(rico.address, {
+    const changeOwner3 = await pod.transferOwnership(rico.address, {
       from: accounts[0]
     })
 
     //initializing launcher.
-    const init = await launcher.init(rico.address, token.address, simplePoD.address, {
+    const init = await launcher.init(rico.address, token.address, pod.address, {
       from: accounts[0]
     });
 
     //setup launcher
-    const setup = await launcher.setup({
+    const setup = await launcher.setup(accounts[0], {
       from: accounts[0]
     });
 
 
-
     const status = await rico.status.call()
-    assert.strictEqual(status.toNumber(), 1, 'status is not 1')
+    assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
-    const test = await rico.changeOwner(launcher.address, {
+    const test = await rico.transferOwnership(launcher.address, {
       from: projectOwner
     }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'changeOwner is executable')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'transferOwnership is executable')
     })
   })
   it("should be confirmed strategy for ICOTest", async function () {
@@ -80,12 +79,12 @@ contract('RICO', function (accounts) {
     });
 
     const status = await rico.status.call()
-    assert.strictEqual(status.toNumber(), 2, 'status is not 2')
+    assert.strictEqual(status.toNumber(), 3, 'status is not 3')
 
-    const reinit = await launcher.init(rico.address, {
+    const init = await launcher.init(rico.address, token.address, pod.address, {
       from: projectOwner
     }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'changeOwner is executable')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'changeOwner is executable')
     })
 
     //console.log(confirmed)
@@ -116,9 +115,9 @@ contract('RICO', function (accounts) {
   it("should be available TOB executes in this contract and should be able to donate to project", async function () {
 
     const projectOwner = accounts[0]
-    const nows = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const podStartTime = nows + 14
+    const podStartTime = now + 169800
     // Error
     const execTOB = await rico.execTOB(podStartTime, {
       from: projectOwner
@@ -127,31 +126,57 @@ contract('RICO', function (accounts) {
     const balance = await rico.getBalanceOfWei(projectOwner)
     assert.equal(balance.toNumber(), web3.toWei('0', 'ether'), 'balance is not equal to 0 ether')
 
+    const status = await rico.status.call()
+    const startTime = await pod.startTime.call()
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_increaseTime",
-      params: [1600],
+      params: [169800],
       id: 0
     })
 
-    const status = await rico.status.call()
-    assert.strictEqual(status.toNumber(), 3, 'status is not 3')
-
-    // Error
-    /*
-    const donate = await web3.eth.sendTransaction({
-      value: web3.toWei('10', 'ether'),
-      to: rico.address,
-      from: projectOwner,
-      gas: 2000000
+    const donate = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(0, 'ether')
+    }).catch((err) => {
+      console.log(err)
     })
-    */
-
-    const donate = await rico.donate({
-      value: web3.toWei('10', 'ether'),
-      from: projectOwner,
-      gas: 2000000
+    assert.strictEqual(status.toNumber(), 4, 'status is not 4')
+    const update = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    console.log(startTime.toNumber(), update)
+    assert.equal(startTime.toNumber(), podStartTime, 'startTime is not equal to podStartTime')
+  })
+  it("contract should be executed for donate", async function () {
+    const projectOwner = accounts[0]
+    // const cap = await pod.proofOfDonationCapOfWei.call()
+    // const totalReceivedWei = await pod.totalReceivedWei.call()
+    const donate = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(7000, 'ether')
+    }).catch((err) => {
+      console.log(err)
     })
+
+    // const balanceOfToken = await pod.getBalanceOfToken(projectOwner)
+    console.log(donate)
+    // console.log(balanceOfToken.toNumber())
+
+    const donate2 = await pod.donate({
+      value: web3.toWei(1, 'ether'),
+      gasPrice: 50000000000
+    }).catch((err) => {
+      console.log(err)
+    })
+    const donate3 = await pod.donate({
+      value: web3.toWei(1, 'ether'),
+      gasPrice: 50000000000
+    }).catch((err) => {
+      console.log(err)
+    })
+
+    const status = await pod.status.call()
+
+    console.log(donate2.tx, status.toNumber(), donate3)
 
     const balances = await rico.getBalanceOfWei(projectOwner)
     assert.equal(balances.toNumber(), web3.toWei('0', 'ether'), 'balance is not equal to 0 ether')
@@ -181,7 +206,7 @@ contract('RICO', function (accounts) {
     })
 
     const balanceToken2 = await token.balanceOf(projectOwner)
-    assert.equal(balanceToken2.toNumber(), firstSupply + Number(web3.toWei('200', 'ether')), 'balanceToken2 is not equal to firstSupply + 200 ')
+    assert.equal(balanceToken2.toNumber(), firstSupply, 'balanceToken2 is not equal to firstSupply + 200 ')
 
   })
   it("should be available to execute second Token Round for projecOwner", async function () {
@@ -218,7 +243,7 @@ contract('RICO', function (accounts) {
 
 
     const balanceToken2 = await token.balanceOf(projectOwner)
-    assert.equal(balanceToken2.toNumber(), secondSupply + firstSupply + Number(web3.toWei('200', 'ether')), 'balanceToken2 is not equal to secondSupply + firstSupply + 200 ')
+    assert.equal(balanceToken2.toNumber(), secondSupply + firstSupply, 'balanceToken2 is not equal to secondSupply + firstSupply ')
 
   })
   it("should be available to all minting token for projecOwner", async function () {
@@ -252,7 +277,7 @@ contract('RICO', function (accounts) {
     const mint3 = await rico.execTokenRound(2, {
       from: projectOwner
     })
-    const mint = await rico.mintToken({
+    const mint = await rico.mintToken(projectOwner, {
       from: projectOwner
     })
 

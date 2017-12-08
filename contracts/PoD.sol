@@ -13,16 +13,16 @@ contract PoD is Ownable {
    * Storage
    */
 
-  string public name;
-  string public version;
-  address public wallet;
+  string  public name;
+  uint    public podType;
+  string  public version;
   uint256 public period;
   uint256 public startTime;
   uint256 public endTime;
   uint256 public tokenPrice;
+  uint256 public totalReceivedWei;
   uint256 public proofOfDonationCapOfToken;
   uint256 public proofOfDonationCapOfWei;
-  uint256 public totalReceivedWei;
   mapping (address => uint256) weiBalances;
 
   enum Status {
@@ -33,6 +33,16 @@ contract PoD is Ownable {
   }
   Status public status;
 
+  /** 
+   * event
+   */
+  
+  event Donated(address user, uint256 amount);
+  event Initialized(address wallet);
+  event Started(uint256 time);
+  event Ended(uint256 time);
+
+
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -42,19 +52,11 @@ contract PoD is Ownable {
     status = Status.PoDDeployed;
   }
 
-  function init(
-    address _wallet,
-    uint256 _proofOfDonationCapOfToken,
-    uint256 _proofOfDonationCapOfWei
-  )
-  public onlyOwner() returns (bool) 
-  {
+  function init() public onlyOwner() returns (bool) {
     require(status == Status.PoDDeployed);
-    wallet = _wallet;
-    proofOfDonationCapOfToken = _proofOfDonationCapOfToken;
-    proofOfDonationCapOfWei = _proofOfDonationCapOfWei;
     status = Status.PoDInitialized;
     totalReceivedWei = 0;
+    Initialized(owner);
     return true;
   }
 
@@ -62,6 +64,7 @@ contract PoD is Ownable {
     require(status == Status.PoDInitialized);
     startTime = _startTimeOfPoD;
     status = Status.PoDStarted;
+    Started(startTime);
     return true;
   }
 
@@ -69,18 +72,21 @@ contract PoD is Ownable {
 
     require(status == Status.PoDStarted);
 
-    require(block.timestamp > startTime);
+    require(block.timestamp >= startTime);
 
-    require(tx.gasprice <= 50000000000);
+    require(tx.gasprice <= 80000000000);
 
-    if (processDonate(msg.sender)) {
-      totalReceivedWei = totalReceivedWei.add(msg.value);
-      require(wallet.send(msg.value));
-    }else {
-      require(msg.sender.send(msg.value));
+    if (!processDonate(msg.sender)) {
       endTime = now;
       status = Status.PoDEnded;
-    }
+      Ended(endTime);
+    } 
+
+    totalReceivedWei = totalReceivedWei.add(msg.value);
+
+    require(owner.send(msg.value));
+
+    Donated(msg.sender, msg.value);
     return true;
   }
 
