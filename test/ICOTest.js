@@ -1,4 +1,3 @@
-
 const LauncherSample = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
 const RICOToken = artifacts.require("./RICOToken.sol");
@@ -34,6 +33,7 @@ contract('RICO', function (accounts) {
   it("should be deployed and init token for ICOTest", async function () {
 
     projectOwner = accounts[0]
+    tobAccount = accounts[1]
     rico = await RICO.new()
     token = await RICOToken.new()
     launcher = await LauncherSample.new()
@@ -45,7 +45,7 @@ contract('RICO', function (accounts) {
       pod.address,
     ]
 
-    const setConfigToB = await tob.setConfig(tobTokenSupply, tobWeiLimit)
+    const setConfigToB = await tob.setConfig(tobTokenSupply, tobWeiLimit, tobAccount)
     const changeOwnerToB = await tob.transferOwnership(rico.address)
 
     const setConfigPoD = await pod.setConfig(podTokenSupply, podWeiLimit)
@@ -58,24 +58,15 @@ contract('RICO', function (accounts) {
     const changeOwnerRICO = await rico.transferOwnership(launcher.address)
 
     //initializing launcher.
-    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods, {
-      from: accounts[0]
-    }).catch((err) => {
-      console.log(err)
-    })
+    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods)
 
     //setup launcher
-    const setup = await launcher.setup(accounts[0], {
-      from: accounts[0]
-    });
-
+    const setup = await launcher.setup(accounts[0]);
 
     const status = await rico.status.call()
     assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
-    const test = await rico.transferOwnership(launcher.address, {
-      from: projectOwner
-    }).catch(err => {
+    const test = await rico.transferOwnership(launcher.address).catch(err => {
       assert.equal(err, "Error: VM Exception while processing transaction: revert", 'transferOwnership is executable')
     })
   })
@@ -83,33 +74,43 @@ contract('RICO', function (accounts) {
 
     const projectOwner = accounts[0]
 
-    const confirmed = await rico.strategyConfirm({
-      from: projectOwner
-    });
+    const confirmed = await rico.strategyConfirm(0)
 
     const status = await rico.status.call()
     assert.strictEqual(status.toNumber(), 3, 'status is not 3')
 
-    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods, {
-      from: projectOwner
-    }).catch(err => {
+    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods).catch(err => {
       assert.equal(err, "Error: VM Exception while processing transaction: revert", 'changeOwner is executable')
     })
-
-    //console.log(confirmed)
   })
   it("should be available TOB executes in this contract and should be able to donate to project", async function () {
 
+    const status = await tob.status()
+    const tobToken = await tob.proofOfDonationCapOfToken()
+    const tobWei = await tob.proofOfDonationCapOfWei()
+    const price = await tob.proofOfDonationCapOfToken()
+
+    assert.strictEqual(tobToken.toNumber(), tobTokenSupply, 'tobTokenSupply is not correct')
+    assert.strictEqual(tobWei.toNumber(), tobWeiLimit, 'tobWeiLimit is not correct')
+
+    assert.strictEqual(status.toNumber(), 2, 'status is not 2')
+
+    const nows = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    const startTime = await tob.startTime()
+    const buyer = await tob.buyer()
+
+    console.log(nows, startTime.toNumber())
+    assert.strictEqual(price.toNumber(), tobTokenSupply / tobWeiLimit, 'price is not correct')
+    assert.strictEqual(buyer, tobAccount, 'tobWeiLimit is not correct')
+
     const donate = await tob.donate({
       gasPrice: 50000000000,
-      value: web3.toWei(100, 'ether')
-    }).catch((err) => {
-      console.log(err)
+      value: web3.toWei(8, 'ether'),
+      from: tobAccount
     })
-    assert.strictEqual(status.toNumber(), 4, 'status is not 4')
-    const update = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-    console.log(startTime.toNumber(), update)
-    assert.equal(startTime.toNumber(), podStartTime, 'startTime is not equal to podStartTime')
+
+    console.log(donate)
+
   })
   it("contract should be executed for donate", async function () {
     const projectOwner = accounts[0]

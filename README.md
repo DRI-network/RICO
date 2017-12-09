@@ -118,7 +118,13 @@ contract Launcher is Ownable {
     return true;
   }
 
+<<<<<<< HEAD
   function setup() public onlyOwner() returns(bool) {
+=======
+  function setup() returns(bool) {
+    require(msg.sender == projectOwner);
+    ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
+>>>>>>> c23cbff9c2af3267afb2c9d789128b077d057774
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(firstSupply, firstSupplyTime, owner);
     ico.addTokenRound(secondSupply, secondSupplyTime, owner);
@@ -172,23 +178,27 @@ EIP-20 is a TokenStandard Format on the Ethereum Blockchain.
 |execTime | uint256 | unlocking time and token creation time. adapt to `now` literal or `block.timestamp` reteral that return unixtimestamps.|
 | to  | address| token will received address.|
 
-#### function addMarketMaker(distributeWei, execTime, maker, metaData)
+#### function addWithdrawalRound(distributeWei, execTime, to, isMM)
 
-This feature is more important precept of RICO Framework. project Owner will spent ether when TOB executed. that ether will be send to RICO contract.but anyone unable to sent ether from contract in that case. RICO has to diestribute ETH to someone from contract.this precept must be defined in token strategy to sending ETH to someone and this method will be called by projectOwner. To decide someone to be honestly we design incentive models. it seems to be market maker.
+This feature is more important precept of RICO Framework. project Owner will spent ether when TOB executed.and Proof of Donation send ether to RICO contract. that ether will be store to RICO contract.but anyone unable to sent ether from contract in that case. RICO has to diestribute ETH to someone from contract.this precept must be defined in token strategy to sending ETH to someone and this method will be called by projectOwner and receiver. To decide someone to be honestly we design incentive models. it seems to be market maker.
 ##### params 
 | argument | type | description |
 |:---|:---:|:---|
-| distributeWei | uint256|  distribute ether amount for this project. |
+| distributeWei | uint256|  distribute ether amount to receiver. |
 | execTime | uint256 |  unlocking distribute time. |
-| maker | address|  ether receive address.|
-| metaData | uint256|  market maker name or meta payload; |
+| to | address|  ether receive address.|
+| isMM | bool|  this process executes for marketmaker or not; |
 
 ## Test 
 
 ### testing on ethereumjs-testrpc
 running testrpc with account balance.
 ```
+<<<<<<< HEAD
 ganache-cli -p 9545 -l 4700000 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000" --account="0x3e478e4fed09cdc68388286b94aeb1404df47b1f1df0de715e582d6aebc6e1c9,200000000000000000000" --account="0xa0d45d6a3911221c4e1b7edcd256741c6bcb9a247fda017a8946ff5f5c38021a,200000000000000000000" --account="0x1386ff12f7d49e6e4e835952493d034570e134bfb0fc6f9d17b49dbdf88d03b3,200000000000000000000" --account="0xf84d5b9d64e427d43645e3c12906d322410a87b277374a0335a4ca0da9316d23,200000000000000000000"
+=======
+$ testrpc -l 4700000 -b 1 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000"
+>>>>>>> c23cbff9c2af3267afb2c9d789128b077d057774
 ```
 
 ```

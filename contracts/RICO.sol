@@ -176,12 +176,12 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function strategyConfirm() public onlyProjectOwner() returns(bool) {
+  function strategyConfirm(uint _tob) public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
-    PoD tob = PoD(pods[0]);
-    
+    PoD tob = PoD(pods[_tob]);
+
     require(tob.podType() == 110);   //TOB pod
 
     tob.start(now);
