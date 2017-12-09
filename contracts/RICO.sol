@@ -5,6 +5,9 @@ import "./PoD.sol";
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
+/// @notice TokenRound chose a index for pod execute modes. 
+/// 0. ToB pod. podType == 101
+/// 1~ Custom pod. podType == 111
 
 contract RICO is Ownable {
   /// using safemath
@@ -17,7 +20,7 @@ contract RICO is Ownable {
   event InitTokenData(string name, string symbol, uint8 decimals);
   event AddTokenRound(address pod);
   event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
-  event Deposit(address sender, uint256 amount);
+  event ExecutedTOB(address po);
   event Withdrawal(address receiver, uint256 amount);
 
   /**
@@ -47,6 +50,7 @@ contract RICO is Ownable {
   uint256 public totalSupply;
   uint256 public tobLimitWei;
   uint256 public nowReserveWei;
+  uint256 public startTimeOfPoD;
   uint256 public nowSupply;
   Status public status;
   AbsRICOToken public token;
@@ -176,11 +180,11 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function strategyConfirm(uint _tob) public onlyProjectOwner() returns(bool) {
+  function strategyConfirm() public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenCreated);
 
-    PoD tob = PoD(pods[_tob]);
+    PoD tob = PoD(pods[0]);
 
     require(tob.podType() == 110);   //TOB pod
 
@@ -221,19 +225,23 @@ contract RICO is Ownable {
    * @param _startTimeOfPoD represent a unix time of PoD start.
    */
 
-  function execTOB(uint _podToB, uint _podPoD, uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
+  function execTOB(uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
 
     require(status == Status.TokenStructureConfirmed);
 
-    PoD tob = PoD(pods[_podToB]);
+    PoD tob = PoD(pods[0]);
 
     require(tob.podType() == 110);   //TOB pod
 
     require(tob.isPoDEnded());
 
-    PoD pod = PoD(pods[_podPoD]);
+    require(_startTimeOfPoD > block.timestamp);
 
-    require(pod.start(_startTimeOfPoD));
+    startTimeOfPoD = _startTimeOfPoD;
+
+    require(startPoD(1));
+
+    ExecutedTOB(po);
 
     status = Status.RICOStarted;
 
@@ -241,13 +249,22 @@ contract RICO is Ownable {
 
   }
 
+  function startPoD(uint _pod) public returns(bool) {
+  
+    PoD pod = PoD(pods[_pod]);
+
+    require(pod.start(startTimeOfPoD));
+
+    return true;
+  }
+
   /**
    * @dev executes claim token when auction trading time elapsed.
    */
 
-  function mintToken(uint _index, address _user) public returns(bool) {
+  function mintToken(uint _pod, address _user) public returns(bool) {
 
-    PoD pod = PoD(pods[_index]);
+    PoD pod = PoD(pods[_pod]);
 
     require(pod.isPoDEnded());
 
@@ -268,7 +285,8 @@ contract RICO is Ownable {
   /**
    * @dev automatically execute received transactions.
    */
-  function () public {
-    mintToken(1, msg.sender);
+  function () payable public {
+    if (status == Status.RICOEnded)
+      mintToken(1, msg.sender);
   }
 }

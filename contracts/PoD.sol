@@ -84,7 +84,7 @@ contract PoD is Ownable {
 
     totalReceivedWei = totalReceivedWei.add(msg.value);
 
-    require(owner.send(msg.value));
+    owner.transfer(msg.value);
 
     Donated(msg.sender, msg.value);
     return true;

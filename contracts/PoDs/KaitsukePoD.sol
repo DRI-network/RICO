@@ -11,7 +11,6 @@ contract KaitsukePoD is PoD {
   address public buyer;
   uint256 public tokenMultiplier;
 
-
   function KaitsukePoD() public {
     name = "KaitsukePoD strategy token price = capToken/capWei";
     version = "0.1";

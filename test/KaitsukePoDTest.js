@@ -1,4 +1,6 @@
 const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol");
+const MultiSigWallet = artifacts.require("./MultiSigWallet.sol")
+const RICO = artifacts.require("./RICO.sol");
 
 contract('KaitsukePoD', function (accounts) {
   const owner = accounts[0]
@@ -10,6 +12,8 @@ contract('KaitsukePoD', function (accounts) {
   it("contract should be deployed and initializing token for SimplePoD", async function () {
 
     tob = await KaitsukePoD.new();
+    multisig = await MultiSigWallet.new(accounts, 2)
+    
     //deploy contracts and initialize ico.
     const setConfigPoD = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, owner)
 
@@ -29,6 +33,8 @@ contract('KaitsukePoD', function (accounts) {
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
 
     const start = await tob.start(now)
+
+    const change = await tob.transferOwnership(multisig.address)
 
   })
   it("Check the process for donation should be done", async function () {
@@ -103,6 +109,12 @@ contract('KaitsukePoD', function (accounts) {
     const balance = await tob.getBalanceOfToken(owner)
     //console.log(balance.toNumber())
     assert.equal(balance.toNumber(), tobTokenSupply, "Error: tobTokenSupply is not correct")
+    
+  })
+  it("Check the tokenBalance for multisig", async function () {
+    const balance = web3.eth.getBalance(multisig.address)
+    //console.log(balance.toNumber())
+    assert.equal(balance.toNumber(), tobWeiLimit, "Error: tobWeiLimit is not correct")
     
   })
     
