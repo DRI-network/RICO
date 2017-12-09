@@ -180,6 +180,12 @@ contract RICO is Ownable {
 
     require(status == Status.TokenCreated);
 
+    PoD tob = PoD(pods[0]);
+    
+    require(tob.podType() == 110);   //TOB pod
+
+    tob.start(now);
+
     status = Status.TokenStructureConfirmed;
 
     return true;
