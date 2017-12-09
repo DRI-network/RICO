@@ -1,187 +1,106 @@
-const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol");
-const name = "SimplePoD contract";
-const symbol = "RIT";
-const decimals = 18;
+const TokenMintPoD = artifacts.require("./PoDs/TokenMintPoD.sol");
 
-contract('RICOToken', function (accounts) {
+contract('TokenMintPoD', function (accounts) {
   const owner = accounts[0]
-  const projectOwner = accounts[1]
 
-  it("should be deployed and init token for RICOToken", async function () {
+  const podTokenSupply = 120 * 10 ** 18;
+  const podWeiLimit = 10 * 10 ** 18;
+  const decimals = 18
 
-    token = await RICOToken.new({
-      from: owner
-    });
+  it("contract should be deployed and initializing token for SimplePoD", async function () {
+
+    pod = await SimplePoD.new();
     //deploy contracts and initialize ico.
-    const init = await token.init(name, symbol, decimals, {
-      from: owner
-    });
-  })
-  it("should be mintable and mint now for projectOwner", async function () {
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
 
-    const mintable = await token.mintable(projectOwner, 1000 * 10 ** decimals, now + 3000, {
-      from: owner
-    });
+    const init = await pod.init()
 
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [3000],
-      id: 0
-    })
+    const status = await pod.status.call()
 
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 1000 * 10 ** decimals, 'balance of projectOwner != 1000 * 10 ** decimals')
-
-  })
-  it("should be disable mint now for projectOwner", async function () {
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const projectOwner = accounts[1]
-    const mintable = await token.mintable(projectOwner, 1000 * 10 ** decimals, now + 22222, {
-      from: owner
-    });
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'token is not generate')
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 1000 * 10 ** decimals, 'assert error balance of projectOwner != 1000 * 10 ** decimals')
-
-  })
-  it("should be mintable additional token and mint now for projectOwner", async function () {
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const mintable = await token.mintable(projectOwner, 1000 * 10 ** decimals, now + 3000, {
-      from: owner
-    });
-
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [4000],
-      id: 0
-    })
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 2000 * 10 ** decimals, 'balance of projectOwner != 2000 * 10 ** decimals')
-
-  })
-  it("should be more mintable additional token and mint now for projectOwner", async function () {
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const mintable1 = await token.mintable(projectOwner, 1000 * 10 ** decimals, now + 3000, {
-      from: owner
-    });
-
-    const mintable2 = await token.mintable(projectOwner, 2000 * 10 ** decimals, now + 8000, {
-      from: owner
-    });
-
-    const mintable3 = await token.mintable(projectOwner, 3000 * 10 ** decimals, now + 9000, {
-      from: owner
-    });
-
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [4000],
-      id: 0
-    })
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 3000 * 10 ** decimals, 'balance of projectOwner != 3000 * 10 ** decimals')
-  })
-  it("should be more mintable additional token and mint with elapsed time now for projectOwner", async function () {
-
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [4000],
-      id: 0
-    })
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 5000 * 10 ** decimals, 'balance of projectOwner != 5000 * 10 ** decimals')
+    assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
   })
 
-  it("should be more mintable additional token and mint with elapsed time of first 1000 + 5000 + 3000 stack for projectOwner", async function () {
+  it("contract should be started SimplePoD", async function () {
 
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [18000],
-      id: 0
-    })
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 9000 * 10 ** decimals, 'balance of projectOwner != 9000 * 10 ** decimals')
-  })
-
-  it("should be same balance of projectOwner with elapsed time", async function () {
-
-    const setTime = await web3.currentProvider.send({
-      jsonrpc: "2.0",
-      method: "evm_increaseTime",
-      params: [18000],
-      id: 0
-    })
-
-    const mint = await token.mint(projectOwner, {
-      from: owner
-    })
-
-    const balance = await token.balanceOf(projectOwner)
-
-    assert.strictEqual(balance.toNumber(), 9000 * 10 ** decimals, 'balance of projectOwner != 9000 * 10 ** decimals')
-  })
-
-  it("should be changed owner by oldOwner", async function () {
+    const status = await pod.status.call()
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const newOwner = projectOwner
+    assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
 
-    const changed = await token.changeOwner(newOwner, {
-      from: owner
+    const start = await pod.start(now)
+
+  })
+  it("Check the process for donation should be done", async function () {
+
+    const setTime = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [0],
+      id: 0
+    })
+    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+
+    const price = await pod.getTokenPrice()
+
+    assert.equal(price.toNumber() / 10 ** decimals, podWeiLimit / podTokenSupply, "Error: Token price is not podTokenSupply / podWeiLimit")
+
+    const donate = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(8, 'ether')
     })
 
-    const mintable = await token.mintable(projectOwner, 3000 * 10 ** decimals, now, {
-      from: owner
-    }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'token is not generate')
-    })
+    const status = await pod.status.call()
+    const proofOfDonationCapOfWei = await pod.proofOfDonationCapOfWei.call()
+
+    //console.log(donate.tx, status.toNumber(), proofOfDonationCapOfWei.toNumber())
+    const balanceOfWei = await pod.getBalanceOfWei(owner)
+    assert.equal(status.toNumber(), 2, "Error: status is not started")
+    assert.equal(balanceOfWei.toNumber() / 10 ** 18, 8, "Error: donation has been failed")
 
   })
 
+  it("Check the process for donation should be ended when cap reached", async function () {
+
+    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+
+    const donate = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(10, 'ether')
+    }).catch((err) => {
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'donate is executable yet.')
+    })
+
+    const status = await pod.status.call()
+    assert.equal(status.toNumber(), 2, "Error: status is not started")
+
+    const donate2 = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(2, 'ether')
+    })
+    const status2 = await pod.status.call()
+    assert.equal(status2.toNumber(), 3, "Error: status is not ended")
+  })
+
+  it("Check the tokenBalance for owner", async function () {
+
+    const setTime = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [2592000],
+      id: 0
+    })
+
+    const donate = await pod.donate({
+      gasPrice: 50000000000,
+      value: web3.toWei(10, 'ether')
+    }).catch((err) => {
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'donate is executable yet.')
+    })
+
+    const balance = await pod.getBalanceOfToken(owner)
+    //console.log(balance.toNumber())
+    assert.equal(balance.toNumber(), podTokenSupply, "Error: podTokenSupply is not correct")
+
+  })
 })

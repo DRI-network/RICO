@@ -11,6 +11,7 @@ const tobTokenSupply = totalTokenSupply * 3 / 100
 const tobWeiLimit = 100 * 10 ** 18
 const podTokenSupply = totalTokenSupply * 20 / 100
 const podWeiLimit = 1000 * 10 ** 18
+const decimals = 18;
 
 
 module.exports = async function (deployer, network, accounts) {
@@ -44,10 +45,10 @@ module.exports = async function (deployer, network, accounts) {
       pod.address,
     ]
 
-    const setConfigToB = await tob.setConfig(tobTokenSupply, tobWeiLimit, accounts[1])
+    const setConfigToB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, accounts[1])
     const changeOwnerToB = await tob.transferOwnership(rico.address)
 
-    const setConfigPoD = await pod.setConfig(podTokenSupply, podWeiLimit)
+    const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
     const changeOwnerPoD = await pod.transferOwnership(rico.address)
 
     // changing owner to owner to rico.
