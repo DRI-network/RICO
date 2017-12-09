@@ -34,9 +34,9 @@ contract LauncherSample is Ownable {
   function setup(address _wallet) public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(0);
-    ico.addTokenRound(1);
-    ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
-    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
+   // ico.addTokenRound(1);
+   // ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
+    //ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
     return true;
   }
 }

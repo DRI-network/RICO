@@ -15,7 +15,7 @@ const podWeiLimit = 1000 * 10 ** 18
 
 module.exports = async function (deployer, network, accounts) {
 
-  if (network === "development") return; // Don't deploy on tests
+  //if (network === "development") return; // Don't deploy on tests
 
   deployer.deploy(LauncherSample).then(() => {
     return deployer.deploy(RICO)
@@ -54,7 +54,7 @@ module.exports = async function (deployer, network, accounts) {
     // changing owner to owner to rico.
     const changeOwnerToken = await token.transferOwnership(rico.address)
 
-    const changeOwnerRICO = await token.transferOwnership(launcher.address)
+    const changeOwnerRICO = await rico.transferOwnership(launcher.address)
     
     //initializing launcher.
     const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods, {
