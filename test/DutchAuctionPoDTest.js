@@ -20,7 +20,7 @@ contract('DutchAuctionPoD', function (accounts) {
     const setup = await dap.setConfig(tokenDecimals, priceStart, priceConstant, priceExponent, podCapOfToken, {
       from: owner
     })
-
+    
     //assert.strictEqual(balance.toNumber(), 5000 * 10 ** decimals, 'balance of projectOwner != 5000 * 10 ** decimals')
 
   })

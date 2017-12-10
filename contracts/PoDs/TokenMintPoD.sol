@@ -9,8 +9,6 @@ contract TokenMintPoD is PoD {
 
   mapping(address => uint256) tokenBalances; 
   uint256 public time;
-  uint256 public proofOfDonationCapOfToken;
-  uint256 public proofOfDonationCapOfWei;
   
   function TokenMintPoD() public {
     name = "TokenMintPoD mean that minting Token when elapsed time";
@@ -20,24 +18,20 @@ contract TokenMintPoD is PoD {
 
   function setConfig(
     address _user, 
-    uint256 _amount, 
     uint256 _time,
-    uint256 _capOfToken,
-    uint256 _capOfWei
+    uint256 _capOfToken
   ) 
   public onlyOwner() returns (bool) 
   {
     require(status == Status.PoDDeployed);
-    tokenBalances[_user] = _amount;
-    proofOfDonationCapOfToken = _capOfToken;
-    proofOfDonationCapOfWei = _capOfWei;
+    tokenBalances[_user] = _capOfToken;
+    weiBalances[_user] = 1;
     time = _time;
     return true;
   }
 
   function processDonate(address _user) internal returns (bool) {
     assert(_user != 0x0);
-    weiBalances[_user] = 1;
     return false;
   }
 

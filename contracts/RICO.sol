@@ -42,8 +42,7 @@ contract RICO is Ownable {
     Initialized,
     TokenCreated,
     TokenStructureConfirmed,
-    RICOStarted,
-    RICOEnded
+    RICOStarted
   }
 
   address public po;
@@ -235,7 +234,7 @@ contract RICO is Ownable {
 
     require(tob.isPoDEnded());
 
-    require(_startTimeOfPoD > block.timestamp);
+    require(_startTimeOfPoD >= block.timestamp);
 
     startTimeOfPoD = _startTimeOfPoD;
 
@@ -264,6 +263,8 @@ contract RICO is Ownable {
 
   function mintToken(uint _pod, address _user) public returns(bool) {
 
+    require(status == Status.RICOStarted);
+
     PoD pod = PoD(pods[_pod]);
 
     require(pod.isPoDEnded());
@@ -278,7 +279,6 @@ contract RICO is Ownable {
 
     require(pod.resetWeiBalance(_user));
 
-    status = Status.RICOEnded;
     return true;
   }
 
@@ -286,7 +286,7 @@ contract RICO is Ownable {
    * @dev automatically execute received transactions.
    */
   function () payable public {
-    if (status == Status.RICOEnded)
+    if (msg.value == 0)
       mintToken(1, msg.sender);
   }
 }

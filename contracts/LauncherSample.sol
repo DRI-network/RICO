@@ -35,6 +35,7 @@ contract LauncherSample is Ownable {
     ico.initTokenData(name, symbol, decimals);
     ico.addTokenRound(0);
     ico.addTokenRound(1);
+    ico.addTokenRound(2);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
     ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
     return true;
