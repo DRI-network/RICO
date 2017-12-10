@@ -1,6 +1,6 @@
 ![](https://dri.network/static/images/rico-banner.png)
 [![npm version](https://badge.fury.io/js/rico-core.svg)](https://badge.fury.io/js/rico-core)
-[![CircleCI](https://circleci.com/gh/DRI-project/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
+[![CircleCI](https://circleci.com/gh/DRI-network/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
 
 **This is an Alpha version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
@@ -29,7 +29,6 @@ An ICO made with RICO is:
 
 ### Tutorial
 - [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial%EF%BC%88%E3%83%AA%E3%82%B3%E3%83%BC%E3%81%AE%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%EF%BC%89)
-![](https://dri.network/static/images/rico-banner.png)
 
 
 ## Dependencies
