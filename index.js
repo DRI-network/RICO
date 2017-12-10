@@ -54,9 +54,9 @@ function newProject(pathDir) {
         if (filepath.indexOf(__dirname + "/migrations") !== -1) {
           return true;
         }
-        //if (stat === 'file' && filename === 'truffle.js') {
-        //  return true;
-        //}
+        if (stat === 'file' && filename === 'rpcrun.bash') {
+          return true;
+        }
 
         return false;
 
