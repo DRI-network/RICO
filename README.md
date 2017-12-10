@@ -1,20 +1,23 @@
 ![](https://dri.network/static/images/rico-banner.png)
 
-**Please be careful. This Version is Alpha. application may contain bugs.We are not responsible for any losses caused by this version.**
-
-This framework is a decentralized framework, that makeing the initial coin offering more responsible and decentralized.
+**This is an Alpha version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
 ## Design Concept
 
-In the case of the conventional ICO, the project owner can freely decide the process of generating the token. That is, the token design and token holding ratio is determined by the project owner. The sale of the token is done after issuance, and the project supporter purchases the issued token.
+RICO is a framework which forms a robust boilerplate for decentralized initial coin offerings (ICO). With RICO your ICO will be more responsible and be easier to set up and launch.
 
-In our approach, all execution processes of issuing tokens are strictly defined on the Ethereum Virtual Machine (EVM) and executed automatically. In addition, by automatically controlling the step of token generation, we can implement fair distribution for promoting system decentralization.
+##### The problems with conventional ICO's
 
+With a conventional ICO, the project owner can freely decide the process how tokens are generated. That is, the token design and holding ratio is decided by the project owner. After an initial issuance these tokens are sold to supporters at a certain price or exchanged for the total raised funds during the ICO.
+
+With RICO's approach the entire execution process of issuing tokens is strictly defined on the Ethereum Virtual Machine (EVM) and executed automatically. With RICO your ICO will be fully automatic and decentrilized. The decentrilized nature of an ICO created with RICO implements a true fair distribution system.
+
+An ICO made with RICO is:
+- Decentralized
 - Autonomous
-- Comfortable 
-- Decentralizing
-- Equitable
+- Fair
 - Mintable
+- Easy to use
 
 ## Dependencies
 
