@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.0.0
+    steps:
+      - checkout
+      - run:   
+          name: Install npm packages
+          command: |
+            npm install
+      - run:   
+          name: Install truffle and ganache-cli
+          command: |
+            sudo npm install -g truffle && sudo npm install -g ganache-cli
+      - run:   
+          name: Run test-rpc
+          background: true
+          command: |
+            ./rpcrun.bash 
+      - run:
+          name: Testing DutchAuctionPoD
+          command: |
+            truffle test test/DutchAuctionPoDTest.js 
+      - run:
+          name: Testing RICOToken
+          command: |
+            truffle test test/RICOTokenTest.js
+      - run:
+          name: Testing All contract
+          command: |
+            truffle test

@@ -9,8 +9,9 @@ contract('RICOToken', function (accounts) {
 
   it("should be deployed and init token for RICOToken", async function () {
 
-    token = await RICOToken.new();
-
+    token = await RICOToken.new({
+      from: owner
+    });
     //deploy contracts and initialize ico.
     const init = await token.init(name, symbol, decimals, {
       from: owner
@@ -30,7 +31,9 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
@@ -70,7 +73,9 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
@@ -99,7 +104,9 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
@@ -114,7 +121,9 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
@@ -130,7 +139,9 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
@@ -146,29 +157,29 @@ contract('RICOToken', function (accounts) {
       id: 0
     })
 
-    const mint = await token.mint(projectOwner)
+    const mint = await token.mint(projectOwner, {
+      from: owner
+    })
 
     const balance = await token.balanceOf(projectOwner)
 
     assert.strictEqual(balance.toNumber(), 9000 * 10 ** decimals, 'balance of projectOwner != 9000 * 10 ** decimals')
   })
 
-  it("should be changed owner by oldOwner", async function () {
+  it("should be changed owner by Old Owner", async function () {
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-    
+
     const newOwner = projectOwner
 
-    const changed = await token.changeOwner(newOwner, {
+    const changed = await token.transferOwnership(newOwner, {
       from: owner
     })
 
     const mintable = await token.mintable(projectOwner, 3000 * 10 ** decimals, now, {
       from: owner
     }).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: invalid opcode", 'token is not generate')
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'token is not generate')
     })
-
   })
-  
 })

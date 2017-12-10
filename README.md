@@ -1,4 +1,6 @@
 ![](https://dri.network/static/images/rico-banner.png)
+[![npm version](https://badge.fury.io/js/rico-core.svg)](https://badge.fury.io/js/rico-core)
+[![CircleCI](https://circleci.com/gh/DRI-network/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
 
 **This is an Alpha version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
@@ -21,22 +23,49 @@ An ICO made with RICO is:
 - Mintable
 - Easy to use
 
+## Docs
+### Whitepaper
+- [Whitepaper[JP]](https://dri.network/static/RICO-whitepaper.pdf)
+
+### Tutorial
+- [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial%EF%BC%88%E3%83%AA%E3%82%B3%E3%83%BC%E3%81%AE%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%EF%BC%89)
+
+
 ## Dependencies
 
-- Node v8.4.0
-- Truffle v3.4.9
-- solidity-compiler v0.4.15
+- Node v9.0.0
+- Truffle v4.0.1
+- solidity-compiler v0.4.18
 
 This project requires the [truffle framework](http://truffleframework.com/) to be installed globally. Please make sure you install this globally first:
 ```bash
-$ npm install truffle@3.4.9 -g 
+$ npm install truffle@4.0.1 -g 
 ```
 You can use ethereumjs-testrpc to test your RICO build.
 ```bash
-$ npm install ethereumjs-testrpc -g
+$ npm install ganache-cli -g
 ```
 
 ## Getting Started 
+
+### install rico-core
+```bash
+$ npm install -g rico-core
+```
+
+### new project generate
+```bash
+$ rico new ./helloico && cd ./helloico
+```
+### ganache-cli deploy
+Set up ganache-cli for migration.
+```bash
+$ ./rpcrun.bash &
+```
+Deploy contracts:
+```
+$ truffle migrate 
+```
 
 ### ropsten testnet deploy
 Set up etheruem Geth node with modules.
@@ -104,7 +133,7 @@ contract Launcher {
   address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set the first market maker's address 
   uint256 mm_1_amount = 100 ether;                           // set the ether amount to 100 ether for the first market maker
   uint256 mmCreateTime = block.timestamp + 100 days;         // set the ether transferable time to 100 days
-  uint256 PoDstrat = 0;                                      //set the token strategy
+  uint256 PoDstrat = 0;                                      // set the token strategy
 
   function Launcher() {
     projectOwner = msg.sender;
@@ -213,7 +242,7 @@ This feature is more important precept of RICO Framework. project Owner will spe
 running testrpc with account balance.
 
 ```bash
-$ testrpc -l 4700000 -b 1 --account="0x8445abbbcf2911a2db42fced93efe0d7b3172295c99b01a9e02197ff52f30a53,200000000000000000000" --account="0x580324cb2abc8029d6eb5a14650a8bd77f48be478c7ece07afd777755070128c,200000000000000000000"
+$ ./rpcrun.bash
 ```
 
 ```bash

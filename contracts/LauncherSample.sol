@@ -1,13 +1,11 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.18;
 import "./RICO.sol";
 
 /// @title SimpleICO - Sample ICO using with RICO Framework
 /// @author - Yusaku Senga <senga@dri.network>
 /// license let's see in LICENSE
 
-
-contract Launcher {
-  address public projectOwner;
+contract LauncherSample is Ownable {
   RICO public ico;
   string name = "Responsible ICO Token";
   string symbol = "RIT";
@@ -23,28 +21,23 @@ contract Launcher {
   uint256 secondSupplyTime = block.timestamp + 140 days; // set second mintable time to 140 days.（after 140 days elapsed)
   address mm_1 = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
   uint256 mm_1_amount = 10 ether; // set ether amount to 100 ether for first market maker.
-  uint256 mmCreateTime = block.timestamp + 100 days; // set ether transferable time to 100 days.
-  uint256 PoDstrat = 0;      //set token strategy.
+  uint256 mmCreateTime = block.timestamp + 20 days; // set ether transferable time to 100 days.
 
+  function LauncherSample() public {}
 
-  function Launcher() {
-    projectOwner = msg.sender;
-  }
-
-  function init(address _rico) returns(bool) {
-    require(msg.sender == projectOwner);
+  function init(address _rico, uint256 _totalSupply, address _token, address[] _pods) public onlyOwner() returns(bool) {
     ico = RICO(_rico);
+    ico.init(_token, _totalSupply, _pods, owner);
     return true;
   }
 
-  function setup() returns(bool) {
-    require(msg.sender == projectOwner);
-
-    ico.init(0x0, totalSupply, tobAmountToken, tobAmountWei, PoDCapToken, PoDCapWei, PoDstrat, projectOwner);
+  function setup(address _wallet) public onlyOwner() returns(bool) {
     ico.initTokenData(name, symbol, decimals);
-    ico.addTokenRound(firstSupply, firstSupplyTime, projectOwner);
-    ico.addTokenRound(secondSupply, secondSupplyTime, projectOwner);
+    ico.addTokenRound(0);
+    ico.addTokenRound(1);
+    ico.addTokenRound(2);
     ico.addWithdrawalRound(mm_1_amount, mmCreateTime, mm_1, true);
+    ico.addWithdrawalRound(PoDCapWei, mmCreateTime, _wallet, false);
     return true;
   }
 }
