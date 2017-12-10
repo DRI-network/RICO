@@ -55,7 +55,7 @@ contract('RICO', function (accounts) {
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const setConfigMint1 = await mint1.setConfig(projectOwner, now + 3, firstSupply)
+    const setConfigMint1 = await mint1.setConfig(projectOwner, 72000, firstSupply)
     const changeOwnerMint1 = await mint1.transferOwnership(rico.address)
 
     // changing owner to owner to rico.
@@ -171,9 +171,11 @@ contract('RICO', function (accounts) {
   })
 
   it("should be available to execute first Token Round for projecOwner", async function () {
-    const startpod = rico.startPoD(2)
+
+    const startpod = await rico.startPoD(2)
 
     const status = await mint1.status()
+
     assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
     const donate3 = await mint1.donate({
@@ -189,13 +191,20 @@ contract('RICO', function (accounts) {
   })
   it("should be available to mint first Token Round for projecOwner", async function () {
 
-    const status = await mint1.status()
-    assert.strictEqual(status.toNumber(), 3, 'status is not 2')
-
+    const status = await mint1.status.call()
+    assert.strictEqual(status.toNumber(), 3, 'status is not 3')
+    const setTime = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+      method: "evm_increaseTime",
+      params: [72000],
+      id: 0
+    })
     const mint = await rico.mintToken(2, projectOwner)
     const balance = await token.balanceOf(projectOwner)
-
+    const resetBalance = await mint1.getBalanceOfToken(projectOwner)
+    
     assert.strictEqual(balance.toNumber(), firstSupply, 'firstSupply is not correct')
-
+    assert.strictEqual(resetBalance.toNumber(), 0, 'resetBalance is not correct')
+    
   })
 })

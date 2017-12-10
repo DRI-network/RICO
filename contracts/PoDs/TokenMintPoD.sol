@@ -18,7 +18,7 @@ contract TokenMintPoD is PoD {
 
   function setConfig(
     address _user, 
-    uint256 _time,
+    uint256 _period,
     uint256 _capOfToken
   ) 
   public onlyOwner() returns (bool) 
@@ -26,7 +26,7 @@ contract TokenMintPoD is PoD {
     require(status == Status.PoDDeployed);
     tokenBalances[_user] = _capOfToken;
     weiBalances[_user] = 1;
-    time = _time;
+    period = _period;
     return true;
   }
 
@@ -36,7 +36,7 @@ contract TokenMintPoD is PoD {
   }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
-    if ( time > block.timestamp) 
+    if ( startTime + period > block.timestamp) 
       return 0;
     return weiBalances[_user].mul(tokenBalances[_user]);
   }

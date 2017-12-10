@@ -26,3 +26,7 @@ jobs:
           name: Testing RICOToken
           command: |
             truffle test test/RICOTokenTest.js
+      - run:
+          name: Testing All contract
+          command: |
+            truffle test

@@ -6,8 +6,8 @@ import "./PoD.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 /// @notice TokenRound chose a index for pod execute modes. 
-/// 0. ToB pod. podType == 101
-/// 1~ Custom pod. podType == 111
+/// 0. Attach ToB pod. podType == 101
+/// 1~ Attach Custom pod. podType == 111
 
 contract RICO is Ownable {
   /// using safemath
