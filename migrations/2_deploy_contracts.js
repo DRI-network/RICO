@@ -35,12 +35,12 @@ module.exports = async function (deployer, network, accounts) {
     projectOwner = accounts[0]
     tobAccount = accounts[1]
 
-    rico = await RICO.new()
-    token = await RICOToken.new()
-    launcher = await LauncherSample.new()
-    tob = await KaitsukePoD.new()
-    pod = await SimplePoD.new()
-    mint1 = await TokenMintPoD.new()
+    rico = await RICO.deployed()
+    token = await RICOToken.deployed()
+    launcher = await LauncherSample.deployed()
+    tob = await KaitsukePoD.deployed()
+    pod = await SimplePoD.deployed()
+    mint1 = await TokenMintPoD.deployed()
 
     pods = [
       tob.address,
