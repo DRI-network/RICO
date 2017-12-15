@@ -23,11 +23,11 @@ module.exports = {
       gas: 4642056,
       gasPrice: 10000000000
     },
-    testnet: {
-      host: "192.168.0.103",
-      port: 8545,
+    testrpc: {
+      host: "localhost",
+      port: 9545,
       network_id: 3, // Match ropsten network id
-      gas: 4700036,
+      gas: 4642056,
       gasPrice: 15000000000
     },
     ropsten: {

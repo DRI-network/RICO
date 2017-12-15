@@ -34,6 +34,7 @@ An ICO made with RICO is:
 
 ## Dependencies
 
+- Mac OSX 10.13.1
 - Node v9.0.0
 - Truffle v4.0.1
 - solidity-compiler v0.4.18
@@ -56,27 +57,31 @@ $ npm install -g rico-core
 
 ### new project generate
 ```bash
-$ rico new ./helloico && cd ./helloico
+$ rico new ./helloico && cd ./helloico && truffle init
 ```
 ### ganache-cli deploy
 Set up ganache-cli for migration.
 ```bash
+$ chmod 775 ./rpcrun.bash
 $ ./rpcrun.bash &
 ```
 Add the truffle.js configuration:
 ```js
+module.exports = {
   networks: {
     dev: {
-      host: "localhost",  // geth rpc addr
+      host: "localhost",
       port: 9545,
-      network_id: "*", // Match ropsten network id
+      network_id: 3, // Match ropsten network id
       gas: 4612188,
       gasPrice: 30000000000
     }
   }
+}
+```
 ```
 Deploy contracts:
-```
+```bash
 $ truffle migrate --network dev
 ```
 
@@ -89,34 +94,48 @@ $ geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,w
 
 Add the truffle.js configuration:
 ```js
- testnet: {
-      host: "192.168.0.103",  // geth rpc addr
-      port: 8545,
+const HDWalletProvider = require('truffle-hdwallet-provider');
+//const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
+const mnemonic = process.env.KEY
+ropsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/')
+
+module.exports = {
+  testnet: {
+      provider: ropsten,
       network_id: 3, // Match ropsten network id
       gas: 4612188,
       gasPrice: 30000000000
- }
+  }
+}
 ```
-
+```
+$ npm install truffle-hdwallet-provider
+```
 Deploy contracts:
 ```bash
-$ truffle migrate --network testnet
+$ KEY="your mnemonic key 12 words" truffle migrate --network testnet
 ``` 
 
 ### Main-net deploy
 
 Add the truffle.js configuration:
 ```js
-mainnet: {
-      host: "10.23.122.2",
-      port: 8545,
+const HDWalletProvider = require('truffle-hdwallet-provider');
+//const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
+const mnemonic = process.env.KEY
+mainet = new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/')
+
+module.exports = {
+  mainnet: {
+      provider: mainet,
       network_id: 1, // Match main network id
       gas: 6312188,
       gasPrice: 30000000000
+  }
 }
 ```
 ```bash
-$ truffle migrate --network mainnet
+$ KEY="your mnemonic key 12 words" truffle migrate --network mainnet
 ``` 
 
 ## SimpleICO Reference
