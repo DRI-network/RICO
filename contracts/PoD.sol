@@ -27,7 +27,6 @@ contract PoD is Ownable {
 
   enum Status {
     PoDDeployed,
-    PoDInitialized,
     PoDStarted,
     PoDEnded
   }
@@ -38,7 +37,6 @@ contract PoD is Ownable {
    */
   
   event Donated(address user, uint256 amount);
-  event Initialized(address wallet);
   event Started(uint256 time);
   event Ended(uint256 time);
 
@@ -52,17 +50,10 @@ contract PoD is Ownable {
     status = Status.PoDDeployed;
   }
 
-  function init() public onlyOwner() returns (bool) {
+  function init(uint256 _startTimeOfPoD) public onlyOwner() returns (bool) {
     require(status == Status.PoDDeployed);
-    status = Status.PoDInitialized;
-    totalReceivedWei = 0;
-    Initialized(owner);
-    return true;
-  }
-
-  function start(uint256 _startTimeOfPoD) public onlyOwner() returns (bool) {
-    require(status == Status.PoDInitialized);
     startTime = _startTimeOfPoD;
+    totalReceivedWei = 0;
     status = Status.PoDStarted;
     Started(startTime);
     return true;
@@ -115,6 +106,12 @@ contract PoD is Ownable {
 
   function isPoDEnded() public constant returns(bool) {
     if (status == Status.PoDEnded)
+      return true;
+    return false;
+  }
+
+  function isPoDStarted() public constant returns (bool) {
+    if (status == Status.PoDStarted)
       return true;
     return false;
   }

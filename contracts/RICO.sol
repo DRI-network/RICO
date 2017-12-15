@@ -16,45 +16,15 @@ contract RICO is Ownable {
    * Events 
    */
 
-  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
-  event InitTokenData(string name, string symbol, uint8 decimals);
-  event AddTokenRound(address pod);
-  event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
-  event ExecutedTOB(address po);
-  event Withdrawal(address receiver, uint256 amount);
-
-  /**
-   * Modifiers
-   */
-
-  modifier onlyProjectOwner() {
-    require(msg.sender == po);
-    // Only projectOwner is allowed to proceed
-    _;
-  }
+  event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address po, address[] pods, address token);
 
   /**
    * Storage
    */
 
-  enum Status {
-    Deployed,
-    Initialized,
-    TokenCreated,
-    TokenStructureConfirmed,
-    RICOStarted
-  }
-
-  address public po;
-  uint256 public totalSupply;
-  uint256 public tobLimitWei;
-  uint256 public nowReserveWei;
-  uint256 public startTimeOfPoD;
-  Status public status;
   string public version = "0.9.2";
   address[] public tokens;
 
-  mapping(address => mapping(uint256 => uint256)) wLimitWei;
   mapping(address => address[]) tokenToPods;
   mapping(address => uint256) totalSupplies;
   /**
@@ -62,9 +32,7 @@ contract RICO is Ownable {
    * @dev define owner when this contract deployed.
    */
 
-  function RICO() public {
-    status = Status.Deployed;
-  }
+  function RICO() public { }
 
   /**
    * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
@@ -72,36 +40,31 @@ contract RICO is Ownable {
    * @param _symbol       set Token symbol of RICO format.
    * @param _decimals     set Token decimals of RICO format.
    */
-  function newToken(string _name, string _symbol, uint8 _decimals, address _po) public returns (address) {
+  function newProject(
+    string _name, 
+    string _symbol, 
+    uint8 _decimals, 
+    uint256 _totalSupply,
+    address[] _pods
+  ) 
+  public returns (address) 
+  {
+
+    require(checkPoDs(_totalSupply, _pods));
 
     MintableToken token = new MintableToken();
 
-    token.init(_name, _symbol, _decimals, _po);
+    token.init(_name, _symbol, _decimals, msg.sender);
 
-    tokens.push(address(token));
+    tokenToPods[token] = _pods;
 
-    InitTokenData(_name, _symbol, _decimals);
+    totalSupplies[token] = _totalSupply;
+
+    tokens.push(token);
+
+    CreatedNewProject(_name, _symbol, _decimals, _totalSupply, msg.sender, _pods, token);
 
     return address(token);
-  }
-  /**
-   * @dev initialize token structure for new project.
-   * @param _pods                       array of Pod's addresses
-   * @param _token                      total supply of Token.
-   */
-  function init(address[] _pods, address _tokenAddr, uint256 _totalSupply) public returns(bool) {
-
-    require(tokenToPods[_tokenAddr].length == 0);
-
-    MintableToken token = MintableToken(_tokenAddr);
-
-    require(token.po() == msg.sender);
-
-    tokenToPods[_tokenAddr] = _pods;
-
-    totalSupplies[_tokenAddr] = _totalSupply;
-
-    return true;
   }
 
 
@@ -109,39 +72,18 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function strategyConfirm(address _tokenAddr) public onlyProjectOwner() returns(bool) {
-
-    MintableToken token = MintableToken(_tokenAddr);
-
-    require(token.po() == msg.sender);
-
-    require(checkTotalSupply(_tokenAddr));
-
-    return true;
-
-  }
-
-  function startPoD(address _tokenAddr, uint _pod, uint256 _startTimeOfPoD) public returns(bool) {
-  
-    require(tokenToPods[_tokenAddr][_pod] != 0x0);
-
-    PoD pod = PoD(tokenToPods[_tokenAddr][_pod]);
-
-    require(_startTimeOfPoD >= block.timestamp);
-
-    require(pod.start(startTimeOfPoD));
-
-    return true;
-  }
-
-  function checkTotalSupply(address _tokenAddr) internal constant returns (bool) {
+  function checkPoDs(uint256 _totalSupply, address[] _pods) internal constant returns (bool) {
     uint256 nowSupply = 0;
-    for (uint i = 0; i < tokenToPods[_tokenAddr].length-1; i++) {
-      address podAddr = tokenToPods[_tokenAddr][i];
+    for (uint i = 0; i < _pods.length-1; i++) {
+      address podAddr = _pods[i];
       PoD pod = PoD(podAddr);
+
+      if (!pod.isPoDStarted())
+        return false;
+
       nowSupply = nowSupply.add(pod.proofOfDonationCapOfToken());
     }
-    if (nowSupply <= totalSupplies[_tokenAddr])
+    if (nowSupply <= _totalSupply)
       return true;
     return false;
   }
