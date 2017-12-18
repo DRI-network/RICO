@@ -1,6 +1,4 @@
 const RICO = artifacts.require("./RICO.sol");
-const RICOToken = artifacts.require("./RICOToken.sol");
-const TokenMintPoD = artifacts.require("./PoDs/TokenMintPoD.sol")
 const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
 const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
 const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
@@ -28,55 +26,32 @@ module.exports = async function (deployer, network, accounts) {
   if (network === "development") return; // Don't deploy on tests
 
   deployer.deploy(RICO).then(() => {
-    return deployer.deploy(TokenMintPoD)
-  }).then(() => {
     return deployer.deploy(SimplePoD)
   }).then(() => {
     return deployer.deploy(KaitsukePoD)
   }).then(async() => {
     // certifiers
     projectOwner = accounts[0]
-    tobAccount = projectOwner
 
     rico = await RICO.deployed()
     tob = await KaitsukePoD.deployed()
     pod = await SimplePoD.deployed()
-    mint1 = await TokenMintPoD.deployed()
 
     pods = [
       tob.address,
-      pod.address,
-      mint1.address
+      pod.address
     ]
 
-    const addToken = await rico.newToken(name, symbol, decimals)
-    
-    const tokenAddr = await rico.tokens.call(0)
-    console.log(tokenAddr)
-    
-    //console.log(projectOwner, tobAccount, pods)
-    const init = await rico.init(pods, tokenAddr)
-    
-    const setConfigToB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, tobAccount)
+
+    const setConfigTOB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, projectOwner)
+    const initTOB = await tob.init(execTime)
     const changeOwnerToB = await tob.transferOwnership(rico.address)
 
     const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
+    const initPoD = await pod.init(execTime)
     const changeOwnerPoD = await pod.transferOwnership(rico.address)
 
-    const setConfigMint1 = await mint1.setConfig(projectOwner, 72000, firstSupply)
-    const changeOwnerMint1 = await mint1.transferOwnership(rico.address)
-
-    // changing owner to owner to rico.
-   // const changeOwnerToken = await token.transferOwnership(rico.address)
-
-    //initializing launcher.
-
-   // const setTOB = await rico.addTokenRound(0);
-   // const setPoD = await rico.addTokenRound(1);
-   // const setFirstTokenSupply = await rico.addTokenRound(2);
-    const setFirstWithdrawal = await rico.addWithdrawalRound(marketMakerAmount, execTime, marketMaker, true);
-    //const setSecondWithdrawal = await rico.addWithdrawalRound(podWeiLimit, execTime, projectOwner, false);
-
+    const addNewProject = await rico.newProject(name, symbol, decimals, totalTokenSupply, pods)
 
   });
 }

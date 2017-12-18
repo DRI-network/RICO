@@ -10,6 +10,8 @@ contract KaitsukePoD is PoD {
   uint256 public lockTime;
   address public buyer;
   uint256 public tokenMultiplier;
+  uint256 public endTime;
+  uint256 public totalReceivedWei;
 
   function KaitsukePoD() public {
     name = "KaitsukePoD strategy token price = capToken/capWei";
@@ -38,6 +40,8 @@ contract KaitsukePoD is PoD {
     
     weiBalances[_user] = weiBalances[_user].add(msg.value);
 
+    owner.transfer(msg.value);
+
     if (msg.value == remains)
       return false;
     
@@ -50,5 +54,15 @@ contract KaitsukePoD is PoD {
       return 0;
     
     return (tokenMultiplier * weiBalances[_user]) / tokenPrice;
+  }
+
+  function resetWeiBalance(address _user) public onlyOwner() returns (bool) {
+
+    require(status == Status.PoDEnded);
+
+    weiBalances[_user] = 0;
+
+    return true;
+
   }
 }

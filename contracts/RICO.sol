@@ -17,6 +17,7 @@ contract RICO is Ownable {
    */
 
   event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address po, address[] pods, address token);
+  event CheckedPodsToken(address pod, uint256 supply);
 
   /**
    * Storage
@@ -25,7 +26,7 @@ contract RICO is Ownable {
   string public version = "0.9.2";
   address[] public tokens;
 
-  mapping(address => address[]) tokenToPods;
+  mapping(address => address[]) public tokenToPods;
   mapping(address => uint256) totalSupplies;
   /**
    * constructor
@@ -72,7 +73,7 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function checkPoDs(uint256 _totalSupply, address[] _pods) internal constant returns (bool) {
+  function checkPoDs(uint256 _totalSupply, address[] _pods) internal returns (bool) {
     uint256 nowSupply = 0;
     for (uint i = 0; i < _pods.length-1; i++) {
       address podAddr = _pods[i];
@@ -80,10 +81,13 @@ contract RICO is Ownable {
 
       if (!pod.isPoDStarted())
         return false;
-
-      nowSupply = nowSupply.add(pod.proofOfDonationCapOfToken());
+      
+      uint256 capOfToken = pod.proofOfDonationCapOfToken();
+      nowSupply = nowSupply.add(capOfToken);
+      CheckedPodsToken(address(pod), capOfToken);
     }
-    if (nowSupply <= _totalSupply)
+
+    if (nowSupply == _totalSupply)
       return true;
     return false;
   }

@@ -53,6 +53,7 @@ contract LimitedWalletPoD is PoD {
   }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
+    assert(_user != 0x0);
     return 0;
   }
 }
