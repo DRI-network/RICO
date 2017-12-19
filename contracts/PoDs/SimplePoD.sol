@@ -8,11 +8,11 @@ import "../PoD.sol";
 contract SimplePoD is PoD {
 
   uint256 public tokenMultiplier;
+  uint256 public period;
 
   function SimplePoD() public {
     name = "SimplePoD strategy token price = capToken/capWei";
     version = "0.1";
-    period = 7 days;
     podType = 111;
   }
 
@@ -22,6 +22,8 @@ contract SimplePoD is PoD {
     proofOfDonationCapOfToken = _capOfToken;
     proofOfDonationCapOfWei = _capOfWei;
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
+    period = 7 days;
+
     return true;
   }
 

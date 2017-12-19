@@ -6,13 +6,11 @@ pragma solidity ^0.4.18;
 
 contract AbsPoD {
 
-  function init(uint256 _proofOfDonationCapOfToken, uint256 _proofOfDonationCapOfWei) public returns(bool);
-
-  function start(uint256 _startTimeOfPoD) public returns(bool);
+  function init(address _wallet, uint256 _startTimeOfPoD) public returns (bool);
 
   function donate() payable public returns(bool);
 
-  function resetTokenBalance(address _user) public returns(bool);
+  function resetWeiBalance(address _user) public returns(bool);
 
   function getTokenPrice() public constant returns(uint256);
 
@@ -22,5 +20,10 @@ contract AbsPoD {
 
   function transferOwnership(address newOwner) public;
 
+  function getCapOfToken() public constant returns(uint256);
+
   function isPoDEnded() public constant returns(bool);
+
+  function isPoDStarted() public constant returns(bool);
+
 }

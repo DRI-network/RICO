@@ -26,7 +26,7 @@ contract TokenMintPoD is PoD {
     require(status == Status.PoDDeployed);
     tokenBalances[_user] = _capOfToken;
     weiBalances[_user] = 1;
-    period = _period;
+    time = _period;
     return true;
   }
 
@@ -36,7 +36,7 @@ contract TokenMintPoD is PoD {
   }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
-    if ( startTime + period > block.timestamp) 
+    if ( startTime + time > block.timestamp) 
       return 0;
     return weiBalances[_user].mul(tokenBalances[_user]);
   }

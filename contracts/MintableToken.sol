@@ -21,7 +21,6 @@ contract MintableToken is EIP20StandardToken, Ownable {
   string public name;
   string public symbol;
   uint8 public decimals;
-  address public po;
 
   modifier canMint() {
     require(!mintingFinished);
@@ -30,12 +29,11 @@ contract MintableToken is EIP20StandardToken, Ownable {
 
   function MintableToken() public {}
 
-  function init(string _name, string _symbol, uint8 _decimals, address _po) onlyOwner() public returns (bool) {
+  function init(string _name, string _symbol, uint8 _decimals) onlyOwner() public returns (bool) {
     require(!initialized);
     name = _name;
     symbol = _symbol;
     decimals = _decimals;
-    po = _po;
     initialized = true;
     return initialized;
   }
@@ -58,7 +56,7 @@ contract MintableToken is EIP20StandardToken, Ownable {
    * @dev Function to stop minting new tokens.
    * @return True if the operation was successful.
    */
-  function finishMinting() onlyOwner canMint public returns (bool) {
+  function finishMinting() onlyOwner() canMint public returns (bool) {
     mintingFinished = true;
     MintFinished();
     return true;

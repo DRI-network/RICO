@@ -1,10 +1,8 @@
-const LauncherSample = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
-const RICOToken = artifacts.require("./RICOToken.sol");
-const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
 const MultiSigWallet = artifacts.require("./MultiSigWallet.sol")
-const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
-const TokenMintPoD = artifacts.require("./PoDs/TokenMintPoD.sol")
+const Launcher = artifacts.require("./Launcher.sol")
+const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
+const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
 
 const ether = 10 ** 18;
 
@@ -15,8 +13,13 @@ const decimals = 18;
 const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
 const tobTokenSupply = totalTokenSupply * 3 / 100
 const tobWeiLimit = 100 * 10 ** 18
+const now = parseInt(new Date() / 1000)
+const tobStartTime = now + 72000; //sec
+
 const podTokenSupply = totalTokenSupply * 20 / 100
 const podWeiLimit = 100 * 10 ** 18
+const podStartTime = now + 172000; //sec
+
 
 const firstSupply = totalTokenSupply * 30 / 100; // set first token supply to 30% of total supply.
 const firstSupplyTime = 3456000; // set first mintable time to 40 days.（after 40 days elapsed)
@@ -34,41 +37,18 @@ contract('RICO', function (accounts) {
     tobAccount = accounts[1]
 
     rico = await RICO.new()
-    token = await RICOToken.new()
-    launcher = await LauncherSample.new()
-    tob = await KaitsukePoD.new()
-    pod = await SimplePoD.new()
-    multisig = await MultiSigWallet.new(accounts, 2)
-    mint1 = await TokenMintPoD.new()
+    lancher = await Launcher.new()
 
-    pods = [
-      tob.address,
-      pod.address,
-      mint1.address
-    ]
+    const kickStart = await lancher.kickStart(
+      rico.address,
+      name,
+      symbol,
+      decimals,
+      0, [tobTokenSupply, tobWeiLimit, tobStartTime, podTokenSupply, podWeiLimit, podStartTime]
+    )
+    console.log(kickStart)
 
-    const setConfigToB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, tobAccount)
-    const changeOwnerToB = await tob.transferOwnership(rico.address)
-
-    const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
-    const changeOwnerPoD = await pod.transferOwnership(rico.address)
-
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const setConfigMint1 = await mint1.setConfig(projectOwner, 72000, firstSupply)
-    const changeOwnerMint1 = await mint1.transferOwnership(rico.address)
-
-    // changing owner to owner to rico.
-    const changeOwnerToken = await token.transferOwnership(rico.address)
-    const changeOwnerRICO = await rico.transferOwnership(launcher.address)
-
-    //initializing launcher.
-    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods)
-
-    //setup launcher
-    const setup = await launcher.setup(accounts[0]);
-
-    const status = await rico.status.call()
+    const status = await rico.tokens.call()
     assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
     const test = await rico.transferOwnership(launcher.address).catch(err => {
@@ -202,9 +182,9 @@ contract('RICO', function (accounts) {
     const mint = await rico.mintToken(2, projectOwner)
     const balance = await token.balanceOf(projectOwner)
     const resetBalance = await mint1.getBalanceOfToken(projectOwner)
-    
+
     assert.strictEqual(balance.toNumber(), firstSupply, 'firstSupply is not correct')
     assert.strictEqual(resetBalance.toNumber(), 0, 'resetBalance is not correct')
-    
+
   })
 })

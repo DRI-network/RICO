@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 import "./MintableToken.sol";
-import "./PoD.sol";
+import "./AbsPoD.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
@@ -16,18 +16,19 @@ contract RICO is Ownable {
    * Events 
    */
 
-  event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address po, address[] pods, address token);
+  event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address[] pods, address token);
   event CheckedPodsToken(address pod, uint256 supply);
 
   /**
    * Storage
    */
 
+  string public name = "RICO contract";
   string public version = "0.9.2";
   address[] public tokens;
 
   mapping(address => address[]) public tokenToPods;
-  mapping(address => uint256) totalSupplies;
+  mapping(address => uint256) public totalSupplies;
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -45,25 +46,25 @@ contract RICO is Ownable {
     string _name, 
     string _symbol, 
     uint8 _decimals, 
-    uint256 _totalSupply,
     address[] _pods
   ) 
   public returns (address) 
   {
+    uint256 totalSupply = checkPoDs(_pods);
 
-    require(checkPoDs(_totalSupply, _pods));
+    require(totalSupply > 0);
 
     MintableToken token = new MintableToken();
 
-    token.init(_name, _symbol, _decimals, msg.sender);
+    token.init(_name, _symbol, _decimals);
 
     tokenToPods[token] = _pods;
 
-    totalSupplies[token] = _totalSupply;
+    totalSupplies[token] = totalSupply;
 
     tokens.push(token);
 
-    CreatedNewProject(_name, _symbol, _decimals, _totalSupply, msg.sender, _pods, token);
+    CreatedNewProject(_name, _symbol, _decimals, totalSupply, _pods, token);
 
     return address(token);
   }
@@ -73,23 +74,21 @@ contract RICO is Ownable {
    * @dev confirm token creation strategy by projectOwner.
    */
 
-  function checkPoDs(uint256 _totalSupply, address[] _pods) internal returns (bool) {
+  function checkPoDs(address[] _pods) internal returns (uint256) {
     uint256 nowSupply = 0;
-    for (uint i = 0; i < _pods.length-1; i++) {
+    for (uint i = 0; i < _pods.length; i++) {
       address podAddr = _pods[i];
-      PoD pod = PoD(podAddr);
+      AbsPoD pod = AbsPoD(podAddr);
 
       if (!pod.isPoDStarted())
-        return false;
+        return 0;
       
-      uint256 capOfToken = pod.proofOfDonationCapOfToken();
+      uint256 capOfToken = pod.getCapOfToken();
       nowSupply = nowSupply.add(capOfToken);
       CheckedPodsToken(address(pod), capOfToken);
     }
 
-    if (nowSupply == _totalSupply)
-      return true;
-    return false;
+    return nowSupply;
   }
 
   /**
@@ -100,7 +99,7 @@ contract RICO is Ownable {
 
     require(tokenToPods[_tokenAddr][_pod] != 0x0);
 
-    PoD pod = PoD(tokenToPods[_tokenAddr][_pod]);
+    AbsPoD pod = AbsPoD(tokenToPods[_tokenAddr][_pod]);
 
     require(pod.isPoDEnded());
 
