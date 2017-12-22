@@ -27,20 +27,20 @@ module.exports = async function (deployer, network, accounts) {
   }).then(() => {
     return deployer.deploy(RICOToken)
   }).then(() => {
-    return deployer.deploy(KaitsukePoD)
-  }).then(() => {
     return deployer.deploy(SimplePoD)
+  }).then(() => {
+    return deployer.deploy(KaitsukePoD)
   }).then(async() => {
     // certifiers
     projectOwner = accounts[0]
-    tobAccount = accounts[1]
-
-    rico = await RICO.new()
-    token = await RICOToken.new()
-    launcher = await LauncherSample.new()
-    tob = await KaitsukePoD.new()
-    pod = await SimplePoD.new()
-    mint1 = await TokenMintPoD.new()
+    tobAccount = projectOwner
+  
+    rico = await RICO.deployed()
+    token = await RICOToken.deployed()
+    launcher = await LauncherSample.deployed()
+    tob = await KaitsukePoD.deployed()
+    pod = await SimplePoD.deployed()
+    mint1 = await TokenMintPoD.deployed()
 
     pods = [
       tob.address,
@@ -48,13 +48,14 @@ module.exports = async function (deployer, network, accounts) {
       mint1.address
     ]
 
+    //console.log(projectOwner, tobAccount, pods)
+
+
     const setConfigToB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, tobAccount)
     const changeOwnerToB = await tob.transferOwnership(rico.address)
 
     const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
     const changeOwnerPoD = await pod.transferOwnership(rico.address)
-
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
     const setConfigMint1 = await mint1.setConfig(projectOwner, 72000, firstSupply)
     const changeOwnerMint1 = await mint1.transferOwnership(rico.address)

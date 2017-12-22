@@ -63,9 +63,21 @@ Set up ganache-cli for migration.
 ```bash
 $ ./rpcrun.bash &
 ```
+Add the truffle.js configuration:
+```js
+  networks: {
+    dev: {
+      host: "localhost",  // geth rpc addr
+      port: 9545,
+      network_id: "*", // Match ropsten network id
+      gas: 4612188,
+      gasPrice: 30000000000
+    }
+  }
+```
 Deploy contracts:
 ```
-$ truffle migrate 
+$ truffle migrate --network dev
 ```
 
 ### ropsten testnet deploy
