@@ -33,9 +33,9 @@ module.exports = async function (deployer, network, accounts) {
     projectOwner = accounts[0]
 
     rico = await RICO.deployed()
-    lancher = await Launcher.deployed()
+    launcher = await Launcher.deployed()
 
-    const kickStart = await lancher.kickStart(
+    const kickStart = await launcher.kickStart(
       rico.address,
       name,
       symbol,
