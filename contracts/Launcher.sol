@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 import "./PoDs/DutchAuctionPoD.sol";
 import "./PoDs/SimplePoD.sol";
-import "./PoDs/KaitsukePoD.sol";
+import "./PoDs/StandardPoD.sol";
 import "./RICO.sol";
 
 /// @title Launcher - RICO Launcher contract
@@ -39,20 +39,21 @@ contract Launcher {
     string _symbol, 
     uint8 _decimals, 
     uint _mode,
-    uint256[] _params
+    uint256[] tobParams,
+    uint256[] podParams,
+    address[2] _owners,
+    address[] _marketMakers
   ) 
   public 
   {
     if (_mode == 0) {
       address[] memory pods = new address[](2);
-      KaitsukePoD tob = new KaitsukePoD();
-      tob.setConfig(_decimals, uint256(_params[0]), uint256(_params[1]), msg.sender);
-      tob.init(msg.sender, uint256(_params[2]));
+      StandardPoD tob = new StandardPoD();
+      tob.init(tobParams[0], _decimals, tobParams[1], tobParams[2], _owners, _marketMakers, tobParams[3]);
       pods[0] = address(tob);
 
       SimplePoD pod = new SimplePoD();
-      pod.setConfig(_decimals, uint256(_params[3]), uint256(_params[4]));
-      pod.init(msg.sender, uint256(_params[5]));
+      pod.init(msg.sender, podParams[0], _decimals, podParams[1], podParams[2]);
       pods[1] = address(pod);
 
       RICO rico = RICO(_rico);

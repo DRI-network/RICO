@@ -29,13 +29,13 @@ module.exports = {
       port: 9545,
       network_id: 3, // Match ropsten network id
       gas: 4642056,
-      gasPrice: 15000000000
+      gasPrice: 20000000000
     },
     ropsten: {
       provider: ropsten,
       network_id: 3, // Match ropsten network id
       gas: 4700036,
-      gasPrice: 30000000000
+      gasPrice: 15000000000
     },
     rinkeby: {
       provider: rinkeby,

@@ -24,7 +24,7 @@ contract RICO is Ownable {
    */
 
   string public name = "RICO contract";
-  string public version = "0.9.2";
+  string public version = "0.9.3";
   address[] public tokens;
 
   mapping(address => address[]) public tokenToPods;
@@ -53,7 +53,8 @@ contract RICO is Ownable {
     uint256 totalSupply = checkPoDs(_pods);
 
     require(totalSupply > 0);
-
+    
+    //generate a ERC20 mintable token.
     MintableToken token = new MintableToken();
 
     token.init(_name, _symbol, _decimals);

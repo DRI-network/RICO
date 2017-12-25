@@ -1,6 +1,6 @@
 const RICO = artifacts.require("./RICO.sol");
 const Launcher = artifacts.require("./Launcher.sol")
-const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
+const KaitsukePoD = artifacts.require("./PoDs/StandardPoD.sol")
 const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
 
 const name = "Responsible ICO Token";
@@ -17,13 +17,10 @@ const podTokenSupply = totalTokenSupply * 90 / 100
 const podWeiLimit = 100 * 10 ** 18
 const podStartTime = now + 172000; //sec
 
-const firstSupply = totalTokenSupply * 30 / 100;
-const firstSupplyDuration = 72000; //sec
+const lastSupply = totalTokenSupply * 30 / 100;
 
 const marketMaker = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
-const marketMakerAmount = tobWeiLimit; // set ether amount to 100 ether for first market maker.
-const now2 = parseInt(new Date() / 1000)
-const execTime = now2 + 172000;
+const owner = 0x8a20a13b75d0aefb995c0626f22df0d98031a4b6;
 
 module.exports = async function (deployer, network, accounts) {
 
@@ -43,10 +40,10 @@ module.exports = async function (deployer, network, accounts) {
       name,
       symbol,
       decimals,
-      0, [tobTokenSupply, tobWeiLimit, tobStartTime, podTokenSupply, podWeiLimit, podStartTime]
+      0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [accounts[0], owner], [marketMaker]
     )
 
-    console.log(kickStart)
+    //console.log(kickStart)
 
   });
 }

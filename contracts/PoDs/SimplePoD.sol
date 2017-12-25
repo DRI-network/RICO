@@ -16,14 +16,26 @@ contract SimplePoD is PoD {
     podType = 111;
   }
 
-  function setConfig(uint8 _tokenDecimals, uint256 _capOfToken, uint256 _capOfWei) public onlyOwner() returns (bool) {
+  function init(
+    address _wallet, 
+    uint256 _startTimeOfPoD,
+    uint8 _tokenDecimals,
+    uint256 _capOfToken, 
+    uint256 _capOfWei
+  ) 
+  public onlyOwner() returns (bool) 
+  {
     require(status == Status.PoDDeployed);
+    require(_wallet != 0x0);
+    startTime = _startTimeOfPoD;
+    wallet = _wallet;
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
     proofOfDonationCapOfToken = _capOfToken;
     proofOfDonationCapOfWei = _capOfWei;
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
     period = 7 days;
-
+    status = Status.PoDStarted;
+    Started(startTime);
     return true;
   }
 

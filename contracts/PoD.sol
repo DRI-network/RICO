@@ -50,17 +50,7 @@ contract PoD is Ownable {
 
   function PoD() public {
     status = Status.PoDDeployed;
-  }
-
-  function init(address _wallet, uint256 _startTimeOfPoD) public onlyOwner() returns (bool) {
-    require(status == Status.PoDDeployed);
-    require(_wallet != 0x0);
-    startTime = _startTimeOfPoD;
-    status = Status.PoDStarted;
-    wallet = _wallet;
     totalReceivedWei = 0;
-    Started(startTime);
-    return true;
   }
 
   function donate() payable public returns (bool) {
