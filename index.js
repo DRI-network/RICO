@@ -48,6 +48,9 @@ function newProject(pathDir) {
         if (filepath.indexOf(__dirname + "/contracts") !== -1) {
           return true;
         }
+        if (filepath.indexOf(__dirname + "/build") !== -1) {
+          return true;
+        }
         if (filepath.indexOf(__dirname + "/exec") !== -1) {
           return true;
         }

@@ -1,7 +1,6 @@
 const Launcher = artifacts.require("./Launcher.sol")
 const RICO = artifacts.require("./RICO.sol")
 
-
 const name = "Responsible ICO Token";
 const symbol = "RIT";
 const decimals = 18;
