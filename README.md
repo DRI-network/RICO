@@ -26,6 +26,7 @@ An ICO made with RICO is:
 
 ## Docs
 ### Whitepaper
+- [Whitepaper[EN]](https://dri.network/static/RICO-whitepaper-en.pdf)
 - [Whitepaper[JP]](https://dri.network/static/RICO-whitepaper.pdf)
 
 ### Tutorial
