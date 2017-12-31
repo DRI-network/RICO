@@ -61,13 +61,7 @@ $ npm install -g rico-core
 $ rico new ./helloico && cd ./helloico && truffle init
 ```
 
-```
-Deploy contracts:
-```bash
-$ truffle migrate --network dev
-```
-
-### ropsten testnet deploy
+### Testnet deploy (ropsten)
 
 **Caution: ropsten hit the Byzantium HardFork #1700000 you have to update geth to v1.7 and sync to the latest block.**
 
@@ -77,31 +71,12 @@ $ npm install truffle-hdwallet-provider
 Attachment contracts:
 ```bash
 $ export KEY="your mnemonic key 12 words" 
-$ export NET=ropsten
+$ export RICO_ADDR=0xdc063bd44f1a395c5d1f3d4bdc75396aaf8b4b75
+$ export LAUNCHER_ADDR=0x9851fa8938542234ed9261258dd19281a60f348a
 $ truffle exec exec/KickStart/deploy.js --network ropsten
 ``` 
 
-### ganache-cli deploy
-Set up ganache-cli for migration.
-```bash
-$ chmod 775 ./rpcrun.bash
-$ ./rpcrun.bash &
-```
-Add the truffle.js configuration:
-```js
-module.exports = {
-  networks: {
-    dev: {
-      host: "localhost",
-      port: 9545,
-      network_id: 3, // Match ropsten network id
-      gas: 4612188,
-      gasPrice: 30000000000
-    }
-  }
-}
-```
-### Main-net deploy
+### Mainnet deploy
 
 Add the truffle.js configuration:
 ```js
