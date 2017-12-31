@@ -59,6 +59,27 @@ $ npm install -g rico-core
 ```bash
 $ rico new ./helloico && cd ./helloico && truffle init
 ```
+
+```
+Deploy contracts:
+```bash
+$ truffle migrate --network dev
+```
+
+### ropsten testnet deploy
+
+**Caution: ropsten hit the Byzantium HardFork #1700000 you have to update geth to v1.7 and sync to the latest block.**
+
+```
+$ npm install truffle-hdwallet-provider
+```
+Attachment contracts:
+```bash
+$ export KEY="your mnemonic key 12 words" 
+$ export NET=ropsten
+$ truffle exec exec/KickStart/deploy.js --network ropsten
+``` 
+
 ### ganache-cli deploy
 Set up ganache-cli for migration.
 ```bash
@@ -79,43 +100,6 @@ module.exports = {
   }
 }
 ```
-```
-Deploy contracts:
-```bash
-$ truffle migrate --network dev
-```
-
-### ropsten testnet deploy
-Set up etheruem Geth node with modules.
-```bash
-$ geth --fast --rpc --testnet --rpcaddr "0.0.0.0" --rpcapi "personal,admin,eth,web3,net"
-```
-**Caution: ropsten hit the Byzantium HardFork #1700000 you have to update geth to v1.7 and sync to the latest block.**
-
-Add the truffle.js configuration:
-```js
-const HDWalletProvider = require('truffle-hdwallet-provider');
-//const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
-const mnemonic = process.env.KEY
-ropsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/')
-
-module.exports = {
-  testnet: {
-      provider: ropsten,
-      network_id: 3, // Match ropsten network id
-      gas: 4612188,
-      gasPrice: 30000000000
-  }
-}
-```
-```
-$ npm install truffle-hdwallet-provider
-```
-Deploy contracts:
-```bash
-$ KEY="your mnemonic key 12 words" truffle migrate --network testnet
-``` 
-
 ### Main-net deploy
 
 Add the truffle.js configuration:

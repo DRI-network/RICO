@@ -60,6 +60,9 @@ function newProject(pathDir) {
         if (stat === 'file' && filename === 'rpcrun.bash') {
           return true;
         }
+        if (stat === 'file' && filename === 'truffle.js') {
+          return true;
+        }
 
         return false;
 

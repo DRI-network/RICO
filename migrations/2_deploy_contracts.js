@@ -40,6 +40,7 @@ module.exports = async function (deployer, network, accounts) {
       name,
       symbol,
       decimals,
+      projectOwner,
       0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [accounts[0], owner], [marketMaker]
     )
 

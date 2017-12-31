@@ -18,7 +18,7 @@ contract Launcher {
    * Storage
    */
   string public name = "RICO Launcher";
-  string public version = "0.9.2";
+  string public version = "0.9.3";
 
   /**
    * constructor
@@ -38,6 +38,7 @@ contract Launcher {
     string _name, 
     string _symbol, 
     uint8 _decimals, 
+    address _wallet,
     uint _mode,
     uint256[] tobParams,
     uint256[] podParams,
@@ -53,11 +54,12 @@ contract Launcher {
       pods[0] = address(tob);
 
       SimplePoD pod = new SimplePoD();
-      pod.init(msg.sender, podParams[0], _decimals, podParams[1], podParams[2]);
+      pod.init(_wallet, podParams[0], _decimals, podParams[1], podParams[2]);
       pods[1] = address(pod);
 
       RICO rico = RICO(_rico);
-      rico.newProject(_name, _symbol, _decimals, pods);
+      rico.newProject(_name, _symbol, _decimals, pods, _owners[0]);
     }
   }
+
 }

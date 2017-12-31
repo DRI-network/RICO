@@ -1,6 +1,6 @@
 {
   "name": "rico-core",
-  "version": "0.9.2-commit.7e875fa",
+  "version": "0.9.2-commit.98a5d4",
   "description": "The Responsible Initial Coin Offering",
   "main": "truffle.js",
   "directories": {

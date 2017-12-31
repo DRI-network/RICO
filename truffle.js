@@ -12,6 +12,8 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 const mnemonic = process.env.KEY
 ropsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/')
 rinkeby = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
+mainnet = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
+
 
 //console.log(rinkebyProvider.address)
 
@@ -35,7 +37,7 @@ module.exports = {
       provider: ropsten,
       network_id: 3, // Match ropsten network id
       gas: 4700036,
-      gasPrice: 15000000000
+      gasPrice: 25000000000
     },
     rinkeby: {
       provider: rinkeby,
@@ -44,11 +46,10 @@ module.exports = {
       gasPrice: 15000000000
     },
     mainnet: {
-      host: "10.23.122.2",
-      port: 8545,
-      network_id: 1, // Match main network id
-      gas: 7000000, // Gaslimit based on latestblock
-      gasPrice: 30000000000
-    }
+      provider: mainnet,
+      network_id: 1,
+      gas: 4700036,
+      gasPrice: 15000000000
+    },
   }
 };

@@ -46,7 +46,8 @@ contract RICO is Ownable {
     string _name, 
     string _symbol, 
     uint8 _decimals, 
-    address[] _pods
+    address[] _pods,
+    address _projectOwner
   ) 
   public returns (address) 
   {
@@ -57,7 +58,7 @@ contract RICO is Ownable {
     //generate a ERC20 mintable token.
     MintableToken token = new MintableToken();
 
-    token.init(_name, _symbol, _decimals);
+    token.init(_name, _symbol, _decimals, _projectOwner);
 
     tokenToPods[token] = _pods;
 
@@ -98,22 +99,33 @@ contract RICO is Ownable {
 
   function mintToken(address _tokenAddr, uint _pod, address _user) public returns(bool) {
 
+    address user = msg.sender;
+
+    if (_user != 0x0) {
+      user = _user;
+    }
+
     require(tokenToPods[_tokenAddr][_pod] != 0x0);
 
     AbsPoD pod = AbsPoD(tokenToPods[_tokenAddr][_pod]);
 
     require(pod.isPoDEnded());
 
-    uint256 tokenValue = pod.getBalanceOfToken(_user);
+    uint256 tokenValue = pod.getBalanceOfToken(user);
 
     require(tokenValue > 0);
 
     MintableToken token = MintableToken(_tokenAddr);
 
-    require(token.mint(_user, tokenValue));
+    require(token.mint(user, tokenValue));
 
-    require(pod.resetWeiBalance(_user));
+    require(pod.resetWeiBalance(user));
 
     return true;
+  }
+  
+
+  function getTokens() public constant returns (address[]) {
+    return tokens;
   }
 }
