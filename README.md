@@ -58,7 +58,7 @@ $ npm install -g rico-core
 
 ### new project generate
 ```bash
-$ rico new ./helloico && cd ./helloico && truffle init
+$ rico new ./helloico && cd ./helloico 
 ```
 
 ### Testnet deploy (ropsten)
@@ -70,7 +70,7 @@ $ npm install truffle-hdwallet-provider
 ```
 Attachment contracts:
 ```bash
-$ export KEY="your mnemonic key 12 words" 
+$ export MNEMONIC_KEY="your mnemonic key 12 words" 
 $ export RICO_ADDR=0xdc063bd44f1a395c5d1f3d4bdc75396aaf8b4b75
 $ export LAUNCHER_ADDR=0x9851fa8938542234ed9261258dd19281a60f348a
 $ truffle exec exec/KickStart/deploy.js --network ropsten
@@ -78,24 +78,12 @@ $ truffle exec exec/KickStart/deploy.js --network ropsten
 
 ### Mainnet deploy
 
-Add the truffle.js configuration:
-```js
-const HDWalletProvider = require('truffle-hdwallet-provider');
-//const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
-const mnemonic = process.env.KEY
-mainet = new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/')
-
-module.exports = {
-  mainnet: {
-      provider: mainet,
-      network_id: 1, // Match main network id
-      gas: 6312188,
-      gasPrice: 30000000000
-  }
-}
-```
 ```bash
-$ KEY="your mnemonic key 12 words" truffle migrate --network mainnet
+$ export MNEMONIC_KEY="your mnemonic key 12 words" 
+$ export PRIV_KEY="your mnemonic key 12 words" 
+$ export RICO_ADDR="non"
+$ export LAUNCHER_ADDR="non"
+$ truffle exec exec/KickStart/deploy.js --network mainnet
 ``` 
 
 ## SimpleICO Reference

@@ -9,7 +9,7 @@ let provider;
 const HDWalletProvider = require('truffle-hdwallet-provider');
 //const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
 
-const mnemonic = process.env.KEY
+const mnemonic = process.env.MNEMONIC_KEY
 ropsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/')
 rinkeby = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
 mainnet = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
