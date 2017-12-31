@@ -24,8 +24,8 @@ const dailyLimit = 200 * 10 ** 18
 
 module.exports = async function (callback) {
 
-  const rico = await RICO.at(ricoAddr[process.env.RICO_ADDR]) // ropsten tsetnet
-  const launcher = await Launcher.at(launcherAddr[process.env.LAUNCHER_ADDR]) //ropsten testnet
+  const rico = await RICO.at(process.env.RICO_ADDR) // ropsten tsetnet
+  const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) //ropsten testnet
   const po = await getAccount()
 
   console.log(`RICO:${rico.address} launcher:${launcher.address}`)
