@@ -28,18 +28,32 @@ module.exports = async function (callback) {
   const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) //ropsten testnet
   const po = await getAccount()
 
-  console.log(`RICO:${rico.address} launcher:${launcher.address}`)
+  console.log(`RICO: ${rico.address} launcher: ${launcher.address}`)
 
   const wallet = await MultiSigWalletWithDailyLimit.new([owner, po], 2, dailyLimit)
 
-  const kickStart = await launcher.kickStart(
-    rico.address,
-    name,
-    symbol,
-    decimals,
-    wallet.address,
-    0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [po, owner], [marketMaker]
-  )
+  console.log(`MultisigWallet: ${wallet.address}`)
+
+  var kickStart;
+  if (process.env.MODE == 0) {
+
+    kickStart = await launcher.kickStartA(
+      rico.address,
+      name,
+      symbol,
+      decimals,
+      wallet.address,
+      0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [po, owner], [marketMaker]
+    )
+  } else {
+
+    kickStart = await launcher.kickStartB(
+      name,
+      symbol,
+      decimals,
+      wallet.address, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
+    )
+  }
 
   console.log(`tx:${kickStart.tx}`)
 

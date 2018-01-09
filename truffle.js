@@ -37,7 +37,7 @@ module.exports = {
       provider: ropsten,
       network_id: 3, // Match ropsten network id
       gas: 4680036,
-      gasPrice: 240000000000
+      gasPrice: 130000000000
     },
     rinkeby: {
       provider: rinkeby,

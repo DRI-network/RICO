@@ -22,10 +22,12 @@ contract RICO is Ownable {
 
   string public name = "RICO contract";
   string public version = "0.9.3";
+
   address[] public tokens;
 
   mapping(address => address[]) tokenToPods;
   mapping(address => uint256) public maxSupplies;
+
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -41,6 +43,7 @@ contract RICO is Ownable {
    * @param _pods         set PoD contract addresses.
    * @param _projectOwner set Token's owner.
    */
+   
   function newProject(
     string _name, 
     string _symbol, 
