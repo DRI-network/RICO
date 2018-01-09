@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 import "./Ownable.sol";
 import "./SafeMath.sol";
 
-/// @title PoD - PoD Strategy contract
+/// @title PoD - PoD Based contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
@@ -12,9 +12,8 @@ contract PoD is Ownable {
   /**
    * Storage
    */
-
+  
   string  public name;
-  uint    public podType;
   string  public version;
   address public wallet;
 
@@ -38,8 +37,6 @@ contract PoD is Ownable {
    */
   
   event Donated(address user, uint256 amount);
-  event Initialized(address wallet);
-  event Started(uint256 time);
   event Ended(uint256 time);
 
 
@@ -51,7 +48,12 @@ contract PoD is Ownable {
   function PoD() public {
     status = Status.PoDDeployed;
     totalReceivedWei = 0;
+    wallet = msg.sender;
   }
+
+  /**
+   * @dev executes donate from project supporter.
+   */
 
   function donate() payable public returns (bool) {
 
@@ -59,8 +61,10 @@ contract PoD is Ownable {
 
     require(block.timestamp >= startTime);
 
+    // gasprice limit is set to 80 Gwei.  
     require(tx.gasprice <= 80000000000);
 
+    // call the internal function.
     if (!processDonate(msg.sender)) {
       endTime = now;
       status = Status.PoDEnded;
@@ -69,6 +73,7 @@ contract PoD is Ownable {
 
     totalReceivedWei = totalReceivedWei.add(msg.value);
     
+    // if contract get some ether, distribute to wallet.
     if (msg.value > 0)
       wallet.transfer(msg.value);
 
@@ -76,45 +81,70 @@ contract PoD is Ownable {
     return true;
   }
 
+  /**
+   * @dev executes reset user's reserved token .
+   * @param _user         set minter's address
+   */
+
   function resetWeiBalance(address _user) public onlyOwner() returns (bool) {
 
     require(status == Status.PoDEnded);
 
+    // reset user's wei balances.
     weiBalances[_user] = 0;
 
     return true;
 
   }
 
+  /**
+   * @dev To get user's balance of wei.
+   */
+
   function getBalanceOfWei(address _user) public constant returns(uint) {
     return weiBalances[_user];
   }
 
+  /**
+   * @dev To get token price.
+   */
   function getTokenPrice() public constant returns(uint256) {
     return tokenPrice;
   }
+
+  /**
+   * @dev To get maximum token cap of pod.
+   */
 
   function getCapOfToken() public constant returns(uint256) {
     return proofOfDonationCapOfToken;
   }
 
+  /**
+   * @dev To get maximum wei cap of pod.
+   */
   function getCapOfWei() public constant returns(uint256) {
     return proofOfDonationCapOfWei;
   }
+
+  /**
+   * @dev To get maximum wei cap of pod.
+   */
 
   function getStartTime() public constant returns (uint256) {
     return startTime;
   }
 
+  /**
+   * @dev To get endTime of pod.
+   */
   function getEndTime() public constant returns (uint256) {
     return endTime;
   }
 
-  function isPoDEnded() public constant returns(bool) {
-    if (status == Status.PoDEnded)
-      return true;
-    return false;
-  }
+  /**
+   * @dev get the status equal started of pod.
+   */
 
   function isPoDStarted() public constant returns(bool) {
     if (status == Status.PoDStarted)
@@ -122,13 +152,27 @@ contract PoD is Ownable {
     return false;
   }
 
+  /**
+   * @dev get the status equal ended of pod.
+   */
 
+  function isPoDEnded() public constant returns(bool) {
+    if (status == Status.PoDEnded)
+      return true;
+    return false;
+  }
+
+  /**
+   * fallback function
+   */
 
   function () payable public {
     donate();
   }
 
-  //Interface functions 
+  /**
+   * Interface functions. 
+   */
 
   function processDonate(address _user) internal returns (bool);
 

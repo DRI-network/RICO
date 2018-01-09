@@ -1,16 +1,12 @@
 pragma solidity ^0.4.18;
 
-import "./PoDs/DutchAuctionPoD.sol";
-import "./PoDs/SimplePoD.sol";
-import "./PoDs/StandardPoD.sol";
+import "./ContractManager.sol";
+import "./PoDs/RICOStandardPoD.sol";
 import "./RICO.sol";
 
 /// @title Launcher - RICO Launcher contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
-/// @notice TokenRound chose a index for pod execute modes. 
-/// 0. Attach ToB pod. podType == 101
-/// 1~ Attach Custom pod. podType == 111
 
 contract Launcher {
 
@@ -19,13 +15,27 @@ contract Launcher {
    */
   string public name = "RICO Launcher";
   string public version = "0.9.3";
-
+  RICO public rico;
+  ContractManager public cm;
+  bool state = false;
   /**
    * constructor
    * @dev define owner when this contract deployed.
    */
 
-  function Launcher() public { }
+  function Launcher() public {}
+
+  /**
+   * @dev init rico contract.
+   * @param _rico         set rico address.
+   */
+  function init(address _rico, address _cm) public {
+    require(!state);
+    rico = RICO(_rico);
+    cm = ContractManager(_cm);
+    state = true;
+  }
+
 
   /**
    * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
@@ -33,33 +43,46 @@ contract Launcher {
    * @param _symbol       set Token symbol of RICO format.
    * @param _decimals     set Token decimals of RICO format.
    */
-  function kickStart(
-    address _rico,
+
+  function kickStartA(
     string _name, 
     string _symbol, 
     uint8 _decimals, 
     address _wallet,
-    uint _mode,
-    uint256[] tobParams,
-    uint256[] podParams,
+    uint256[] _tobParams,
+    uint256[] _podParams,
     address[2] _owners,
     address[] _marketMakers
   ) 
   public 
   {
-    if (_mode == 0) {
-      address[] memory pods = new address[](2);
-      StandardPoD tob = new StandardPoD();
-      tob.init(tobParams[0], _decimals, tobParams[1], tobParams[2], _owners, _marketMakers, tobParams[3]);
-      pods[0] = address(tob);
+    address[] memory pods = new address[](2);
 
-      SimplePoD pod = new SimplePoD();
-      pod.init(_wallet, podParams[0], _decimals, podParams[1], podParams[2]);
-      pods[1] = address(pod);
+    RICOStandardPoD tob = new RICOStandardPoD();
+    tob.init(_decimals, _tobParams[0], _tobParams[1], _tobParams[2], _owners, _marketMakers, _tobParams[3]);
+    
+    pods[0] = address(tob);
+    pods[1] = cm.deploy(0, _decimals, _wallet, _podParams);
 
-      RICO rico = RICO(_rico);
-      rico.newProject(_name, _symbol, _decimals, pods, _owners[0]);
-    }
+    rico.newProject(_name, _symbol, _decimals, pods, _wallet);
   }
 
+  function kickStartB(
+    string _name, 
+    string _symbol, 
+    uint8 _decimals, 
+    address _wallet,
+    uint256[] _podParams,
+    uint256[] _mintParams
+  ) 
+  public 
+  {
+    address[] memory pods = new address[](2);
+    pods[0] = cm.deploy(0, _decimals, _wallet, _podParams);
+    pods[1] = cm.deploy(1, _decimals, _wallet, _mintParams);
+
+    rico.newProject(_name, _symbol, _decimals, pods, _wallet);
+
+  }
 }
+

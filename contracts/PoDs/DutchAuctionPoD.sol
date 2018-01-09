@@ -47,10 +47,11 @@ contract DutchAuctionPoD is PoD {
   /// @dev Contract constructor function 
   function DutchAuctionPoD() public { 
     name = "DutchAuction strategy PoD";
-    version = "0.1";
+    version = "0.9.3";
   }
 
-  function setConfig(
+  function init(
+    address _wallet,
     uint8 _tokenDecimals,
     uint _priceStart,
     uint _priceConstant,
@@ -62,11 +63,14 @@ contract DutchAuctionPoD is PoD {
     require(_tokenDecimals != 0);
     require(_priceStart > 0);
     require(_priceConstant > 0);
+    require(_wallet != 0x0);
+    wallet = _wallet;
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
     priceStart = _priceStart;
     priceConstant = _priceConstant;
     priceExponent = _priceExponent;
     proofOfDonationCapOfToken = _capOfToken;
+    status = Status.PoDStarted;
     Setup(_priceStart, _priceConstant, _priceExponent);
     
     return true;

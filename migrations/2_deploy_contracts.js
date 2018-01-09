@@ -1,7 +1,6 @@
 const RICO = artifacts.require("./RICO.sol");
 const Launcher = artifacts.require("./Launcher.sol")
-const KaitsukePoD = artifacts.require("./PoDs/StandardPoD.sol")
-const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
+const ContractManager = artifacts.require("./ContractManager.sol")
 
 const name = "Responsible ICO Token";
 const symbol = "RIT";
@@ -28,21 +27,31 @@ module.exports = async function (deployer, network, accounts) {
 
   deployer.deploy(RICO).then(() => {
     return deployer.deploy(Launcher)
+  }).then(() => {
+    return deployer.deploy(ContractManager)
   }).then(async() => {
     // certifiers
     projectOwner = accounts[0]
 
     rico = await RICO.deployed()
     launcher = await Launcher.deployed()
+    cm = await ContractManager.deployed()
+    init = await launcher.init(rico.address, cm.address)
 
-    const kickStart = await launcher.kickStart(
-      rico.address,
+    const kickStartA = await launcher.kickStartA(
       name,
       symbol,
       decimals,
-      projectOwner,
-      0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [accounts[0], owner], [marketMaker]
+      projectOwner, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker]
     )
+
+    const kickStartB = await launcher.kickStartB(
+      name,
+      symbol,
+      decimals,
+      projectOwner, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
+    )
+
 
     //console.log(kickStart)
 

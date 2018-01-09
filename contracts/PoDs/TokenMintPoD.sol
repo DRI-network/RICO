@@ -8,36 +8,38 @@ import "../PoD.sol";
 contract TokenMintPoD is PoD {
 
   mapping(address => uint256) tokenBalances; 
-  uint256 public time;
+  uint256 public lockTime;
   
   function TokenMintPoD() public {
-    name = "TokenMintPoD mean that minting Token when elapsed time";
-    version = "0.1";
-    podType = 111;
+    name = "TokenMintPoD mean that minting Token to user";
+    version = "0.9.3";
   }
 
-  function setConfig(
+  function init(
     address _user, 
-    uint256 _period,
-    uint256 _capOfToken
+    uint256 _capOfToken,
+    uint256 _lockTime
   ) 
   public onlyOwner() returns (bool) 
   {
     require(status == Status.PoDDeployed);
-    tokenBalances[_user] = _capOfToken;
+    proofOfDonationCapOfToken = _capOfToken;
+    tokenBalances[_user] = proofOfDonationCapOfToken;
+    lockTime = _lockTime;
     weiBalances[_user] = 1;
-    time = _period;
+    status = Status.PoDStarted;
     return true;
   }
 
   function processDonate(address _user) internal returns (bool) {
-    assert(_user != 0x0);
+    require(_user != 0x0);
     return false;
   }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
-    if ( startTime + time > block.timestamp) 
+    if (block.timestamp <= lockTime) 
       return 0;
+
     return weiBalances[_user].mul(tokenBalances[_user]);
   }
 }

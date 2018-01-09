@@ -5,9 +5,6 @@ import "./AbsPoD.sol";
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
-/// @notice TokenRound chose a index for pod execute modes. 
-/// 0. Attach ToB pod. podType == 101
-/// 1~ Attach Custom pod. podType == 111
 
 contract RICO is Ownable {
   /// using safemath
@@ -27,8 +24,8 @@ contract RICO is Ownable {
   string public version = "0.9.3";
   address[] public tokens;
 
-  mapping(address => address[]) public tokenToPods;
-  mapping(address => uint256) public totalSupplies;
+  mapping(address => address[]) tokenToPods;
+  mapping(address => uint256) public maxSupplies;
   /**
    * constructor
    * @dev define owner when this contract deployed.
@@ -41,6 +38,8 @@ contract RICO is Ownable {
    * @param _name         set Token name of RICO format.
    * @param _symbol       set Token symbol of RICO format.
    * @param _decimals     set Token decimals of RICO format.
+   * @param _pods         set PoD contract addresses.
+   * @param _projectOwner set Token's owner.
    */
   function newProject(
     string _name, 
@@ -62,7 +61,7 @@ contract RICO is Ownable {
 
     tokenToPods[token] = _pods;
 
-    totalSupplies[token] = totalSupply;
+    maxSupplies[token] = totalSupply;
 
     tokens.push(token);
 
@@ -73,7 +72,8 @@ contract RICO is Ownable {
 
 
   /**
-   * @dev confirm token creation strategy by projectOwner.
+   * @dev To confirm pods and check the token maximum supplies.
+   * @param _pods         set PoD contract addresses.
    */
 
   function checkPoDs(address[] _pods) internal returns (uint256) {
@@ -94,20 +94,23 @@ contract RICO is Ownable {
   }
 
   /**
-   * @dev executes claim token when auction trading time elapsed.
+   * @dev executes claim token when pod's status was ended.
+   * @param _tokenAddr         set the project's token address.
+   * @param _index             set a pods num of registered array.
+   * @param _user              set a minter address.
    */
 
-  function mintToken(address _tokenAddr, uint _pod, address _user) public returns(bool) {
+  function mintToken(address _tokenAddr, uint _index, address _user) public returns(bool) {
 
     address user = msg.sender;
-
+ 
     if (_user != 0x0) {
       user = _user;
     }
 
-    require(tokenToPods[_tokenAddr][_pod] != 0x0);
+    require(tokenToPods[_tokenAddr][_index] != 0x0);
 
-    AbsPoD pod = AbsPoD(tokenToPods[_tokenAddr][_pod]);
+    AbsPoD pod = AbsPoD(tokenToPods[_tokenAddr][_index]);
 
     require(pod.isPoDEnded());
 
@@ -125,7 +128,11 @@ contract RICO is Ownable {
   }
   
 
-  function getTokens() public constant returns (address[]) {
-    return tokens;
+  /**
+   * @dev To get pods addresses attached to token.
+   */
+
+  function getTokenPods(address _token) public constant returns (address[]) {
+    return tokenToPods[_token];
   }
 }

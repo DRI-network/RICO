@@ -12,14 +12,13 @@ contract SimplePoD is PoD {
 
   function SimplePoD() public {
     name = "SimplePoD strategy token price = capToken/capWei";
-    version = "0.1";
-    podType = 111;
+    version = "0.9.3";
   }
 
   function init(
     address _wallet, 
-    uint256 _startTimeOfPoD,
     uint8 _tokenDecimals,
+    uint256 _startTimeOfPoD,
     uint256 _capOfToken, 
     uint256 _capOfWei
   ) 
@@ -35,11 +34,12 @@ contract SimplePoD is PoD {
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
     period = 7 days;
     status = Status.PoDStarted;
-    Started(startTime);
     return true;
   }
 
   function processDonate(address _user) internal returns (bool) {
+
+    require(block.timestamp <= startTime.add(period));
 
     uint256 remains = proofOfDonationCapOfWei.sub(totalReceivedWei);
 
@@ -53,9 +53,20 @@ contract SimplePoD is PoD {
     return true;
   }
 
+  function finalize() public {
+
+    require(status == Status.PoDStarted);
+
+    require(block.timestamp > startTime.add(period));
+
+    endTime = now;
+
+    status = Status.PoDEnded;
+
+    Ended(endTime);
+  }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
-    
     return (tokenMultiplier * weiBalances[_user]) / tokenPrice;
   }
 }

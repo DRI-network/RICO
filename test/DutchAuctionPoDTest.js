@@ -17,7 +17,7 @@ contract('DutchAuctionPoD', function (accounts) {
     dap = await DutchAuctionPoD.new();
     //deploy contracts and initialize ico.
 
-    const setup = await dap.setConfig(tokenDecimals, priceStart, priceConstant, priceExponent, podCapOfToken, {
+    const setup = await dap.init(tokenDecimals, priceStart, priceConstant, priceExponent, podCapOfToken, {
       from: owner
     })
     

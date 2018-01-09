@@ -58,7 +58,7 @@ contract MintableToken is EIP20StandardToken, Ownable {
    * @dev Function to stop minting new tokens.
    * @return True if the operation was successful.
    */
-  function finishMinting() canMint public returns (bool) {
+  function finishMinting() canMint() public returns (bool) {
     require(msg.sender == projectOwner);
     mintingFinished = true;
     MintFinished();
