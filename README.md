@@ -61,7 +61,7 @@ $ npm install -g rico-core
 $ rico new ./helloico && cd ./helloico 
 ```
 
-### Testnet deploy (rinkeby)
+### Testnet deploy (ropsten)
 
 **Caution: ropsten hit the Byzantium HardFork #1700000 you have to update geth to v1.7 and sync to the latest block.**
 
@@ -73,7 +73,7 @@ Attachment contracts:
 $ export MNEMONIC_KEY="your mnemonic key 12 words" 
 $ export RICO_ADDR=0xdc063bd44f1a395c5d1f3d4bdc75396aaf8b4b75
 $ export LAUNCHER_ADDR=0x9851fa8938542234ed9261258dd19281a60f348a
-$ truffle exec exec/KickStart/deploy.js --network rinkeby
+$ truffle exec exec/KickStart/deploy.js --network ropsten
 ``` 
 
 ### Mainnet deploy
@@ -85,7 +85,7 @@ $ export LAUNCHER_ADDR="non"
 $ truffle exec exec/KickStart/deploy.js --network mainnet
 ``` 
 
-### Customize
+### Customize KickStart project
 
 To customizing ico deploy files -> exec/KickStart/deploy.js
 ```js
@@ -139,7 +139,7 @@ module.exports = async function (callback) {
 
 ```
 
-to using `kickStartA` process mean that use to RICO standard pods.
+To call  `kickStartA` process mean that use to RICO standard pods.
 ```js
   kickStart = await launcher.kickStartA(
     rico.address,

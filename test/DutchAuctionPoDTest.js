@@ -16,39 +16,22 @@ contract('DutchAuctionPoD', function (accounts) {
 
     dap = await DutchAuctionPoD.new();
     //deploy contracts and initialize ico.
+    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const setup = await dap.init(tokenDecimals, priceStart, priceConstant, priceExponent, podCapOfToken, {
+    const setup = await dap.init(accounts[0], tokenDecimals , now +100, priceStart, priceConstant, priceExponent, podCapOfToken, {
       from: owner
     })
-    
+
     //assert.strictEqual(balance.toNumber(), 5000 * 10 ** decimals, 'balance of projectOwner != 5000 * 10 ** decimals')
 
   })
-  it("contract should be initialized with parameters for DutchAuctionPoD", async function () {
 
-    const init = await dap.init({
-      from: owner
-    });
-  })
-
-  it("contract should be started DutchAuction", async function () {
-
-    const status = await dap.status.call()
-
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
-
-    const start = await dap.start(now)
-
-  })
-
-  it("Check the process for donation should be done", async function () {
+  it("Check the process donation should be done", async function () {
 
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_increaseTime",
-      params: [0],
+      params: [100],
       id: 0
     })
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
@@ -72,15 +55,6 @@ contract('DutchAuctionPoD', function (accounts) {
 
   })
 
-  it("contract should be started DutchAuction", async function () {
-
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const start = await dap.start(now).catch(err => {
-      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'start is executable yet.')
-    })
-
-  })
   it("Check the token price when 10 hours passed", async function () {
 
     const setTime = await web3.currentProvider.send({
@@ -111,7 +85,7 @@ contract('DutchAuctionPoD', function (accounts) {
 
     const status = await dap.status()
 
-    assert.equal(status.toNumber(), 3, "Error: status is not 'AuctionEnded'")
+    assert.equal(status.toNumber(), 2, "Error: status is not 'AuctionEnded'")
 
   })
 })

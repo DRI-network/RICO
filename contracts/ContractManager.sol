@@ -50,7 +50,7 @@ contract ContractManager {
 
     if (_mode == 2) {
       DutchAuctionPoD auction = new DutchAuctionPoD();
-      auction.init(_wallet, _decimals, _params[0], _params[1], uint32(_params[2]), _params[3]);
+      auction.init(_wallet, _decimals, _params[0], _params[1], _params[2], uint32(_params[3]), _params[4]);
       return address(auction);
     }
     

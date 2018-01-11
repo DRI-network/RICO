@@ -64,4 +64,20 @@ contract MintableToken is EIP20StandardToken, Ownable {
     MintFinished();
     return true;
   }
+
+
+  /**
+   * @dev Emergency call for token transfer miss.
+   */
+
+  function tokenTransfer(address _token) public onlyOwner() {
+    
+    EIP20StandardToken token = EIP20StandardToken(_token);
+
+    uint balance = token.balanceOf(this);
+    
+    token.transfer(projectOwner, balance);
+  }
+
+  
 }

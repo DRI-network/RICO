@@ -129,6 +129,20 @@ contract RICO is Ownable {
 
     return true;
   }
+
+  /**
+   * @dev Emergency call for token transfer miss.
+   */
+
+  function tokenTransfer(address _token) public onlyOwner() {
+    
+    MintableToken token = MintableToken(_token);
+
+    uint balance = token.balanceOf(this);
+    
+    token.transfer(owner, balance);
+  }
+
   
 
   /**

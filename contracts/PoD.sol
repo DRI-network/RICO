@@ -64,6 +64,8 @@ contract PoD is Ownable {
     // gasprice limit is set to 80 Gwei.  
     require(tx.gasprice <= 80000000000);
 
+    require(msg.value > 0);
+    
     // call the internal function.
     if (!processDonate(msg.sender)) {
       endTime = now;
@@ -72,10 +74,6 @@ contract PoD is Ownable {
     } 
 
     totalReceivedWei = totalReceivedWei.add(msg.value);
-    
-    // if contract get some ether, distribute to wallet.
-    if (msg.value > 0)
-      wallet.transfer(msg.value);
 
     Donated(msg.sender, msg.value);
     return true;

@@ -12,31 +12,19 @@ contract('TokenMintPoD', function (accounts) {
     //deploy contracts and initialize ico.
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    const setConfigMint1 = await pod.setConfig(owner, 72000, podTokenSupply)
+    const setConfigMint1 = await pod.init(owner, podTokenSupply, now + 72000)
 
-    const init = await pod.init()
 
     const status = await pod.status.call()
 
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
   })
 
-  it("contract should be started SimplePoD", async function () {
-
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
-
-    const start = await pod.start(now)
-
-    const status = await pod.status.call()
-
-    assert.equal(status.toNumber(), 2, "Error: status is not Initialized")
-
-
-  })
-  it("Check the process for donation should be done", async function () {
+  it("Check the donation process should be done", async function () {
 
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
+
       method: "evm_increaseTime",
       params: [72000],
       id: 0
@@ -44,20 +32,28 @@ contract('TokenMintPoD', function (accounts) {
 
     const donate = await pod.donate({
       gasPrice: 50000000000,
-      value: web3.toWei(8, 'ether')
+      value: web3.toWei(10, 'ether')
+    }).catch((err) => {
+      //console.log(err)
+      assert.equal(err, "Error: VM Exception while processing transaction: revert", 'donate is executable yet.')
     })
-    //console.log(donate)
 
     const status = await pod.status.call()
 
-    assert.equal(status.toNumber(), 3, "Error: status is not Initialized")
+    assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
 
   })
 
+  it("Check the finalize process done", async function () {
+    const finalize = await pod.finalize()
+    const status = await pod.status.call()
+
+    assert.equal(status.toNumber(), 2, "Error: status is not ended")
+  })
   it("Check the tokenBalance for owner", async function () {
 
     const status = await pod.status.call()
-    assert.strictEqual(status.toNumber(), 3, 'status is not 3')
+    assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
     const balance = await pod.getBalanceOfToken(owner)
     //console.log(balance.toNumber())

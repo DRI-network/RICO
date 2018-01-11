@@ -34,8 +34,6 @@ contract RICOStandardPoD is PoD {
    
     startTime = _startTimeOfPoD;
   
-    wallet = this;
-
     marketMakers = _marketMakers;
 
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
@@ -57,13 +55,16 @@ contract RICOStandardPoD is PoD {
 
   function processDonate(address _user) internal returns (bool) {
     
-    require(msg.sender == buyer);
+    require(_user == buyer);
     
     uint256 remains = proofOfDonationCapOfWei.sub(totalReceivedWei);
 
     require(msg.value <= remains);
     
     weiBalances[_user] = weiBalances[_user].add(msg.value);
+
+    //distribute ether to wallet.
+    //wallet.transfer(msg.value);
 
     if (msg.value == remains)
       return false;

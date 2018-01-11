@@ -47,6 +47,8 @@ contract SimplePoD is PoD {
     
     weiBalances[_user] = weiBalances[_user].add(msg.value);
 
+    wallet.transfer(msg.value);
+
     if (msg.value == remains)
       return false;
     

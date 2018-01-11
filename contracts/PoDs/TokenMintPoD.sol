@@ -31,9 +31,13 @@ contract TokenMintPoD is PoD {
     return true;
   }
 
+  function finalize() public {
+    status = Status.PoDEnded;
+  }
+
   function processDonate(address _user) internal returns (bool) {
-    require(_user != 0x0);
-    return false;
+    require(_user == 0x0);
+    return true;
   }
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {

@@ -7,7 +7,7 @@ const symbol = "RIT";
 const decimals = 18;
 
 const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
-const tobTokenSupply = totalTokenSupply * 10 / 100
+const tobTokenSupply = totalTokenSupply * 1 / 10
 const tobWeiLimit = 100 * 10 ** 18
 const now = parseInt(new Date() / 1000)
 const tobStartTime = now + 72000; //sec
@@ -42,7 +42,7 @@ module.exports = async function (deployer, network, accounts) {
       name,
       symbol,
       decimals,
-      projectOwner, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker]
+      projectOwner, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker, owner]
     )
 
     const kickStartB = await launcher.kickStartB(
