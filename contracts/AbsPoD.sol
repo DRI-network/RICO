@@ -10,8 +10,6 @@ contract AbsPoD {
 
   function getBalanceOfToken(address _user) public constant returns(uint256);
 
-  function transferOwnership(address newOwner) public;
-
   function getCapOfToken() public constant returns(uint256);
 
   function isPoDStarted() public constant returns(bool);

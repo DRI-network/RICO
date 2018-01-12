@@ -71,8 +71,8 @@ $ npm install truffle-hdwallet-provider
 Attachment contracts:
 ```bash
 $ export MNEMONIC_KEY="your mnemonic key 12 words" 
-$ export RICO_ADDR=0xdc063bd44f1a395c5d1f3d4bdc75396aaf8b4b75
-$ export LAUNCHER_ADDR=0x9851fa8938542234ed9261258dd19281a60f348a
+$ export RICO_ADDR=0x9e18e5bdb7f47631cf212b34a42cd54cfd713a6d
+$ export LAUNCHER_ADDR=0x40c75eb39c3a06c50b9109d36b1e488d99aadf97
 $ truffle exec exec/KickStart/deploy.js --network ropsten
 ``` 
 

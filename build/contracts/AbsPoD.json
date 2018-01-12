@@ -142,14 +142,14 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.18;\n\n/// @title AbsPoD - Abstract PoD contract\n/// @author - Yusaku Senga - <senga@dri.network>\n/// license let's see in LICENSE\n\ncontract AbsPoD {\n\n  function resetWeiBalance(address _user) public returns(bool);\n\n  function getBalanceOfToken(address _user) public constant returns(uint256);\n\n  function transferOwnership(address newOwner) public;\n\n  function getCapOfToken() public constant returns(uint256);\n\n  function isPoDStarted() public constant returns(bool);\n\n  function isPoDEnded() public constant returns(bool);\n\n  function getTokenPrice() public constant returns(uint256);\n\n  function getStartTime() public constant returns (uint256);\n\n  function getEndtime() public constant returns(uint256);\n\n}\n",
+  "source": "pragma solidity ^0.4.18;\n\n/// @title AbsPoD - Abstract PoD contract\n/// @author - Yusaku Senga - <senga@dri.network>\n/// license let's see in LICENSE\n\ncontract AbsPoD {\n\n  function resetWeiBalance(address _user) public returns(bool);\n\n  function getBalanceOfToken(address _user) public constant returns(uint256);\n\n  function getCapOfToken() public constant returns(uint256);\n\n  function isPoDStarted() public constant returns(bool);\n\n  function isPoDEnded() public constant returns(bool);\n\n  function getTokenPrice() public constant returns(uint256);\n\n  function getStartTime() public constant returns (uint256);\n\n  function getEndtime() public constant returns(uint256);\n\n}\n",
   "sourcePath": "/Users/sengayusaku/repo/RICO/contracts/AbsPoD.sol",
   "ast": {
     "attributes": {
       "absolutePath": "/Users/sengayusaku/repo/RICO/contracts/AbsPoD.sol",
       "exportedSymbols": {
         "AbsPoD": [
-          51
+          46
         ]
       }
     },
@@ -179,10 +179,10 @@
           "documentation": "@title AbsPoD - Abstract PoD contract\n @author - Yusaku Senga - <senga@dri.network>\n license let's see in LICENSE",
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            51
+            46
           ],
           "name": "AbsPoD",
-          "scope": 52
+          "scope": 47
         },
         "children": [
           {
@@ -196,7 +196,7 @@
               ],
               "name": "resetWeiBalance",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "nonpayable",
               "superFunction": null,
               "visibility": "public"
@@ -284,7 +284,7 @@
               ],
               "name": "getBalanceOfToken",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -364,16 +364,16 @@
           {
             "attributes": {
               "body": null,
-              "constant": false,
+              "constant": true,
               "implemented": false,
               "isConstructor": false,
               "modifiers": [
                 null
               ],
-              "name": "transferOwnership",
+              "name": "getCapOfToken",
               "payable": false,
-              "scope": 51,
-              "stateMutability": "nonpayable",
+              "scope": 46,
+              "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
             },
@@ -407,9 +407,14 @@
                     "src": "343:16:0"
                   }
                 ],
-                "id": 18,
+                "id": 16,
                 "name": "ParameterList",
-                "src": "342:18:0"
+                "src": "338:2:0",
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                }
               },
               {
                 "attributes": {
@@ -417,15 +422,42 @@
                     null
                   ]
                 },
-                "children": [],
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 20,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 17,
+                        "name": "ElementaryTypeName",
+                        "src": "365:7:0"
+                      }
+                    ],
+                    "id": 18,
+                    "name": "VariableDeclaration",
+                    "src": "365:7:0"
+                  }
+                ],
                 "id": 19,
                 "name": "ParameterList",
-                "src": "367:0:0"
+                "src": "364:9:0"
               }
             ],
             "id": 20,
             "name": "FunctionDefinition",
-            "src": "316:52:0"
+            "src": "316:58:0"
           },
           {
             "attributes": {
@@ -436,9 +468,9 @@
               "modifiers": [
                 null
               ],
-              "name": "getCapOfToken",
+              "name": "isPoDStarted",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -453,7 +485,7 @@
                 "children": [],
                 "id": 21,
                 "name": "ParameterList",
-                "src": "394:2:0"
+                "src": "399:2:0"
               },
               {
                 "children": [
@@ -464,34 +496,34 @@
                       "scope": 25,
                       "stateVariable": false,
                       "storageLocation": "default",
-                      "type": "uint256",
+                      "type": "bool",
                       "value": null,
                       "visibility": "internal"
                     },
                     "children": [
                       {
                         "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
+                          "name": "bool",
+                          "type": "bool"
                         },
                         "id": 22,
                         "name": "ElementaryTypeName",
-                        "src": "421:7:0"
+                        "src": "426:4:0"
                       }
                     ],
                     "id": 23,
                     "name": "VariableDeclaration",
-                    "src": "421:7:0"
+                    "src": "426:4:0"
                   }
                 ],
                 "id": 24,
                 "name": "ParameterList",
-                "src": "420:9:0"
+                "src": "425:6:0"
               }
             ],
             "id": 25,
             "name": "FunctionDefinition",
-            "src": "372:58:0"
+            "src": "378:54:0"
           },
           {
             "attributes": {
@@ -502,9 +534,9 @@
               "modifiers": [
                 null
               ],
-              "name": "isPoDStarted",
+              "name": "isPoDEnded",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -557,7 +589,7 @@
             ],
             "id": 30,
             "name": "FunctionDefinition",
-            "src": "434:54:0"
+            "src": "436:52:0"
           },
           {
             "attributes": {
@@ -568,9 +600,9 @@
               "modifiers": [
                 null
               ],
-              "name": "isPoDEnded",
+              "name": "getTokenPrice",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -585,7 +617,7 @@
                 "children": [],
                 "id": 31,
                 "name": "ParameterList",
-                "src": "511:2:0"
+                "src": "514:2:0"
               },
               {
                 "children": [
@@ -596,34 +628,34 @@
                       "scope": 35,
                       "stateVariable": false,
                       "storageLocation": "default",
-                      "type": "bool",
+                      "type": "uint256",
                       "value": null,
                       "visibility": "internal"
                     },
                     "children": [
                       {
                         "attributes": {
-                          "name": "bool",
-                          "type": "bool"
+                          "name": "uint256",
+                          "type": "uint256"
                         },
                         "id": 32,
                         "name": "ElementaryTypeName",
-                        "src": "538:4:0"
+                        "src": "541:7:0"
                       }
                     ],
                     "id": 33,
                     "name": "VariableDeclaration",
-                    "src": "538:4:0"
+                    "src": "541:7:0"
                   }
                 ],
                 "id": 34,
                 "name": "ParameterList",
-                "src": "537:6:0"
+                "src": "540:9:0"
               }
             ],
             "id": 35,
             "name": "FunctionDefinition",
-            "src": "492:52:0"
+            "src": "492:58:0"
           },
           {
             "attributes": {
@@ -634,9 +666,9 @@
               "modifiers": [
                 null
               ],
-              "name": "getTokenPrice",
+              "name": "getStartTime",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -651,7 +683,7 @@
                 "children": [],
                 "id": 36,
                 "name": "ParameterList",
-                "src": "570:2:0"
+                "src": "575:2:0"
               },
               {
                 "children": [
@@ -674,22 +706,22 @@
                         },
                         "id": 37,
                         "name": "ElementaryTypeName",
-                        "src": "597:7:0"
+                        "src": "603:7:0"
                       }
                     ],
                     "id": 38,
                     "name": "VariableDeclaration",
-                    "src": "597:7:0"
+                    "src": "603:7:0"
                   }
                 ],
                 "id": 39,
                 "name": "ParameterList",
-                "src": "596:9:0"
+                "src": "602:9:0"
               }
             ],
             "id": 40,
             "name": "FunctionDefinition",
-            "src": "548:58:0"
+            "src": "554:58:0"
           },
           {
             "attributes": {
@@ -700,9 +732,9 @@
               "modifiers": [
                 null
               ],
-              "name": "getStartTime",
+              "name": "getEndtime",
               "payable": false,
-              "scope": 51,
+              "scope": 46,
               "stateMutability": "view",
               "superFunction": null,
               "visibility": "public"
@@ -717,7 +749,7 @@
                 "children": [],
                 "id": 41,
                 "name": "ParameterList",
-                "src": "631:2:0"
+                "src": "635:2:0"
               },
               {
                 "children": [
@@ -740,22 +772,22 @@
                         },
                         "id": 42,
                         "name": "ElementaryTypeName",
-                        "src": "659:7:0"
+                        "src": "662:7:0"
                       }
                     ],
                     "id": 43,
                     "name": "VariableDeclaration",
-                    "src": "659:7:0"
+                    "src": "662:7:0"
                   }
                 ],
                 "id": 44,
                 "name": "ParameterList",
-                "src": "658:9:0"
+                "src": "661:9:0"
               }
             ],
             "id": 45,
             "name": "FunctionDefinition",
-            "src": "610:58:0"
+            "src": "616:55:0"
           },
           {
             "attributes": {
@@ -824,14 +856,14 @@
             "src": "672:55:0"
           }
         ],
-        "id": 51,
+        "id": 46,
         "name": "ContractDefinition",
-        "src": "151:579:0"
+        "src": "151:523:0"
       }
     ],
-    "id": 52,
+    "id": 47,
     "name": "SourceUnit",
-    "src": "0:731:0"
+    "src": "0:675:0"
   },
   "compiler": {
     "name": "solc",
@@ -839,5 +871,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-12T09:25:39.415Z"
+  "updatedAt": "2018-01-12T11:02:22.510Z"
 }
