@@ -37,11 +37,11 @@ contract RICO is Ownable {
 
   /**
    * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         set Token name of RICO format.
-   * @param _symbol       set Token symbol of RICO format.
-   * @param _decimals     set Token decimals of RICO format.
-   * @param _pods         set PoD contract addresses.
-   * @param _projectOwner set Token's owner.
+   * @param _name         Token name of RICO format.
+   * @param _symbol       Token symbol of RICO format.
+   * @param _decimals     Token decimals of RICO format.
+   * @param _pods         PoD contract addresses.
+   * @param _projectOwner Token's owner.
    */
    
   function newProject(
@@ -76,7 +76,7 @@ contract RICO is Ownable {
 
   /**
    * @dev To confirm pods and check the token maximum supplies.
-   * @param _pods         set PoD contract addresses.
+   * @param _pods         PoD contract addresses.
    */
 
   function checkPoDs(address[] _pods) internal returns (uint256) {
@@ -98,9 +98,9 @@ contract RICO is Ownable {
 
   /**
    * @dev executes claim token when pod's status was ended.
-   * @param _tokenAddr         set the project's token address.
-   * @param _index             set a pods num of registered array.
-   * @param _user              set a minter address.
+   * @param _tokenAddr         the project's token address.
+   * @param _index             pods num of registered array.
+   * @param _user              minter address.
    */
 
   function mintToken(address _tokenAddr, uint _index, address _user) public returns(bool) {

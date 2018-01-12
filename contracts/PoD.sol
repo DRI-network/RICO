@@ -65,7 +65,7 @@ contract PoD is Ownable {
     require(tx.gasprice <= 80000000000);
 
     require(msg.value > 0);
-    
+
     // call the internal function.
     if (!processDonate(msg.sender)) {
       endTime = now;

@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 
 import "./PoDs/SimplePoD.sol";
-import "./PoDs/DutchAuctionPoD.sol";
 import "./PoDs/TokenMintPoD.sol";
 
 /// @title Launcher - RICO Launcher contract
@@ -24,12 +23,16 @@ contract ContractManager {
   function ContractManager() public {}
 
   /**
-   * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
-   * @param _mode         set Token name of RICO format.
-   * @param _decimals     set Token decimals of RICO format.
+   * @dev deploy contract instance to rico kickstarts.
+   * @param _rico         address of rico.
+   * @param _mode         Token name of RICO format.
+   * @param _decimals     Token decimals of RICO format.
+   * @param _wallet       Founder's multisig wallet.
+   * @param _params       parameters of pod.
    */
 
-  function deploy(  
+  function deploy( 
+    address _rico, 
     uint _mode,
     uint8 _decimals, 
     address _wallet,
@@ -40,20 +43,15 @@ contract ContractManager {
     if (_mode == 0) {
       SimplePoD pod = new SimplePoD();
       pod.init(_wallet, _decimals, _params[0], _params[1], _params[2]);
+      pod.transferOwnership(_rico);
       return address(pod);
     }
     if (_mode == 1) {
       TokenMintPoD mint = new TokenMintPoD();
       mint.init(_wallet, _params[0], _params[1]);
+      mint.transferOwnership(_rico);
       return address(mint);
     }
-
-    if (_mode == 2) {
-      DutchAuctionPoD auction = new DutchAuctionPoD();
-      auction.init(_wallet, _decimals, _params[0], _params[1], _params[2], uint32(_params[3]), _params[4]);
-      return address(auction);
-    }
-    
   }
 }
 

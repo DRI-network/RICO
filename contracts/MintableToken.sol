@@ -70,8 +70,10 @@ contract MintableToken is EIP20StandardToken, Ownable {
    * @dev Emergency call for token transfer miss.
    */
 
-  function tokenTransfer(address _token) public onlyOwner() {
-    
+  function tokenTransfer(address _token) public returns (bool) {
+  
+    require(msg.sender == projectOwner);
+
     EIP20StandardToken token = EIP20StandardToken(_token);
 
     uint balance = token.balanceOf(this);

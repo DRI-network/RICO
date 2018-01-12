@@ -38,10 +38,15 @@ contract Launcher {
 
 
   /**
-   * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         set Token name of RICO format.
-   * @param _symbol       set Token symbol of RICO format.
-   * @param _decimals     set Token decimals of RICO format.
+   * @dev kickStartA uses 2 pods RICOStandardPoD and SimplePoD.
+   * @param _name         Token name of RICO format.
+   * @param _symbol       Token symbol of RICO format.
+   * @param _decimals     Token decimals of RICO format.
+   * @param _wallet       Founder's multisigWallet.
+   * @param _tobParams    params of RICOStandardPoD pod.
+   * @param _podParams    params of SimplePoD pod.
+   * @param _owners       array of owners address, 0:tob executor, 1: founder.
+   * @param _marketMakers array of marketMakers address of project 
    */
 
   function kickStartA(
@@ -60,12 +65,24 @@ contract Launcher {
 
     RICOStandardPoD tob = new RICOStandardPoD();
     tob.init(_decimals, _tobParams[0], _tobParams[1], _tobParams[2], _owners, _marketMakers, _tobParams[3]);
-    
+    tob.transferOwnership(rico);
+
     pods[0] = address(tob);
-    pods[1] = cm.deploy(0, _decimals, _wallet, _podParams);
+    pods[1] = cm.deploy(rico, 0, _decimals, _wallet, _podParams);
 
     rico.newProject(_name, _symbol, _decimals, pods, _wallet);
   }
+
+
+  /**
+   * @dev kickStartA uses 2 pods SimplePoD and TokenMintPoD.
+   * @param _name         Token name of RICO format.
+   * @param _symbol       Token symbol of RICO format.
+   * @param _decimals     Token decimals of RICO format.
+   * @param _wallet       Founder's multisigWallet.
+   * @param _podParams    params of SimplePoD pod.
+   * @param _mintParams   params of TokenMintPoD pod.
+   */
 
   function kickStartB(
     string _name, 
@@ -78,8 +95,8 @@ contract Launcher {
   public 
   {
     address[] memory pods = new address[](2);
-    pods[0] = cm.deploy(0, _decimals, _wallet, _podParams);
-    pods[1] = cm.deploy(1, _decimals, _wallet, _mintParams);
+    pods[0] = cm.deploy(rico, 0, _decimals, _wallet, _podParams);
+    pods[1] = cm.deploy(rico, 1, _decimals, _wallet, _mintParams);
 
     rico.newProject(_name, _symbol, _decimals, pods, _wallet);
 
