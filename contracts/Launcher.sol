@@ -59,7 +59,7 @@ contract Launcher {
     address[2] _owners,
     address[] _marketMakers
   ) 
-  public 
+  public returns (address)
   {
     address[] memory pods = new address[](2);
 
@@ -70,7 +70,7 @@ contract Launcher {
     pods[0] = address(tob);
     pods[1] = cm.deploy(rico, 0, _decimals, _wallet, _podParams);
 
-    rico.newProject(_name, _symbol, _decimals, pods, _wallet);
+    return rico.newProject(_name, _symbol, _decimals, pods, _wallet);
   }
 
 
@@ -92,13 +92,13 @@ contract Launcher {
     uint256[] _podParams,
     uint256[] _mintParams
   ) 
-  public 
+  public returns (address)
   {
     address[] memory pods = new address[](2);
     pods[0] = cm.deploy(rico, 0, _decimals, _wallet, _podParams);
     pods[1] = cm.deploy(rico, 1, _decimals, _wallet, _mintParams);
 
-    rico.newProject(_name, _symbol, _decimals, pods, _wallet);
+    return rico.newProject(_name, _symbol, _decimals, pods, _wallet);
 
   }
 }
