@@ -19,14 +19,18 @@ jobs:
           command: |
             ./rpcrun.bash 
       - run:
-          name: Testing DutchAuctionPoD
+          name: Testing DutchAuctionPoDTest
           command: |
             truffle test test/DutchAuctionPoDTest.js 
       - run:
-          name: Testing RICOToken
+          name: Testing RICOStandardPoDTest
           command: |
-            truffle test test/RICOTokenTest.js
+            truffle test test/RICOStandardPoDTest.js
       - run:
-          name: Testing All contract
+          name: Testing SimplePoDTest
           command: |
-            truffle test
+            truffle test test/SimplePoDTest.js
+      - run:
+          name: Testing TokenMintPoD
+          command: |
+            truffle test test/TokenMintPoD.js

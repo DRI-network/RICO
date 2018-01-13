@@ -1,73 +1,56 @@
-const LauncherSample = artifacts.require("./LauncherSample.sol");
 const RICO = artifacts.require("./RICO.sol");
-const RICOToken = artifacts.require("./RICOToken.sol");
-const TokenMintPoD = artifacts.require("./PoDs/TokenMintPoD.sol")
-const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol")
-const KaitsukePoD = artifacts.require("./PoDs/KaitsukePoD.sol")
-const DutchAuctionPoD = artifacts.require("./PoDs/DutchAuctionPoD.sol")
+const Launcher = artifacts.require("./Launcher.sol")
+const ContractManager = artifacts.require("./ContractManager.sol")
 
-const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
-const tobTokenSupply = totalTokenSupply * 3 / 100
-const tobWeiLimit = 100 * 10 ** 18
-const podTokenSupply = totalTokenSupply * 20 / 100
-const podWeiLimit = 100 * 10 ** 18
-
-const firstSupply = totalTokenSupply * 30 / 100;
+const name = "Responsible ICO Token";
+const symbol = "RIT";
 const decimals = 18;
 
+const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
+const tobTokenSupply = totalTokenSupply * 1 / 10
+const tobWeiLimit = 100 * 10 ** 18
+const now = parseInt(new Date() / 1000)
+const tobStartTime = now + 72000; //sec
+
+const podTokenSupply = totalTokenSupply * 90 / 100
+const podWeiLimit = 100 * 10 ** 18
+const podStartTime = now + 172000; //sec
+
+const lastSupply = totalTokenSupply * 30 / 100;
+
+const marketMaker = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
+const owner = 0x8a20a13b75d0aefb995c0626f22df0d98031a4b6;
 
 module.exports = async function (deployer, network, accounts) {
 
   if (network === "development") return; // Don't deploy on tests
 
-  deployer.deploy(LauncherSample).then(() => {
-    return deployer.deploy(RICO)
+  deployer.deploy(RICO).then(() => {
+    return deployer.deploy(Launcher)
   }).then(() => {
-    return deployer.deploy(TokenMintPoD)
-  }).then(() => {
-    return deployer.deploy(RICOToken)
-  }).then(() => {
-    return deployer.deploy(SimplePoD)
-  }).then(() => {
-    return deployer.deploy(KaitsukePoD)
+    return deployer.deploy(ContractManager)
   }).then(async() => {
     // certifiers
     projectOwner = accounts[0]
-    tobAccount = projectOwner
-  
+
     rico = await RICO.deployed()
-    token = await RICOToken.deployed()
-    launcher = await LauncherSample.deployed()
-    tob = await KaitsukePoD.deployed()
-    pod = await SimplePoD.deployed()
-    mint1 = await TokenMintPoD.deployed()
+    launcher = await Launcher.deployed()
+    cm = await ContractManager.deployed()
+    init = await launcher.init(rico.address, cm.address)
 
-    pods = [
-      tob.address,
-      pod.address,
-      mint1.address
-    ]
+    const standardICO = await launcher.standardICO(
+      name,
+      symbol,
+      decimals,
+      projectOwner, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker, owner]
+    )
 
-    //console.log(projectOwner, tobAccount, pods)
+    const simpleICO = await launcher.simpleICO(
+      name,
+      symbol,
+      decimals,
+      projectOwner, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
+    )
 
-
-    const setConfigToB = await tob.setConfig(decimals, tobTokenSupply, tobWeiLimit, tobAccount)
-    const changeOwnerToB = await tob.transferOwnership(rico.address)
-
-    const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
-    const changeOwnerPoD = await pod.transferOwnership(rico.address)
-
-    const setConfigMint1 = await mint1.setConfig(projectOwner, 72000, firstSupply)
-    const changeOwnerMint1 = await mint1.transferOwnership(rico.address)
-
-    // changing owner to owner to rico.
-    const changeOwnerToken = await token.transferOwnership(rico.address)
-    const changeOwnerRICO = await rico.transferOwnership(launcher.address)
-
-    //initializing launcher.
-    const init = await launcher.init(rico.address, totalTokenSupply, token.address, pods)
-
-    //setup launcher
-    const setup = await launcher.setup(accounts[0]);
   });
 }

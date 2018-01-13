@@ -9,34 +9,23 @@ contract('SimplePoD', function (accounts) {
 
   it("contract should be deployed and initializing token for SimplePoD", async function () {
 
-    pod = await SimplePoD.new();
-    //deploy contracts and initialize ico.
-    const setConfigPoD = await pod.setConfig(decimals, podTokenSupply, podWeiLimit)
-
-    const init = await pod.init()
-
-    const status = await pod.status.call()
-
-    assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
-  })
-
-  it("contract should be started SimplePoD", async function () {
-
-    const status = await pod.status.call()
-
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
+    pod = await SimplePoD.new();
+    //deploy contracts and initialize ico.
+    const init = await pod.init(accounts[0], decimals, now + 200, podTokenSupply, podWeiLimit)
+
+    const status = await pod.status.call()
+
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
-
-    const start = await pod.start(now)
-
   })
+
   it("Check the process for donation should be done", async function () {
 
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_increaseTime",
-      params: [0],
+      params: [200],
       id: 0
     })
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
@@ -51,11 +40,11 @@ contract('SimplePoD', function (accounts) {
     })
 
     const status = await pod.status.call()
-    const proofOfDonationCapOfWei = await pod.proofOfDonationCapOfWei.call()
+    const proofOfDonationCapOfWei = await pod.getCapOfWei()
 
     //console.log(donate.tx, status.toNumber(), proofOfDonationCapOfWei.toNumber())
     const balanceOfWei = await pod.getBalanceOfWei(owner)
-    assert.equal(status.toNumber(), 2, "Error: status is not started")
+    assert.equal(status.toNumber(), 1, "Error: status is not started")
     assert.equal(balanceOfWei.toNumber() / 10 ** 18, 8, "Error: donation has been failed")
 
   })
@@ -72,14 +61,14 @@ contract('SimplePoD', function (accounts) {
     })
 
     const status = await pod.status.call()
-    assert.equal(status.toNumber(), 2, "Error: status is not started")
+    assert.equal(status.toNumber(), 1, "Error: status is not started")
 
     const donate2 = await pod.donate({
       gasPrice: 50000000000,
       value: web3.toWei(2, 'ether')
     })
     const status2 = await pod.status.call()
-    assert.equal(status2.toNumber(), 3, "Error: status is not ended")
+    assert.equal(status2.toNumber(), 2, "Error: status is not ended")
   })
 
   it("Check the tokenBalance for owner", async function () {
@@ -87,7 +76,7 @@ contract('SimplePoD', function (accounts) {
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_increaseTime",
-      params: [2592000],
+      params: [400],
       id: 0
     })
 

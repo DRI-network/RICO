@@ -1,13 +1,10 @@
 pragma solidity ^0.4.18;
-import "./AbsRICOToken.sol";
-import "./PoD.sol";
+import "./MintableToken.sol";
+import "./AbsPoD.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
-/// @notice TokenRound chose a index for pod execute modes. 
-/// 0. Attach ToB pod. podType == 101
-/// 1~ Attach Custom pod. podType == 111
 
 contract RICO is Ownable {
   /// using safemath
@@ -16,277 +13,143 @@ contract RICO is Ownable {
    * Events 
    */
 
-  event InitStructure(uint256 totalSupply, address po, uint256 tobAmountWei, uint256 tobAmountToken);
-  event InitTokenData(string name, string symbol, uint8 decimals);
-  event AddTokenRound(address pod);
-  event AddWithdrawalRound(uint256 amount, uint256 execTime, address to, bool isMM, uint256 totalWithdrawals);
-  event ExecutedTOB(address po);
-  event Withdrawal(address receiver, uint256 amount);
-
-  /**
-   * Modifiers
-   */
-
-  modifier onlyProjectOwner() {
-    require(msg.sender == po);
-    // Only projectOwner is allowed to proceed
-    _;
-  }
+  event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address[] pods, address token);
+  event CheckedPodsToken(address pod, uint256 supply);
 
   /**
    * Storage
    */
 
-  enum Status {
-    Deployed,
-    Initialized,
-    TokenCreated,
-    TokenStructureConfirmed,
-    RICOStarted
-  }
+  string public name = "RICO contract";
+  string public version = "0.9.3";
 
-  address public po;
-  uint256 public totalSupply;
-  uint256 public tobLimitWei;
-  uint256 public nowReserveWei;
-  uint256 public startTimeOfPoD;
-  uint256 public nowSupply;
-  Status public status;
-  AbsRICOToken public token;
-  address[] public pods;
-  mapping(address => mapping(uint256 => uint256)) wLimitWei;
+  address[] public tokens;
+
+  mapping(address => address[]) tokenToPods;
+  mapping(address => uint256) public maxSupplies;
 
   /**
    * constructor
    * @dev define owner when this contract deployed.
    */
 
-  function RICO() public {
-    status = Status.Deployed;
-  }
+  function RICO() public { }
 
   /**
-   * @dev initialize token structure for new project.
-   * @param _tokenAddr                  RICOToken contract's address.
-   * @param _totalSupply                total supply of Token.
-   * @param _pods                       array of Pod's addresses
-   * @param _po                         project owner address.
+   * @dev newToken token meta Data implement for ERC-20 Token Standard Format.
+   * @param _name         Token name of RICO format.
+   * @param _symbol       Token symbol of RICO format.
+   * @param _decimals     Token decimals of RICO format.
+   * @param _pods         PoD contract addresses.
+   * @param _projectOwner Token's owner.
    */
-  function init(
-    address _tokenAddr,
-    uint256 _totalSupply,
+   
+  function newProject(
+    string _name, 
+    string _symbol, 
+    uint8 _decimals, 
     address[] _pods,
-    address _po
-  )
-  external onlyOwner() returns(bool) 
+    address _projectOwner
+  ) 
+  public returns (address) 
   {
-    require(status == Status.Deployed);
+    uint256 totalSupply = checkPoDs(_pods);
 
-    require(_tokenAddr != 0x0 && _totalSupply > 0 && _po != 0x0);
-
-    token = AbsRICOToken(_tokenAddr);
-
-    totalSupply = _totalSupply;
-
-    nowSupply = 0;
-
-    tobLimitWei = 0;
-
-    nowReserveWei = 0;
-     
-    po = _po;
+    require(totalSupply > 0);
     
-    pods = _pods;
+    //generate a ERC20 mintable token.
+    MintableToken token = new MintableToken();
 
-    status = Status.Initialized;
+    token.init(_name, _symbol, _decimals, _projectOwner);
 
-    return true;
+    tokenToPods[token] = _pods;
+
+    maxSupplies[token] = totalSupply;
+
+    tokens.push(token);
+
+    CreatedNewProject(_name, _symbol, _decimals, totalSupply, _pods, token);
+
+    return address(token);
   }
 
-  /**
-   * @dev initialize token meta Data implement for ERC-20 Token Standard Format.
-   * @param _name         set Token name of RICO format.
-   * @param _symbol       set Token symbol of RICO format.
-   * @param _decimals     set Token decimals of RICO format.
-   */
-  function initTokenData(string _name, string _symbol, uint8 _decimals) public onlyOwner() returns(bool) {
-
-    require(status == Status.Initialized);
-
-    token.init(_name, _symbol, _decimals);
-
-    InitTokenData(_name, _symbol, _decimals);
-
-    status = Status.TokenCreated;
-
-    return true;
-  }
 
   /**
-   * @dev define a token supply by token creation strategy.
-   * @param _index      check the one address index of array of pods.
+   * @dev To confirm pods and check the token maximum supplies.
+   * @param _pods         PoD contract addresses.
    */
 
-  function addTokenRound(uint _index) public onlyOwner() returns(bool) {
+  function checkPoDs(address[] _pods) internal returns (uint256) {
+    uint256 nowSupply = 0;
+    for (uint i = 0; i < _pods.length; i++) {
+      address podAddr = _pods[i];
+      AbsPoD pod = AbsPoD(podAddr);
 
-    require(status == Status.TokenCreated);
-
-    PoD pod = PoD(pods[_index]);
-
-    if (pod.podType() == 110)   //TOB pod
-      tobLimitWei = tobLimitWei.add(pod.proofOfDonationCapOfWei());
+      if (!pod.isPoDStarted())
+        return 0;
       
-    pod.init();
-
-    nowSupply = nowSupply.add(pod.proofOfDonationCapOfToken());
-
-    require(nowSupply <= totalSupply);
-
-    AddTokenRound(address(pod));
-
-    return true;
-  }
-
-  /**
-   * @dev distribute ether from contract defined by token creation strategy.
-   * @param _distributeWei      set distribute ether amount for this project.
-   * @param _execTime           set unlocking distribute time.
-   * @param _to                 set ether receive address.
-   * @param _isMM               set bool for marketmaker flag.
-   */
-
-  function addWithdrawalRound(uint256 _distributeWei, uint256 _execTime, address _to, bool _isMM) public onlyOwner() returns(bool) {
-
-    require(status == Status.TokenCreated);
-
-    require(_execTime >= block.timestamp);  
-
-    require(wLimitWei[_to][_distributeWei] == 0);  
-
-    if (_isMM)
-      require(tobLimitWei >= nowReserveWei.add(_distributeWei));
-
-    wLimitWei[_to][_distributeWei] = _execTime;
-
-    nowReserveWei = nowReserveWei.add(_distributeWei);
-
-    AddWithdrawalRound(_distributeWei, _execTime, _to, _isMM, nowReserveWei);
-
-    return true;
-  }
-
-  /**
-   * @dev confirm token creation strategy by projectOwner.
-   */
-
-  function strategyConfirm() public onlyProjectOwner() returns(bool) {
-
-    require(status == Status.TokenCreated);
-
-    PoD tob = PoD(pods[0]);
-
-    require(tob.podType() == 110);   //TOB pod
-
-    tob.start(now);
-
-    status = Status.TokenStructureConfirmed;
-
-    return true;
-
-  }
-  
-  /**
-   * @dev withdraw ether from this contract.
-   */
-
-  function withdraw(uint256 _amount) public returns (bool) {
-
-    require(wLimitWei[msg.sender][_amount] > block.timestamp);
-
-    uint256 amount = 0;
-    if (_amount >= this.balance) {
-      amount = this.balance;
-    } else {
-      amount = _amount;
+      uint256 capOfToken = pod.getCapOfToken();
+      nowSupply = nowSupply.add(capOfToken);
+      CheckedPodsToken(address(pod), capOfToken);
     }
 
-    require(msg.sender.send(amount));
-
-    wLimitWei[msg.sender][_amount] = 0;
-
-    Withdrawal(msg.sender, amount);
-
-    return true;
+    return nowSupply;
   }
 
   /**
-   * @dev executes TOB call from project owner.
-   * @param _startTimeOfPoD represent a unix time of PoD start.
+   * @dev executes claim token when pod's status was ended.
+   * @param _tokenAddr         the project's token address.
+   * @param _index             pods num of registered array.
+   * @param _user              minter address.
    */
 
-  function execTOB(uint256 _startTimeOfPoD) public onlyProjectOwner() returns(bool) {
+  function mintToken(address _tokenAddr, uint _index, address _user) public returns(bool) {
 
-    require(status == Status.TokenStructureConfirmed);
+    address user = msg.sender;
+ 
+    if (_user != 0x0) {
+      user = _user;
+    }
 
-    PoD tob = PoD(pods[0]);
+    require(tokenToPods[_tokenAddr][_index] != 0x0);
 
-    require(tob.podType() == 110);   //TOB pod
-
-    require(tob.isPoDEnded());
-
-    require(_startTimeOfPoD >= block.timestamp);
-
-    startTimeOfPoD = _startTimeOfPoD;
-
-    require(startPoD(1));
-
-    ExecutedTOB(po);
-
-    status = Status.RICOStarted;
-
-    return true;
-
-  }
-
-  function startPoD(uint _pod) public returns(bool) {
-  
-    PoD pod = PoD(pods[_pod]);
-
-    require(pod.start(startTimeOfPoD));
-
-    return true;
-  }
-
-  /**
-   * @dev executes claim token when auction trading time elapsed.
-   */
-
-  function mintToken(uint _pod, address _user) public returns(bool) {
-
-    require(status == Status.RICOStarted);
-
-    PoD pod = PoD(pods[_pod]);
+    AbsPoD pod = AbsPoD(tokenToPods[_tokenAddr][_index]);
 
     require(pod.isPoDEnded());
 
-    uint256 tokenValue = pod.getBalanceOfToken(_user);
+    uint256 tokenValue = pod.getBalanceOfToken(user);
 
     require(tokenValue > 0);
 
-    require(token.mintable(_user, tokenValue, now));
+    MintableToken token = MintableToken(_tokenAddr);
 
-    require(token.mint(_user));
+    require(token.mint(user, tokenValue));
 
-    require(pod.resetWeiBalance(_user));
+    require(pod.resetWeiBalance(user));
 
     return true;
   }
 
   /**
-   * @dev automatically execute received transactions.
+   * @dev Emergency call for token transfer miss.
    */
-  function () payable public {
-    if (msg.value == 0)
-      mintToken(1, msg.sender);
+
+  function tokenTransfer(address _token) public onlyOwner() {
+    
+    MintableToken token = MintableToken(_token);
+
+    uint balance = token.balanceOf(this);
+    
+    token.transfer(owner, balance);
+  }
+
+  
+
+  /**
+   * @dev To get pods addresses attached to token.
+   */
+
+  function getTokenPods(address _token) public constant returns (address[]) {
+    return tokenToPods[_token];
   }
 }

@@ -47,11 +47,13 @@ contract DutchAuctionPoD is PoD {
   /// @dev Contract constructor function 
   function DutchAuctionPoD() public { 
     name = "DutchAuction strategy PoD";
-    version = "0.1";
+    version = "0.9.3";
   }
 
-  function setConfig(
+  function init(
+    address _wallet,
     uint8 _tokenDecimals,
+    uint256 _startTime,
     uint _priceStart,
     uint _priceConstant,
     uint32 _priceExponent,
@@ -62,11 +64,15 @@ contract DutchAuctionPoD is PoD {
     require(_tokenDecimals != 0);
     require(_priceStart > 0);
     require(_priceConstant > 0);
+    require(_wallet != 0x0);
+    wallet = _wallet;
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
+    startTime = _startTime;
     priceStart = _priceStart;
     priceConstant = _priceConstant;
     priceExponent = _priceExponent;
     proofOfDonationCapOfToken = _capOfToken;
+    status = Status.PoDStarted;
     Setup(_priceStart, _priceConstant, _priceExponent);
     
     return true;
@@ -153,10 +159,7 @@ contract DutchAuctionPoD is PoD {
   /// @notice Send `msg.value` WEI to the auction from the `msg.sender` account.
   /// @dev Allows to send a bid to the auction.
   function processDonate(address _user) internal returns (bool) {
-    require(msg.value > 0);
     require(_user != 0x0);
-    assert(weiBalances[_user].add(msg.value) >= msg.value);
-
     // Missing funds without the current bid value
     uint missingFunds = missingFundsToEndAuction();
 
@@ -164,7 +167,8 @@ contract DutchAuctionPoD is PoD {
     // at the current price.
     require(msg.value <= missingFunds);
 
-    weiBalances[_user] = weiBalances[_user].add(msg.value);
+    // distribute ether to wallet.
+    wallet.transfer(msg.value);
 
     // Send bid amount to wallet
     BidSubmission(msg.sender, msg.value, missingFunds);
