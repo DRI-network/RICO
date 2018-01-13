@@ -43,9 +43,9 @@ contract Launcher {
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
    * @param _wallet       Founder's multisigWallet.
-   * @param _tobParams    params of RICOStandardPoD pod.
+   * @param _bidParams    params of RICOStandardPoD pod.
    * @param _podParams    params of SimplePoD pod.
-   * @param _owners       array of owners address, 0:tob executor, 1: founder.
+   * @param _owners       array of owners address, 0:bid executor, 1: founder.
    * @param _marketMakers array of marketMakers address of project 
    */
 
@@ -54,7 +54,7 @@ contract Launcher {
     string _symbol, 
     uint8 _decimals, 
     address _wallet,
-    uint256[] _tobParams,
+    uint256[] _bidParams,
     uint256[] _podParams,
     address[2] _owners,
     address[] _marketMakers
@@ -63,11 +63,11 @@ contract Launcher {
   {
     address[] memory pods = new address[](2);
 
-    RICOStandardPoD tob = new RICOStandardPoD();
-    tob.init(_decimals, _tobParams[0], _tobParams[1], _tobParams[2], _owners, _marketMakers, _tobParams[3]);
-    tob.transferOwnership(rico);
+    RICOStandardPoD rsp = new RICOStandardPoD();
+    rsp.init(_decimals, _bidParams[0], _bidParams[1], _bidParams[2], _owners, _marketMakers, _bidParams[3]);
+    rsp.transferOwnership(rico);
 
-    pods[0] = address(tob);
+    pods[0] = address(rsp);
     pods[1] = cm.deploy(rico, 0, _decimals, _wallet, _podParams);
 
     return rico.newProject(_name, _symbol, _decimals, pods, _wallet);

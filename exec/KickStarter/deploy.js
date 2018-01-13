@@ -7,10 +7,10 @@ const symbol = "RIT";
 const decimals = 18;
 
 const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
-const tobTokenSupply = totalTokenSupply * 10 / 100
-const tobWeiLimit = 100 * 10 ** 18
+const TokenSupply = totalTokenSupply * 10 / 100
+const bidWeiLimit = 100 * 10 ** 18
 const now = parseInt(new Date() / 1000)
-const tobStartTime = now + 72000; //sec
+const bidStartTime = now + 72000; //sec
 
 const podTokenSupply = totalTokenSupply * 90 / 100
 const podWeiLimit = 100 * 10 ** 18
@@ -51,7 +51,7 @@ module.exports = async function (callback) {
     symbol,
     decimals,
     wallet.address,
-    0, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [po, owner], [marketMaker]
+    0, [bidStartTime, bidTokenSupply, bidWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [po, owner], [marketMaker]
   )
    */
 
