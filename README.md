@@ -153,9 +153,9 @@ To call  `kickStartA` process mean that use to RICO standard pods.
 
 ## Test 
 
-### testing on ethereumjs-testrpc
+### testing on ganache-cli
 
-running testrpc with account balance.
+running ganache-cli with account balance.
 
 ```bash
 $ ./rpcrun.bash
@@ -163,13 +163,6 @@ $ ./rpcrun.bash
 
 ```bash
 $ truffle test 
-```
-### testing on ropsten testnet
-
-please set the timeout to `this.timeout` if the block confirmation is too slow.
-
-```bash
-$ truffle test --network testnet
 ```
 
 ## LICENSE
