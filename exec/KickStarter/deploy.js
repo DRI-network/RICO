@@ -34,9 +34,9 @@ module.exports = async function (callback) {
 
   console.log(`MultisigWallet: ${wallet.address}`)
 
-  var kickStart;
+  var newICO;
 
-  kickStart = await launcher.simpleICO(
+  newICO = await launcher.simpleICO(
     name,
     symbol,
     decimals,
@@ -45,7 +45,7 @@ module.exports = async function (callback) {
 
   /**
    *     
-   * kickStart = await launcher.kickStartA(
+   * newICO = await launcher.standardICO(
     rico.address,
     name,
     symbol,
@@ -56,7 +56,7 @@ module.exports = async function (callback) {
    */
 
 
-  console.log(`tx:${kickStart.tx}`)
+  console.log(`tx:${newICO.tx}`)
 
 }
 

@@ -52,8 +52,5 @@ module.exports = async function (deployer, network, accounts) {
       projectOwner, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
     )
 
-
-    //console.log(kickStart)
-
   });
 }

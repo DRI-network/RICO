@@ -50,7 +50,7 @@ $ npm install ganache-cli -g
 
 ## Getting Started 
 
-### install rico-core
+### Install rico-core
 ```bash
 $ npm install -g rico-core
 ```
@@ -67,15 +67,15 @@ $ rico new helloico && cd helloico
 ```
 $ npm install truffle-hdwallet-provider
 ```
-To kickStart new project, sending a transaction to launcher contract.
-For now, launcher has deployed => [launcher.sol](https://ropsten.etherscan.io/address/0x40c75eb39c3a06c50b9109d36b1e488d99aadf97)
+In order to deploy a new project, sending a deploy transaction to launcher contract.
+For now, launcher has deployed in ropsten network. => [launcher.sol](https://ropsten.etherscan.io/address/0x40c75eb39c3a06c50b9109d36b1e488d99aadf97)
 
-Sending kickStart Transaction process:
+Sending deploy transaction process:
 ```bash
 $ export MNEMONIC_KEY="your mnemonic key 12 words" 
 $ export RICO_ADDR=0x9e18e5bdb7f47631cf212b34a42cd54cfd713a6d
 $ export LAUNCHER_ADDR=0x40c75eb39c3a06c50b9109d36b1e488d99aadf97
-$ truffle exec exec/KickStart/deploy.js --network ropsten
+$ truffle exec exec/KickStarter/deploy.js --network ropsten
 ``` 
 
 ### Mainnet deploy
@@ -84,12 +84,12 @@ $ truffle exec exec/KickStart/deploy.js --network ropsten
 $ export MNEMONIC_KEY="your mnemonic key 12 words" 
 $ export RICO_ADDR="non"
 $ export LAUNCHER_ADDR="non"
-$ truffle exec exec/KickStart/deploy.js --network mainnet
+$ truffle exec exec/KickStarter/deploy.js --network mainnet
 ``` 
 
-### Customize KickStart project
+### Customize ICO project
 
-To customizing ico deploy files -> exec/KickStart/deploy.js
+To customizing ICO deploy files -> exec/KickStarter/deploy.js
 ```js
 const Launcher = artifacts.require("./Launcher.sol")
 const RICO = artifacts.require("./RICO.sol")
@@ -127,7 +127,7 @@ module.exports = async function (callback) {
 
   console.log(`MultisigWallet: ${wallet.address}`)
 
-  const kickStart = await launcher.kickStartB(
+  const newICO = await launcher.standardICO(
       name,
       symbol,
       decimals,
@@ -135,15 +135,15 @@ module.exports = async function (callback) {
     )
   }
 
-  console.log(`tx:${kickStart.tx}`)
+  console.log(`tx:${newICO.tx}`)
 
 }
 
 ```
 
-To call  `kickStartA` process mean that use to RICO standard pods.
+Calling method `standardICO` process means that use of RICO standard pods.
 ```js
-  kickStart = await launcher.kickStartA(
+  newICO = await launcher.simpleICO(
     rico.address,
     name,
     symbol,
@@ -157,7 +157,7 @@ To call  `kickStartA` process mean that use to RICO standard pods.
 
 ### testing on ganache-cli
 
-running ganache-cli with account balance.
+Running ganache-cli, and allocate account's balance.
 
 ```bash
 $ ./rpcrun.bash
