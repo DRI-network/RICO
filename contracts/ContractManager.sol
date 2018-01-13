@@ -23,7 +23,7 @@ contract ContractManager {
   function ContractManager() public {}
 
   /**
-   * @dev deploy contract instance to rico kickstarts.
+   * @dev deploy a new contract instance.
    * @param _rico         address of rico.
    * @param _mode         Token name of RICO format.
    * @param _decimals     Token decimals of RICO format.
