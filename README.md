@@ -58,7 +58,7 @@ $ npm install -g rico-core
 
 ### new project generate
 ```bash
-$ rico new ./helloico && cd ./helloico 
+$ rico new helloico && cd helloico 
 ```
 
 ### Testnet deploy (ropsten)
