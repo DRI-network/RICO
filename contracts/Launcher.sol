@@ -38,7 +38,7 @@ contract Launcher {
 
 
   /**
-   * @dev kickStartA uses 2 pods RICOStandardPoD and SimplePoD.
+   * @dev standardICO uses 2 pods RICOStandardPoD and SimplePoD.
    * @param _name         Token name of RICO format.
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
@@ -49,7 +49,7 @@ contract Launcher {
    * @param _marketMakers array of marketMakers address of project 
    */
 
-  function kickStartA(
+  function standardICO(
     string _name, 
     string _symbol, 
     uint8 _decimals, 
@@ -75,7 +75,7 @@ contract Launcher {
 
 
   /**
-   * @dev kickStartA uses 2 pods SimplePoD and TokenMintPoD.
+   * @dev simpleICO uses 2 pods SimplePoD and TokenMintPoD.
    * @param _name         Token name of RICO format.
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
@@ -84,7 +84,7 @@ contract Launcher {
    * @param _mintParams   params of TokenMintPoD pod.
    */
 
-  function kickStartB(
+  function simpleICO(
     string _name, 
     string _symbol, 
     uint8 _decimals, 

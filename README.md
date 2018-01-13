@@ -35,7 +35,6 @@ An ICO made with RICO is:
 
 ## Dependencies
 
-- Mac OSX 10.13.1
 - Node v9.0.0
 - Truffle v4.0.1
 - solidity-compiler v0.4.18
@@ -56,7 +55,7 @@ $ npm install ganache-cli -g
 $ npm install -g rico-core
 ```
 
-### new project generate
+### Generate project
 ```bash
 $ rico new helloico && cd helloico 
 ```

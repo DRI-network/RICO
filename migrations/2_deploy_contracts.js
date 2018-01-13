@@ -38,14 +38,14 @@ module.exports = async function (deployer, network, accounts) {
     cm = await ContractManager.deployed()
     init = await launcher.init(rico.address, cm.address)
 
-    const kickStartA = await launcher.kickStartA(
+    const standardICO = await launcher.standardICO(
       name,
       symbol,
       decimals,
       projectOwner, [tobStartTime, tobTokenSupply, tobWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker, owner]
     )
 
-    const kickStartB = await launcher.kickStartB(
+    const simpleICO = await launcher.simpleICO(
       name,
       symbol,
       decimals,

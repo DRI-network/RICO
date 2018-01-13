@@ -36,7 +36,7 @@ module.exports = async function (callback) {
 
   var kickStart;
 
-  kickStart = await launcher.kickStartB(
+  kickStart = await launcher.simpleICO(
     name,
     symbol,
     decimals,
