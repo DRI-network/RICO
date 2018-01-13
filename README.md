@@ -68,7 +68,10 @@ $ rico new helloico && cd helloico
 ```
 $ npm install truffle-hdwallet-provider
 ```
-Attachment contracts:
+To kickStart new project, sending a transaction to launcher contract.
+For now, launcher has deployed => [launcher.sol](https://ropsten.etherscan.io/address/0x40c75eb39c3a06c50b9109d36b1e488d99aadf97)
+
+Sending kickStart Transaction process:
 ```bash
 $ export MNEMONIC_KEY="your mnemonic key 12 words" 
 $ export RICO_ADDR=0x9e18e5bdb7f47631cf212b34a42cd54cfd713a6d
