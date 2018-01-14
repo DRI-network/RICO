@@ -14,6 +14,8 @@ contract DaicoPoD is PoD {
   mapping(address => uint256) lockedVotePowers;  //Deposit based Stake counter.
 
   uint256 public voterCount;
+  uint256 public reundPrice;
+  bool public refundable;
 
   EIP20StandardToken public token;
 
@@ -24,6 +26,7 @@ contract DaicoPoD is PoD {
     uint256 closeVoteTime;
     uint256 totalVoted;
     uint256 newTap;
+    bool isDestruct;
     mapping(bool => uint256) voted;
     mapping(address => bool) isVote;
   }
@@ -38,6 +41,7 @@ contract DaicoPoD is PoD {
     version = "0.9.3";
     tap = 0;
     voterCount = 0;
+    refundable = false;
   }
 
   function init(
@@ -63,7 +67,7 @@ contract DaicoPoD is PoD {
 
     require(token.transferFrom(msg.sender, this, _amount));
 
-    lockedVotePowers[msg.sender] = _amount;
+    lockedVotePowers[msg.sender] = lockedVotePowers[msg.sender].add(_amount);
 
     voterCount = voterCount.add(1);
 
@@ -87,34 +91,53 @@ contract DaicoPoD is PoD {
 
     var proposal = proposals[proposals.length-1];
 
+    require(block.timestamp >= proposal.openVoteTime);
+    require(block.timestamp < proposal.closeVoteTime);
+
     require(!proposal.isVote[msg.sender]);
 
-    require(lockedVotePowers[msg.sender] >= tokenMultiplier.mul(50000));
+    require(lockedVotePowers[msg.sender] >= tokenMultiplier.mul(5000));
 
     proposal.isVote[msg.sender] = true;
     proposal.voted[_flag] = proposal.voted[_flag].add(1);
     proposal.totalVoted = proposal.totalVoted.add(1);
+
+    Voted(msg.sender, _flag);
   }
 
 
-  function aggregate(uint256 nextOpenTime, uint256 nextCloseTime, uint256 _newTap) public returns (bool) {
+  function aggregate(uint256 nextOpenTime, uint256 nextCloseTime, uint256 _newTap, bool _isDestruct) public returns (bool) {
 
     var proposal = proposals[proposals.length-1];
 
     require(block.timestamp >= proposal.closeVoteTime);
+    require(block.timestamp >= nextOpenTime);
+    require(nextCloseTime >= nextOpenTime.add(7 days));
+
+    require(!refundable);
 
     uint votedUsers = proposal.voted[true].add(proposal.voted[false]);
+
+    //require(votedUsers >= 20);
 
     uint absent = voterCount.sub(votedUsers);
 
     if (proposal.voted[true] > proposal.voted[false].add(absent.div(6))) {
-      modifyTap(proposal.newTap);
+      if (proposal.isDestruct) {
+        refundable = true;
+        tap = 0;
+      } else {
+        modifyTap(proposal.newTap);
+      }
     }
+
+    require(tap < _newTap);
 
     Proposal memory newProposal = Proposal({
       openVoteTime: nextOpenTime,
       closeVoteTime: nextCloseTime,
       newTap: _newTap,
+      isDestruct: _isDestruct,
       totalVoted: 0
     });
 
@@ -130,8 +153,28 @@ contract DaicoPoD is PoD {
     lastWithdrawn = block.timestamp;
   }
 
+  function decreaseTap(uint256 _newTap) public onlyOwner() returns (bool) {
 
-  function modifyTap(uint256 newTap) private returns (bool) {
+    require(tap > _newTap);
+
+    modifyTap(_newTap);
+  }
+
+  function refund() public returns (bool) {
+
+    require(refundable);
+
+    uint refundAmount = this.balance * lockedVotePowers[msg.sender] / token.balanceOf(this);
+
+    msg.sender.transfer(refundAmount);
+
+    lockedVotePowers[msg.sender] = 0;
+    
+    return true;
+  }
+
+
+  function modifyTap(uint256 newTap) internal returns (bool) {
     withdraw();
     tap = newTap;
   }
@@ -141,7 +184,7 @@ contract DaicoPoD is PoD {
     return true;
   }
 
-  function finalize() public {
+  function finalize() public onlyOwner() {
 
     require(status == Status.PoDStarted);
 
