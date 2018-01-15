@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/DRI-network/RICO/tree/master.svg?style=shield)](https://circleci.com/gh/DRI-project/RICO/tree/master)
 [![Slack Channel](https://dri-slack.now.sh/badge.svg)](https://dri-slack.now.sh/)
 
-**This is an Beta version and may still contain bugs. We are not responsible for any losses caused by this version.**
+**This is a Beta version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
 ## Design Concept
 
@@ -141,7 +141,7 @@ module.exports = async function (callback) {
 
 ```
 
-Calling method `standardICO` process means that use of RICO standard pods.
+Calling method `standardICO` process uses RICO standard pods.
 ```js
   newICO = await launcher.standardICO(
     rico.address,
