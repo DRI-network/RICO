@@ -23,7 +23,9 @@ module.exports = async function (callback) {
 
   console.log(`token: ${token.address}, decimals: ${tokenDecimals}, multisigWallet:${wallet.address}`)
 
-  const init = await daico.init(wallet.address, tokenDecimals, token.address, firstOpenTime, firstCloseTime, firstTapAmount);
+  const init = await daico.init(wallet.address, tokenDecimals, token.address);
+
+  console.log(`tx:${init.tx}`)
 
 }
 

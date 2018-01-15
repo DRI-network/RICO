@@ -8,20 +8,23 @@ import "../EIP20StandardToken.sol";
 
 contract DaicoPoD is PoD {
 
-  // tap is withdrawal limit (wei / sec)
+  // The tap is withdrawal limit (wei / sec) of founder's multisig wallet.
   uint256 public tap;
-  // last time of withdrawal funds.
+  // Latest withdrawal time.
   uint256 public lastWithdrawn;
-  // define Token Deposit and Locked balances.
-  mapping(address => uint256) lockedVotePowers; 
-  // contract has num of all voters.
+  // Locked token balances of users.
+  mapping(address => uint256) lockedTokenBalances; 
+  // Contract has total number of all voters.
   uint256 public voterCount;
-  // contract should be called refund funtion if refundable.
+  // Contract should be called refund funtion if contract is refundable (withdraw mode).
   bool public refundable;
-  // define EIP20 token that use and locked to vote.
+  // EIP20 token that locked to vote.
   EIP20StandardToken public token;
   // Token tokenMultiplier; e.g. 10 ** uint256(18)
   uint256 tokenMultiplier;
+  // Flag that whether proposed vote or not.
+  bool isProposed;
+
   // proposal for DAICO proposal
   struct Proposal {
     // Starting vote process at openVoteTime. 
@@ -39,18 +42,25 @@ contract DaicoPoD is PoD {
     // Represent the flag to whether a voter voted or not.
     mapping(address => bool) isVote;
   }
-  // storage of proposals.
+  // Storage of proposals.
   Proposal[] proposals;
     
   /**
    * Events
    */
 
-  event Voted(address user, bool flag);
+  event Voted(address _user, bool _flag);
+  event DepositToken(address _user, uint256 _amount);
+  event WithdrawalToken(address _user, uint256 _amount);
+  event SubmittedProposal(uint256 _nextOpenTime, uint256 _nextCloseTime, uint256 _nextTapAmount, bool _isDestruct);
+  event ModifiedTap(uint256 _tapAmount);
+  event Withdraw(address _user, uint256 _amount, uint256 _time);
+  event Refund(address _user, uint256 _amount);
+
 
   /**
-   * constructor
-   * @dev define owner when this contract deployed.
+   * Constructor
+   * @dev Set the owner when this contract deployed.
    */
   
   function DaicoPoD() public {
@@ -59,22 +69,20 @@ contract DaicoPoD is PoD {
     tap = 0;
     voterCount = 0;
     refundable = false;
+    isProposed = false;
   }
 
 
   /**
-   * @dev init contract defined params.
-   * @param _wallet            Address of ProjectOwner's multisig wallet.
+   * @dev Initialized PoD.
+   * @param _wallet            Address of founder's multisig wallet.
    * @param _tokenDecimals     Token decimals for EIP20 token contract.
    * @param _token             Address of EIP20 token contract.
    */
   function init(
     address _wallet, 
     uint8 _tokenDecimals, 
-    address _token,
-    uint256 _firstOpenTime,
-    uint256 _firstCloseTime,
-    uint256 _firstTapAmount
+    address _token
   ) 
   public onlyOwner() returns (bool) 
   {
@@ -86,19 +94,7 @@ contract DaicoPoD is PoD {
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
     // The first time of contract deployed, contract's token balance should be zero.
     require(token.balanceOf(this) == 0);
-    require(_firstCloseTime >= _firstOpenTime.add(7 days));
-    Proposal memory newProposal = Proposal({
-      openVoteTime: _firstOpenTime,
-      closeVoteTime: _firstCloseTime,
-      newTap: _firstTapAmount,
-      isDestruct: false,
-      totalVoted: 0
-    });
-
-    proposals.push(newProposal);    
-
     status = Status.PoDStarted;
-
     return true;
   }
 
@@ -109,7 +105,7 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Deposit token to this contract for EIP20 token format.
-   * and deposited token is to be lockedVotePowers.
+   * And lockedTokenBalances represents amount of deposited token.
    * @param _amount            The Amount of token allowed.
    */
   function depositToken(uint256 _amount) public returns (bool) {
@@ -118,31 +114,35 @@ contract DaicoPoD is PoD {
 
     require(token.transferFrom(msg.sender, this, _amount));
 
-    lockedVotePowers[msg.sender] = lockedVotePowers[msg.sender].add(_amount);
+    lockedTokenBalances[msg.sender] = lockedTokenBalances[msg.sender].add(_amount);
 
     voterCount = voterCount.add(1);
+
+    DepositToken(msg.sender, _amount);
 
     return true;
   }
 
   /**
-   * @dev withdrawal token from this contract.
-   * and `msg.sender` lose all lockedVotePowers if this method has called.
+   * @dev Withdraw token from this contract.
    */
   function withdrawalToken() public returns (bool) {
     
-    var proposal = proposals[proposals.length-1];
+    Proposal storage proposal = proposals[proposals.length-1];
 
     require(!proposal.isVote[msg.sender]);
 
-    require(lockedVotePowers[msg.sender] > 0);
+    uint256 amount = lockedTokenBalances[msg.sender];
 
-    token.transfer(msg.sender, lockedVotePowers[msg.sender]);
+    require(amount > 0);
+
+    token.transfer(msg.sender, lockedTokenBalances[msg.sender]);
 
     voterCount = voterCount.sub(1);
 
-    lockedVotePowers[msg.sender] = 0;
+    lockedTokenBalances[msg.sender] = 0;
 
+    WithdrawalToken(msg.sender, amount);
     return true;
   }
 
@@ -154,14 +154,14 @@ contract DaicoPoD is PoD {
 
   function vote(bool _flag) public returns (bool) {
 
-    var proposal = proposals[proposals.length-1];
+    Proposal storage proposal = proposals[proposals.length-1];
 
     require(block.timestamp >= proposal.openVoteTime);
     require(block.timestamp < proposal.closeVoteTime);
 
     require(!proposal.isVote[msg.sender]);
 
-    require(lockedVotePowers[msg.sender] >= tokenMultiplier.mul(15000));
+    require(lockedTokenBalances[msg.sender] >= tokenMultiplier.mul(15000));
 
     proposal.isVote[msg.sender] = true;
     proposal.voted[_flag] = proposal.voted[_flag].add(1);
@@ -173,55 +173,80 @@ contract DaicoPoD is PoD {
   }
 
   /**
-   * @dev Aggregate the voted results and calling modiryTap process or destruct.
+   * @dev Submitting proposal to increase tap or destruct funds.
    * @param _nextOpenTime        The open time of next propsoal.
    * @param _nextCloseTime       The close time of next propsoal.
-   * @param _nextNewTap              The newTap params.
+   * @param _nextTapAmount       The newTap num ( wei / sec ).
    * @param _isDestruct          The flag to whether a voter voted or not.
    */
 
-  function aggregate(uint256 _nextOpenTime, uint256 _nextCloseTime, uint256 _nextNewTap, bool _isDestruct) public returns (bool) {
+  function submitProposal(uint256 _nextOpenTime, uint256 _nextCloseTime, uint256 _nextTapAmount, bool _isDestruct) public returns (bool) {
 
-    var proposal = proposals[proposals.length-1];
-    
-    require(block.timestamp >= proposal.closeVoteTime);
     require(block.timestamp >= _nextOpenTime);
     require(_nextCloseTime >= _nextOpenTime.add(7 days));
 
-    require(!refundable);
+    require(lockedTokenBalances[msg.sender] >= tokenMultiplier.mul(30000));
 
-    uint votedUsers = proposal.voted[true].add(proposal.voted[false]);
+    require(tap < _nextTapAmount);
 
-    //require(votedUsers >= 20);
-
-    uint absent = voterCount.sub(votedUsers);
-
-    if (proposal.voted[true].mul(10000) > proposal.voted[false].mul(10000).add(absent.mul(10000).div(6))) {
-      if (proposal.isDestruct) {
-        refundable = true;
-        tap = 0;
-      } else {
-        modifyTap(proposal.newTap);
-      }
-    }
-
-    require(tap < _nextNewTap);
+    require(!isProposed);
 
     Proposal memory newProposal = Proposal({
       openVoteTime: _nextOpenTime,
       closeVoteTime: _nextCloseTime,
-      newTap: _nextNewTap,
+      newTap: _nextTapAmount,
       isDestruct: _isDestruct,
       totalVoted: 0
     });
 
     proposals.push(newProposal);
 
+    isProposed = true;
+
+    SubmittedProposal(_nextOpenTime, _nextCloseTime, _nextTapAmount, _isDestruct);
     return true;
   }
 
   /**
-   * @dev founder can withdrawal ether from contract.
+   * @dev Aggregate the voted results.
+   * return uint 0 => No executed, 1 => Modified tap num, 2 => Transition to withdraw mode
+   */
+
+  function aggregateVotes() public returns (uint) {
+    
+    Proposal storage proposal = proposals[proposals.length-1];
+    
+    require(block.timestamp >= proposal.closeVoteTime);
+
+    require(!refundable);
+
+    uint votedUsers = proposal.voted[true].add(proposal.voted[false]);
+
+    isProposed = false;
+
+    if (votedUsers <= 20) {
+      return 0;
+    }
+
+    uint absent = voterCount.sub(votedUsers);
+
+    uint threshold = absent.mul(10000).div(6);
+
+    if (proposal.voted[true].mul(10000) > proposal.voted[false].mul(10000).add(threshold)) {
+      if (proposal.isDestruct) {
+        refundable = true;
+        tap = 0;
+        return 2;
+      } else {
+        modifyTap(proposal.newTap);
+        return 1;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * @dev Founder can withdraw ether from contract.
    * receiver `wallet` whould be called failback function to receiving ether.
    */
 
@@ -229,20 +254,22 @@ contract DaicoPoD is PoD {
 
     require(block.timestamp > lastWithdrawn.add(30 days));
 
-    wallet.transfer((block.timestamp - lastWithdrawn) * tap);
+    uint256 amount = (block.timestamp - lastWithdrawn) * tap;
+    wallet.transfer(amount);
 
     lastWithdrawn = block.timestamp;
-
+    
+    Withdraw(wallet, amount, lastWithdrawn);
     return true;
   }
 
   /**
-   * @dev founder can withdrawal ether from contract.
-   * receiver `wallet` called fallback function to receiving ether.
+   * @dev Founder can decrease the tap amount at anytime.
+   * @param _newTap        The new tap quantity.
    */
 
   function decreaseTap(uint256 _newTap) public returns (bool) {
-    // only called by foudner's multisig wallet.
+    // Only called by foudner's multisig wallet.
     require(msg.sender == wallet); 
 
     require(tap > _newTap);
@@ -253,7 +280,7 @@ contract DaicoPoD is PoD {
   }
 
   /**
-   * @dev if contract to be refundable, project supporter can withdrawal ether from contract.
+   * @dev If contract to be refundable, project supporter can withdraw ether from contract.
    * Basically, supporter gets the amount of ether has dependent by a locked amount of token.
    */
 
@@ -261,14 +288,15 @@ contract DaicoPoD is PoD {
 
     require(refundable);
 
-    uint refundAmount = this.balance * lockedVotePowers[msg.sender] / token.balanceOf(this);
+    uint refundAmount = this.balance * lockedTokenBalances[msg.sender] / token.balanceOf(this);
 
     require(refundAmount > 0);
 
     msg.sender.transfer(refundAmount);
 
-    lockedVotePowers[msg.sender] = 0;
+    lockedTokenBalances[msg.sender] = 0;
     
+    Refund(msg.sender, refundAmount);
     return true;
   }
 
@@ -283,9 +311,11 @@ contract DaicoPoD is PoD {
    * @param newTap       The withdrawal limit for project owner tap = (wei / sec).
    */
 
-  function modifyTap(uint256 newTap) internal {
+  function modifyTap(uint256 newTap) internal returns (bool) {
     withdraw();
     tap = newTap;
+    ModifiedTap(tap);
+    return true;
   }
 
   /**

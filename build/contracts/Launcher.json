@@ -31,32 +31,7 @@
     },
     {
       "constant": true,
-      "inputs": [
-        {
-          "name": "_name",
-          "type": "string"
-        },
-        {
-          "name": "_symbol",
-          "type": "string"
-        },
-        {
-          "name": "_decimals",
-          "type": "uint8"
-        },
-        {
-          "name": "_wallet",
-          "type": "address"
-        },
-        {
-          "name": "_podParams",
-          "type": "uint256[]"
-        },
-        {
-          "name": "_mintParams",
-          "type": "uint256[]"
-        }
-      ],
+      "inputs": [],
       "name": "version",
       "outputs": [
         {
@@ -155,14 +130,6 @@
         {
           "name": "_mintParams",
           "type": "uint256[]"
-        },
-        {
-          "name": "_owners",
-          "type": "address[2]"
-        },
-        {
-          "name": "_marketMakers",
-          "type": "address[]"
         }
       ],
       "name": "simpleICO",
@@ -247,7 +214,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3533,
+          "SourceUnit": 3753,
           "absolutePath": "/Users/sengayusaku/repo/RICO/contracts/PoDs/RICOStandardPoD.sol",
           "file": "./PoDs/RICOStandardPoD.sol",
           "scope": 618,
@@ -262,7 +229,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 4185,
+          "SourceUnit": 4405,
           "absolutePath": "/Users/sengayusaku/repo/RICO/contracts/RICO.sol",
           "file": "./RICO.sol",
           "scope": 618,
@@ -281,7 +248,7 @@
             null
           ],
           "contractDependencies": [
-            3532
+            3752
           ],
           "contractKind": "contract",
           "documentation": "@title Launcher - RICO Launcher contract\n @author - Yusaku Senga - <senga@dri.network>\n license let's see in LICENSE",
@@ -393,7 +360,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RICO",
-                  "referencedDeclaration": 4184,
+                  "referencedDeclaration": 4404,
                   "type": "contract RICO"
                 },
                 "id": 413,
@@ -645,7 +612,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 4294,
+                              "referencedDeclaration": 4514,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -747,7 +714,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 4184,
+                                  "referencedDeclaration": 4404,
                                   "type": "type(contract RICO)",
                                   "value": "RICO"
                                 },
@@ -1230,11 +1197,6 @@
                 "src": "1363:192:4"
               },
               {
-                "attributes": {
-                  "parameters": [
-                    null
-                  ]
-                },
                 "children": [
                   {
                     "attributes": {
@@ -1418,7 +1380,7 @@
                             "attributes": {
                               "contractScope": null,
                               "name": "RICOStandardPoD",
-                              "referencedDeclaration": 3532,
+                              "referencedDeclaration": 3752,
                               "type": "contract RICOStandardPoD"
                             },
                             "id": 488,
@@ -1464,7 +1426,7 @@
                                 "attributes": {
                                   "contractScope": null,
                                   "name": "RICOStandardPoD",
-                                  "referencedDeclaration": 3532,
+                                  "referencedDeclaration": 3752,
                                   "type": "contract RICOStandardPoD"
                                 },
                                 "id": 490,
@@ -1500,8 +1462,7 @@
                             null
                           ],
                           "type": "bool",
-                          "type_conversion": false,
-                          "operator": "="
+                          "type_conversion": false
                         },
                         "children": [
                           {
@@ -1541,7 +1502,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "init",
-                              "referencedDeclaration": 3387,
+                              "referencedDeclaration": 3607,
                               "type": "function (uint8,uint256,uint256,uint256,address[2] memory,address[] memory,uint256) external returns (bool)"
                             },
                             "children": [
@@ -1558,23 +1519,6 @@
                                 "id": 494,
                                 "name": "Identifier",
                                 "src": "1688:3:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number",
-                                  "type": "int_const 0",
-                                  "value": "0"
-                                },
-                                "id": 524,
-                                "name": "Literal",
-                                "src": "1510:1:4"
                               }
                             ],
                             "id": 496,
@@ -1589,55 +1533,11 @@
                               ],
                               "referencedDeclaration": 458,
                               "type": "uint8",
-                              "value": "_decimals",
-                              "isConstant": false,
-                              "isLValue": false,
-                              "isPure": false,
-                              "isStructConstructorCall": false,
-                              "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
-                              "type_conversion": true
+                              "value": "_decimals"
                             },
                             "id": 497,
                             "name": "Identifier",
-                            "src": "1697:9:4",
-                            "children": [
-                              {
-                                "attributes": {
-                                  "argumentTypes": [
-                                    {
-                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$1744",
-                                      "typeString": "contract RICOStandardPoD"
-                                    }
-                                  ],
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "type": "type(address)",
-                                  "value": "address"
-                                },
-                                "id": 526,
-                                "name": "ElementaryTypeNameExpression",
-                                "src": "1515:7:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 518,
-                                  "type": "contract RICOStandardPoD",
-                                  "value": "tob"
-                                },
-                                "id": 527,
-                                "name": "Identifier",
-                                "src": "1523:3:4"
-                              }
-                            ]
+                            "src": "1697:9:4"
                           },
                           {
                             "attributes": {
@@ -1869,13 +1769,12 @@
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
-                          "lValueRequested": false,
-                          "operator": "=",
-                          "type": "tuple()",
                           "isStructConstructorCall": false,
+                          "lValueRequested": false,
                           "names": [
                             null
                           ],
+                          "type": "tuple()",
                           "type_conversion": false
                         },
                         "children": [
@@ -1883,7 +1782,7 @@
                             "attributes": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_contract$_RICO_$4184",
+                                  "typeIdentifier": "t_contract$_RICO_$4404",
                                   "typeString": "contract RICO"
                                 }
                               ],
@@ -1891,9 +1790,9 @@
                               "isLValue": false,
                               "isPure": false,
                               "lValueRequested": false,
-                              "type": "function (address) external",
                               "member_name": "transferOwnership",
-                              "referencedDeclaration": 2026
+                              "referencedDeclaration": 2083,
+                              "type": "function (address) external"
                             },
                             "children": [
                               {
@@ -1909,23 +1808,6 @@
                                 "id": 514,
                                 "name": "Identifier",
                                 "src": "1797:3:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number",
-                                  "type": "int_const 0",
-                                  "value": "0"
-                                },
-                                "id": 564,
-                                "name": "Literal",
-                                "src": "1508:1:4"
                               }
                             ],
                             "id": 516,
@@ -1935,136 +1817,13 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "isConstant": false,
-                              "isLValue": false,
-                              "isPure": false,
-                              "isStructConstructorCall": false,
-                              "lValueRequested": false,
-                              "names": [
-                                null
-                              ],
-                              "type": "contract RICO",
-                              "type_conversion": true,
                               "overloadedDeclarations": [
                                 null
                               ],
                               "referencedDeclaration": 414,
+                              "type": "contract RICO",
                               "value": "rico"
                             },
-                            "children": [
-                              {
-                                "attributes": {
-                                  "argumentTypes": [
-                                    {
-                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$1797",
-                                      "typeString": "contract RICOStandardPoD"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_uint8",
-                                      "typeString": "uint8"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_address",
-                                      "typeString": "address"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                                      "typeString": "uint256[] memory"
-                                    }
-                                  ],
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "type": "type(address)",
-                                  "value": "address",
-                                  "member_name": "deploy",
-                                  "referencedDeclaration": 178
-                                },
-                                "id": 566,
-                                "name": "ElementaryTypeNameExpression",
-                                "src": "1513:7:4",
-                                "children": [
-                                  {
-                                    "attributes": {
-                                      "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
-                                      "referencedDeclaration": 447,
-                                      "type": "contract ContractManager",
-                                      "value": "cm"
-                                    },
-                                    "id": 534,
-                                    "name": "Identifier",
-                                    "src": "1543:2:4"
-                                  }
-                                ]
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 538,
-                                  "type": "contract RICOStandardPoD",
-                                  "value": "tob",
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number"
-                                },
-                                "id": 567,
-                                "name": "Identifier",
-                                "src": "1521:3:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 489,
-                                  "type": "uint8",
-                                  "value": "_decimals"
-                                },
-                                "id": 537,
-                                "name": "Identifier",
-                                "src": "1556:9:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 491,
-                                  "type": "address",
-                                  "value": "_wallet"
-                                },
-                                "id": 538,
-                                "name": "Identifier",
-                                "src": "1567:7:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 497,
-                                  "type": "uint256[] memory",
-                                  "value": "_podParams"
-                                },
-                                "id": 539,
-                                "name": "Identifier",
-                                "src": "1576:10:4"
-                              }
-                            ],
                             "id": 517,
                             "name": "Identifier",
                             "src": "1819:4:4"
@@ -2157,75 +1916,20 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$3532",
+                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$3752",
                                       "typeString": "contract RICOStandardPoD"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_rational_0_by_1",
-                                      "typeString": "int_const 0"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_uint8",
-                                      "typeString": "uint8"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_address",
-                                      "typeString": "address"
-                                    },
-                                    {
-                                      "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                                      "typeString": "uint256[] memory"
                                     }
                                   ],
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "lValueRequested": false,
-                                  "member_name": "deploy",
-                                  "referencedDeclaration": 198,
                                   "type": "type(address)",
                                   "value": "address"
                                 },
-                                "children": [
-                                  {
-                                    "attributes": {
-                                      "argumentTypes": null,
-                                      "overloadedDeclarations": [
-                                        null
-                                      ],
-                                      "referencedDeclaration": 467,
-                                      "type": "contract ContractManager",
-                                      "value": "cm"
-                                    },
-                                    "id": 574,
-                                    "name": "Identifier",
-                                    "src": "1541:2:4"
-                                  }
-                                ],
                                 "id": 523,
                                 "name": "ElementaryTypeNameExpression",
                                 "src": "1841:7:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number",
-                                  "type": "contract RICOStandardPoD",
-                                  "value": "rsp",
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 489
-                                },
-                                "id": 524,
-                                "name": "Identifier",
-                                "src": "1849:3:4"
                               },
                               {
                                 "attributes": {
@@ -2234,61 +1938,12 @@
                                     null
                                   ],
                                   "referencedDeclaration": 489,
-                                  "type": "int_const 0",
-                                  "value": "0",
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number"
+                                  "type": "contract RICOStandardPoD",
+                                  "value": "rsp"
                                 },
-                                "id": 577,
-                                "name": "Literal",
-                                "src": "1557:1:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 509,
-                                  "type": "uint8",
-                                  "value": "_decimals"
-                                },
-                                "id": 578,
+                                "id": 524,
                                 "name": "Identifier",
-                                "src": "1560:9:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 511,
-                                  "type": "address",
-                                  "value": "_wallet"
-                                },
-                                "id": 579,
-                                "name": "Identifier",
-                                "src": "1571:7:4"
-                              },
-                              {
-                                "attributes": {
-                                  "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 517,
-                                  "type": "uint256[] memory",
-                                  "value": "_podParams"
-                                },
-                                "id": 580,
-                                "name": "Identifier",
-                                "src": "1580:10:4"
+                                "src": "1849:3:4"
                               }
                             ],
                             "id": 525,
@@ -2313,14 +1968,9 @@
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
-                          "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [
-                            null
-                          ],
-                          "type": "address",
-                          "type_conversion": false,
-                          "operator": "="
+                          "operator": "=",
+                          "type": "address"
                         },
                         "children": [
                           {
@@ -2330,8 +1980,6 @@
                               "isLValue": true,
                               "isPure": false,
                               "lValueRequested": true,
-                              "member_name": "newProject",
-                              "referencedDeclaration": 2252,
                               "type": "address"
                             },
                             "children": [
@@ -2374,12 +2022,6 @@
                           {
                             "attributes": {
                               "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 505,
-                              "type": "address",
-                              "value": "_name",
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -2388,17 +2030,15 @@
                               "names": [
                                 null
                               ],
+                              "type": "address",
                               "type_conversion": false
                             },
-                            "id": 538,
-                            "name": "FunctionCall",
-                            "src": "1869:50:4",
                             "children": [
                               {
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$4184",
+                                      "typeIdentifier": "t_contract$_RICO_$4404",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -2519,63 +2159,10 @@
                                 "name": "Identifier",
                                 "src": "1908:10:4"
                               }
-                            ]
-                          },
-                          {
-                            "attributes": {
-                              "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 507,
-                              "type": "string memory",
-                              "value": "_symbol"
-                            },
-                            "id": 588,
-                            "name": "Identifier",
-                            "src": "1621:7:4"
-                          },
-                          {
-                            "attributes": {
-                              "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 509,
-                              "type": "uint8",
-                              "value": "_decimals"
-                            },
-                            "id": 589,
-                            "name": "Identifier",
-                            "src": "1630:9:4"
-                          },
-                          {
-                            "attributes": {
-                              "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 530,
-                              "type": "address[] memory",
-                              "value": "pods"
-                            },
-                            "id": 590,
-                            "name": "Identifier",
-                            "src": "1641:4:4"
-                          },
-                          {
-                            "attributes": {
-                              "argumentTypes": null,
-                              "overloadedDeclarations": [
-                                null
-                              ],
-                              "referencedDeclaration": 511,
-                              "type": "address",
-                              "value": "_wallet"
-                            },
-                            "id": 591,
-                            "name": "Identifier",
-                            "src": "1647:7:4"
+                            ],
+                            "id": 538,
+                            "name": "FunctionCall",
+                            "src": "1869:50:4"
                           }
                         ],
                         "id": 539,
@@ -2588,6 +2175,9 @@
                     "src": "1859:60:4"
                   },
                   {
+                    "attributes": {
+                      "functionReturnParameters": 477
+                    },
                     "children": [
                       {
                         "attributes": {
@@ -2633,7 +2223,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "newProject",
-                              "referencedDeclaration": 3987,
+                              "referencedDeclaration": 4207,
                               "type": "function (string memory,string memory,uint8,address[] memory,address) external returns (address)"
                             },
                             "children": [
@@ -2734,10 +2324,7 @@
                     ],
                     "id": 549,
                     "name": "Return",
-                    "src": "1926:64:4",
-                    "attributes": {
-                      "functionReturnParameters": 477
-                    }
+                    "src": "1926:64:4"
                   }
                 ],
                 "id": 550,
@@ -2951,11 +2538,6 @@
                 "src": "2413:140:4"
               },
               {
-                "attributes": {
-                  "parameters": [
-                    null
-                  ]
-                },
                 "children": [
                   {
                     "attributes": {
@@ -3194,7 +2776,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$4184",
+                                      "typeIdentifier": "t_contract$_RICO_$4404",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -3245,19 +2827,12 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "hexvalue": "30",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number",
-                                  "type": "contract RICO",
-                                  "value": "rico",
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 414
+                                  "referencedDeclaration": 414,
+                                  "type": "contract RICO",
+                                  "value": "rico"
                                 },
                                 "id": 585,
                                 "name": "Identifier",
@@ -3266,19 +2841,15 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 580,
-                                  "type": "int_const 0",
-                                  "value": "0",
                                   "hexvalue": "30",
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "lValueRequested": false,
                                   "subdenomination": null,
-                                  "token": "number"
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
                                 },
                                 "id": 586,
                                 "name": "Literal",
@@ -3419,7 +2990,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$4184",
+                                      "typeIdentifier": "t_contract$_RICO_$4404",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -3470,19 +3041,12 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "hexvalue": "31",
-                                  "isConstant": false,
-                                  "isLValue": false,
-                                  "isPure": true,
-                                  "lValueRequested": false,
-                                  "subdenomination": null,
-                                  "token": "number",
-                                  "type": "contract RICO",
-                                  "value": "rico",
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 414
+                                  "referencedDeclaration": 414,
+                                  "type": "contract RICO",
+                                  "value": "rico"
                                 },
                                 "id": 598,
                                 "name": "Identifier",
@@ -3491,19 +3055,15 @@
                               {
                                 "attributes": {
                                   "argumentTypes": null,
-                                  "overloadedDeclarations": [
-                                    null
-                                  ],
-                                  "referencedDeclaration": 580,
-                                  "type": "int_const 1",
-                                  "value": "1",
                                   "hexvalue": "31",
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "lValueRequested": false,
                                   "subdenomination": null,
-                                  "token": "number"
+                                  "token": "number",
+                                  "type": "int_const 1",
+                                  "value": "1"
                                 },
                                 "id": 599,
                                 "name": "Literal",
@@ -3567,6 +3127,9 @@
                     "src": "2702:61:4"
                   },
                   {
+                    "attributes": {
+                      "functionReturnParameters": 569
+                    },
                     "children": [
                       {
                         "attributes": {
@@ -3612,7 +3175,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "newProject",
-                              "referencedDeclaration": 3987,
+                              "referencedDeclaration": 4207,
                               "type": "function (string memory,string memory,uint8,address[] memory,address) external returns (address)"
                             },
                             "children": [
@@ -3713,10 +3276,7 @@
                     ],
                     "id": 614,
                     "name": "Return",
-                    "src": "2770:64:4",
-                    "attributes": {
-                      "functionReturnParameters": 569
-                    }
+                    "src": "2770:64:4"
                   }
                 ],
                 "id": 615,
@@ -3742,23 +3302,7 @@
     "name": "solc",
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
-  "networks": {
-    "3": {
-      "events": {},
-      "links": {},
-      "address": "0x40c75eb39c3a06c50b9109d36b1e488d99aadf97"
-    },
-    "1515684702992": {
-      "events": {},
-      "links": {},
-      "address": "0xd95183d81d5e91f309b08b4b17b2d70dad76fb06"
-    },
-    "1515686685127": {
-      "events": {},
-      "links": {},
-      "address": "0x39326f43557b33afdad3cec0d0272619c0d7ad9b"
-    }
-  },
+  "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-15T11:45:23.922Z"
+  "updatedAt": "2018-01-15T16:10:12.638Z"
 }
