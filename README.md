@@ -127,7 +127,7 @@ module.exports = async function (callback) {
 
   console.log(`MultisigWallet: ${wallet.address}`)
 
-  const newICO = await launcher.standardICO(
+  const newICO = await launcher.simpleICO(
       name,
       symbol,
       decimals,
@@ -143,7 +143,7 @@ module.exports = async function (callback) {
 
 Calling method `standardICO` process means that use of RICO standard pods.
 ```js
-  newICO = await launcher.simpleICO(
+  newICO = await launcher.standardICO(
     rico.address,
     name,
     symbol,
