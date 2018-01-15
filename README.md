@@ -9,6 +9,16 @@
 
 Discussing on forum: https://ethresear.ch/t/explanation-of-daicos/465
 
+## Testnet deploy to use DAICO (ropsten)
+
+```bash
+$ git clone https://github.com/DRI-network/RICO.git
+$ cd RICO 
+$ git checkout daico-pod
+$ export MNEMONIC_KEY="your mnemonic key 12 words" 
+$ truffle exec exec/DAICO/deploy.js --network ropsten
+```
+
 ## Design Concept
 
 RICO is a framework which forms a robust boilerplate for decentralized initial coin offerings (ICO). With RICO your ICO will be more responsible and be easier to set up and launch.
@@ -82,12 +92,6 @@ $ export LAUNCHER_ADDR=0x40c75eb39c3a06c50b9109d36b1e488d99aadf97
 $ truffle exec exec/KickStarter/deploy.js --network ropsten
 ``` 
 
-## Testnet deploy to use DAICO (ropsten)
-
-```bash
-$ export MNEMONIC_KEY="your mnemonic key 12 words" 
-$ truffle exec exec/DAICO/deploy.js --network ropsten
-```
 
 
 ### Mainnet deploy
