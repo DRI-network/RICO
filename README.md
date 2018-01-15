@@ -5,6 +5,10 @@
 
 **This is an Beta version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
+## Now we construct the DAICO implementation based on RICO's Proof of Donation Architecture.
+
+Discussing on forum: https://ethresear.ch/t/explanation-of-daicos/465
+
 ## Design Concept
 
 RICO is a framework which forms a robust boilerplate for decentralized initial coin offerings (ICO). With RICO your ICO will be more responsible and be easier to set up and launch.
@@ -77,6 +81,14 @@ $ export RICO_ADDR=0x9e18e5bdb7f47631cf212b34a42cd54cfd713a6d
 $ export LAUNCHER_ADDR=0x40c75eb39c3a06c50b9109d36b1e488d99aadf97
 $ truffle exec exec/KickStarter/deploy.js --network ropsten
 ``` 
+
+## Testnet deploy to use DAICO (ropsten)
+
+```bash
+$ export MNEMONIC_KEY="your mnemonic key 12 words" 
+$ truffle exec exec/DAICO/deploy.js --network ropsten
+```
+
 
 ### Mainnet deploy
 

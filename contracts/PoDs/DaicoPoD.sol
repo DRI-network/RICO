@@ -153,6 +153,8 @@ contract DaicoPoD is PoD {
     proposal.totalVoted = proposal.totalVoted.add(1);
 
     Voted(msg.sender, _flag);
+
+    return true;
   }
 
   /**
@@ -208,11 +210,13 @@ contract DaicoPoD is PoD {
    * receiver `wallet` whould be called failback function to receiving ether.
    */
 
-  function withdraw() public {
+  function withdraw() public returns (bool) {
 
     wallet.transfer((block.timestamp - lastWithdrawn) * tap);
 
     lastWithdrawn = block.timestamp;
+
+    return true;
   }
 
   /**
@@ -227,11 +231,13 @@ contract DaicoPoD is PoD {
     require(tap > _newTap);
 
     modifyTap(_newTap);
+
+    return true;
   }
 
   /**
    * @dev if contract to be refundable, project supporter can withdrawal ether from contract.
-   * basically, supporter gets the amount of ether has dependent by a locked amount of token.
+   * Basically, supporter gets the amount of ether has dependent by a locked amount of token.
    */
 
   function refund() public returns (bool) {
@@ -251,11 +257,16 @@ contract DaicoPoD is PoD {
 
 
   /**
+   * Private fucntions.
+   */
+
+
+  /**
    * @dev modify tap num. 
    * @param newTap       The withdrawal limit for project owner tap = (wei / sec).
    */
 
-  function modifyTap(uint256 newTap) internal returns (bool) {
+  function modifyTap(uint256 newTap) internal {
     withdraw();
     tap = newTap;
   }
@@ -279,6 +290,7 @@ contract DaicoPoD is PoD {
    * @dev get reserved token balances of _user. inherits PoD architecture. (Not used).
    */
   function getBalanceOfToken(address _user) public constant returns (uint256) {
+    require(_user != 0x0);
     return 0;
   }
 }
