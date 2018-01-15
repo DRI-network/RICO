@@ -71,7 +71,10 @@ contract DaicoPoD is PoD {
   function init(
     address _wallet, 
     uint8 _tokenDecimals, 
-    address _token
+    address _token,
+    uint256 _firstOpenTime,
+    uint256 _firstCloseTime,
+    uint256 _firstTapAmount
   ) 
   public onlyOwner() returns (bool) 
   {
@@ -83,7 +86,19 @@ contract DaicoPoD is PoD {
     tokenMultiplier = 10 ** uint256(_tokenDecimals);
     // The first time of contract deployed, contract's token balance should be zero.
     require(token.balanceOf(this) == 0);
+    require(_firstCloseTime >= _firstOpenTime.add(7 days));
+    Proposal memory newProposal = Proposal({
+      openVoteTime: _firstOpenTime,
+      closeVoteTime: _firstCloseTime,
+      newTap: _firstTapAmount,
+      isDestruct: false,
+      totalVoted: 0
+    });
+
+    proposals.push(newProposal);    
+
     status = Status.PoDStarted;
+
     return true;
   }
 
@@ -181,7 +196,7 @@ contract DaicoPoD is PoD {
 
     uint absent = voterCount.sub(votedUsers);
 
-    if (proposal.voted[true] > proposal.voted[false].add(absent.div(6))) {
+    if (proposal.voted[true].mul(10000) > proposal.voted[false].mul(10000).add(absent.mul(10000).div(6))) {
       if (proposal.isDestruct) {
         refundable = true;
         tap = 0;
@@ -211,6 +226,8 @@ contract DaicoPoD is PoD {
    */
 
   function withdraw() public returns (bool) {
+
+    require(block.timestamp > lastWithdrawn.add(30 days));
 
     wallet.transfer((block.timestamp - lastWithdrawn) * tap);
 
