@@ -14,9 +14,9 @@ contract DaicoPoD is PoD {
   uint256 public lastWithdrawn;
   // Locked token balances of users.
   mapping(address => uint256) lockedTokenBalances; 
-  // Contract has total number of all voters.
+  // Contract has the total amount of all voters.
   uint256 public voterCount;
-  // Contract should be called refund funtion if contract is refundable (withdraw mode).
+  // Contract should be called refund function if the contract is refundable (withdraw mode).
   bool public refundable;
   // EIP20 token that locked to vote.
   EIP20StandardToken public token;
@@ -25,7 +25,7 @@ contract DaicoPoD is PoD {
   // Flag that whether proposed vote or not.
   bool isProposed;
 
-  // proposal for DAICO proposal
+  // Proposal struct is DAICO proposal
   struct Proposal {
     // Starting vote process at openVoteTime. 
     uint256 openVoteTime;
@@ -34,8 +34,8 @@ contract DaicoPoD is PoD {
     // Ensure totalVoted Counter in a proposal. 
     uint256 totalVoted;
     // Update tap value if proposal approved.
-    uint256 newTap;
-    // Represent the flag this proposal contain a Destructor call
+    uint256 tapAmount;
+    // Represent the flag this proposal contains a Destructor call
     bool isDestruct;
     // Represent a voter's intention counter; e.g. Yes[true] of No[false]
     mapping(bool => uint256) voted;
@@ -105,8 +105,8 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Deposit token to this contract for EIP20 token format.
-   * And lockedTokenBalances represents amount of deposited token.
-   * @param _amount            The Amount of token allowed.
+   * And lockedTokenBalances represents the amount of deposited token.
+   * @param _amount            The amount of token allowed.
    */
   function depositToken(uint256 _amount) public returns (bool) {
 
@@ -148,7 +148,7 @@ contract DaicoPoD is PoD {
 
 
   /**
-   * @dev Calling vote is available while proposal is opening.
+   * @dev Calling vote function is available while the proposal is opening.
    * @param _flag            The Flag of voter's intention.
    */
 
@@ -174,9 +174,9 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Submitting proposal to increase tap or destruct funds.
-   * @param _nextOpenTime        The open time of next propsoal.
-   * @param _nextCloseTime       The close time of next propsoal.
-   * @param _nextTapAmount       The newTap num ( wei / sec ).
+   * @param _nextOpenTime        The open time of next proposal.
+   * @param _nextCloseTime       The close time of next proposal.
+   * @param _nextTapAmount       The next tap amount ( wei / sec ).
    * @param _isDestruct          The flag to whether a voter voted or not.
    */
 
@@ -194,7 +194,7 @@ contract DaicoPoD is PoD {
     Proposal memory newProposal = Proposal({
       openVoteTime: _nextOpenTime,
       closeVoteTime: _nextCloseTime,
-      newTap: _nextTapAmount,
+      tapAmount: _nextTapAmount,
       isDestruct: _isDestruct,
       totalVoted: 0
     });
@@ -209,7 +209,7 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Aggregate the voted results.
-   * return uint 0 => No executed, 1 => Modified tap num, 2 => Transition to withdraw mode
+   * return uint 0 => No executed, 1 => Modified tap amount, 2 => Transition to withdraw mode
    */
 
   function aggregateVotes() public returns (uint) {
@@ -238,7 +238,7 @@ contract DaicoPoD is PoD {
         tap = 0;
         return 2;
       } else {
-        modifyTap(proposal.newTap);
+        modifyTap(proposal.tapAmount);
         return 1;
       }
     }
@@ -246,8 +246,8 @@ contract DaicoPoD is PoD {
   }
 
   /**
-   * @dev Founder can withdraw ether from contract.
-   * receiver `wallet` whould be called failback function to receiving ether.
+   * @dev Founder can withdraw ether from the contract.
+   * receiver `wallet` would be called failback function to receiving ether.
    */
 
   function withdraw() public returns (bool) {
@@ -265,22 +265,22 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Founder can decrease the tap amount at anytime.
-   * @param _newTap        The new tap quantity.
+   * @param _tapAmount        The new tap amount.
    */
 
-  function decreaseTap(uint256 _newTap) public returns (bool) {
-    // Only called by foudner's multisig wallet.
+  function decreaseTap(uint256 _tapAmount) public returns (bool) {
+    // Only called by founder's multisig wallet.
     require(msg.sender == wallet); 
 
-    require(tap > _newTap);
+    require(tap > _tapAmount);
 
-    modifyTap(_newTap);
+    modifyTap(_tapAmount);
 
     return true;
   }
 
   /**
-   * @dev If contract to be refundable, project supporter can withdraw ether from contract.
+   * @dev If the contract to be refundable, project supporter can withdraw ether from the contract.
    * Basically, supporter gets the amount of ether has dependent by a locked amount of token.
    */
 
@@ -307,13 +307,13 @@ contract DaicoPoD is PoD {
 
 
   /**
-   * @dev modify tap num. 
-   * @param newTap       The withdrawal limit for project owner tap = (wei / sec).
+   * @dev Modify tap amount. 
+   * @param tapAmount       The withdrawal limit for project owner tap = (wei / sec).
    */
 
-  function modifyTap(uint256 newTap) internal returns (bool) {
+  function modifyTap(uint256 tapAmount) internal returns (bool) {
     withdraw();
-    tap = newTap;
+    tap = tapAmount;
     ModifiedTap(tap);
     return true;
   }
