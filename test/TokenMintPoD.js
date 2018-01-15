@@ -52,6 +52,14 @@ contract('TokenMintPoD', function (accounts) {
   })
   it("Check the tokenBalance for owner", async function () {
 
+    const setTime = await web3.currentProvider.send({
+      jsonrpc: "2.0",
+
+      method: "evm_increaseTime",
+      params: [20],
+      id: 0
+    })
+    
     const status = await pod.status.call()
     assert.strictEqual(status.toNumber(), 2, 'status is not 2')
 
