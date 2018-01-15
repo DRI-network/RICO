@@ -265,7 +265,7 @@ contract DaicoPoD is PoD {
 
   /**
    * @dev Founder can decrease the tap amount at anytime.
-   * @param _tapAmount        The new tap amount.
+   * @param _tapAmount        The tap amount.
    */
 
   function decreaseTap(uint256 _tapAmount) public returns (bool) {
@@ -319,7 +319,7 @@ contract DaicoPoD is PoD {
   }
 
   /**
-   * Defined fucntions of RICO's PoD architecture. 
+   * Defined functions of RICO's PoD architecture. 
    */
 
   /**
