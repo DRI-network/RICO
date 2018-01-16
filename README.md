@@ -185,3 +185,8 @@ $ truffle test
 
 ## LICENSE
 RICO is licensed under the GNU General Public License v3.0.
+
+## Support
+Ether: 0x4e3e7AFbc460d54eE67B437BEdF79f3c50DFB279
+Bitcoin: 1H7iMYUy3y7mEv1PWPXwyHPSG2jx8LL3H7
+
