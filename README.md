@@ -5,6 +5,20 @@
 
 **This is a Beta version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
+## Now we construct the DAICO implementation based on RICO's Proof of Donation Architecture.
+
+Discussing on forum: https://ethresear.ch/t/explanation-of-daicos/465
+
+## Testnet deploy to use DAICO (ropsten)
+
+```bash
+$ git clone https://github.com/DRI-network/RICO.git
+$ cd RICO 
+$ git checkout daico-pod
+$ export MNEMONIC_KEY="your mnemonic key 12 words" 
+$ truffle exec exec/DAICO/deploy.js --network ropsten
+```
+
 ## Design Concept
 
 RICO is a framework which forms a robust boilerplate for decentralized initial coin offerings (ICO). With RICO your ICO will be more responsible and be easier to set up and launch.
@@ -77,6 +91,8 @@ $ export RICO_ADDR=0x9e18e5bdb7f47631cf212b34a42cd54cfd713a6d
 $ export LAUNCHER_ADDR=0x40c75eb39c3a06c50b9109d36b1e488d99aadf97
 $ truffle exec exec/KickStarter/deploy.js --network ropsten
 ``` 
+
+
 
 ### Mainnet deploy
 
@@ -169,3 +185,8 @@ $ truffle test
 
 ## LICENSE
 RICO is licensed under the GNU General Public License v3.0.
+
+## Support
+
+Ether: 0x4e3e7AFbc460d54eE67B437BEdF79f3c50DFB279
+

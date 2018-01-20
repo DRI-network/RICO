@@ -122,20 +122,6 @@
       "payable": false,
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
     }
   ],
   "bytecode": "0x",
@@ -379,49 +365,17 @@
             },
             "children": [
               {
-                "children": [
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "newOwner",
-                      "scope": 20,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "address",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "address",
-                          "type": "address"
-                        },
-                        "id": 16,
-                        "name": "ElementaryTypeName",
-                        "src": "343:7:0"
-                      }
-                    ],
-                    "id": 17,
-                    "name": "VariableDeclaration",
-                    "src": "343:16:0"
-                  }
-                ],
-                "id": 16,
-                "name": "ParameterList",
-                "src": "338:2:0",
-                "attributes": {
-                  "parameters": [
-                    null
-                  ]
-                }
-              },
-              {
                 "attributes": {
                   "parameters": [
                     null
                   ]
                 },
+                "children": [],
+                "id": 16,
+                "name": "ParameterList",
+                "src": "338:2:0"
+              },
+              {
                 "children": [
                   {
                     "attributes": {
@@ -788,72 +742,6 @@
             "id": 45,
             "name": "FunctionDefinition",
             "src": "616:55:0"
-          },
-          {
-            "attributes": {
-              "body": null,
-              "constant": true,
-              "implemented": false,
-              "isConstructor": false,
-              "modifiers": [
-                null
-              ],
-              "name": "getEndtime",
-              "payable": false,
-              "scope": 51,
-              "stateMutability": "view",
-              "superFunction": null,
-              "visibility": "public"
-            },
-            "children": [
-              {
-                "attributes": {
-                  "parameters": [
-                    null
-                  ]
-                },
-                "children": [],
-                "id": 46,
-                "name": "ParameterList",
-                "src": "691:2:0"
-              },
-              {
-                "children": [
-                  {
-                    "attributes": {
-                      "constant": false,
-                      "name": "",
-                      "scope": 50,
-                      "stateVariable": false,
-                      "storageLocation": "default",
-                      "type": "uint256",
-                      "value": null,
-                      "visibility": "internal"
-                    },
-                    "children": [
-                      {
-                        "attributes": {
-                          "name": "uint256",
-                          "type": "uint256"
-                        },
-                        "id": 47,
-                        "name": "ElementaryTypeName",
-                        "src": "718:7:0"
-                      }
-                    ],
-                    "id": 48,
-                    "name": "VariableDeclaration",
-                    "src": "718:7:0"
-                  }
-                ],
-                "id": 49,
-                "name": "ParameterList",
-                "src": "717:9:0"
-              }
-            ],
-            "id": 50,
-            "name": "FunctionDefinition",
-            "src": "672:55:0"
           }
         ],
         "id": 46,
@@ -871,5 +759,5 @@
   },
   "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-01-12T11:02:22.510Z"
+  "updatedAt": "2018-01-15T16:10:12.635Z"
 }
