@@ -214,13 +214,13 @@ contract MultiSigWallet {
         notExecuted(transactionId)
     {
         if (isConfirmed(transactionId)) {
-            Transaction tx = transactions[transactionId];
-            tx.executed = true;
-            if (tx.destination.call.value(tx.value)(tx.data))
+            Transaction txn = transactions[transactionId];
+            txn.executed = true;
+            if (txn.destination.call.value(txn.value)(txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                tx.executed = false;
+                txn.executed = false;
             }
         }
     }
@@ -396,19 +396,19 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         public
         notExecuted(transactionId)
     {
-        Transaction tx = transactions[transactionId];
+        Transaction txn = transactions[transactionId];
         bool confirmed = isConfirmed(transactionId);
-        if (confirmed || tx.data.length == 0 && isUnderLimit(tx.value)) {
-            tx.executed = true;
+        if (confirmed || txn.data.length == 0 && isUnderLimit(txn.value)) {
+            txn.executed = true;
             if (!confirmed)
-                spentToday += tx.value;
-            if (tx.destination.call.value(tx.value)(tx.data))
+                spentToday += txn.value;
+            if (txn.destination.call.value(txn.value)(txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                tx.executed = false;
+                txn.executed = false;
                 if (!confirmed)
-                    spentToday -= tx.value;
+                    spentToday -= txn.value;
             }
         }
     }
