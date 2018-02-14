@@ -32,59 +32,50 @@ contract MultiSigWallet {
     }
 
     modifier onlyWallet() {
-        if (msg.sender != address(this))
-            throw;
+        require(msg.sender != address(this));
         _;
     }
 
     modifier ownerDoesNotExist(address owner) {
-        if (isOwner[owner])
-            throw;
+        require(isOwner[owner]);
         _;
     }
 
     modifier ownerExists(address owner) {
-        if (!isOwner[owner])
-            throw;
+        require(!isOwner[owner]);
         _;
     }
 
     modifier transactionExists(uint transactionId) {
-        if (transactions[transactionId].destination == 0)
-            throw;
+        require(transactions[transactionId].destination == 0);
         _;
     }
 
     modifier confirmed(uint transactionId, address owner) {
-        if (!confirmations[transactionId][owner])
-            throw;
+        require(!confirmations[transactionId][owner]);
         _;
     }
 
     modifier notConfirmed(uint transactionId, address owner) {
-        if (confirmations[transactionId][owner])
-            throw;
+        require(confirmations[transactionId][owner]);
         _;
     }
 
     modifier notExecuted(uint transactionId) {
-        if (transactions[transactionId].executed)
-            throw;
+        require(transactions[transactionId].executed);
         _;
     }
 
     modifier notNull(address _address) {
-        if (_address == 0)
-            throw;
+        require(_address == 0);
         _;
     }
 
     modifier validRequirement(uint ownerCount, uint _required) {
-        if (   ownerCount > MAX_OWNER_COUNT
+        require(ownerCount > MAX_OWNER_COUNT
             || _required > ownerCount
             || _required == 0
-            || ownerCount == 0)
-            throw;
+            || ownerCount == 0);
         _;
     }
 
@@ -107,8 +98,7 @@ contract MultiSigWallet {
         validRequirement(_owners.length, _required)
     {
         for (uint i=0; i<_owners.length; i++) {
-            if (isOwner[_owners[i]] || _owners[i] == 0)
-                throw;
+            require(isOwner[_owners[i]] || _owners[i] == 0);
             isOwner[_owners[i]] = true;
         }
         owners = _owners;
@@ -224,13 +214,13 @@ contract MultiSigWallet {
         notExecuted(transactionId)
     {
         if (isConfirmed(transactionId)) {
-            Transaction tx = transactions[transactionId];
-            tx.executed = true;
-            if (tx.destination.call.value(tx.value)(tx.data))
+            Transaction txn = transactions[transactionId];
+            txn.executed = true;
+            if (txn.destination.call.value(txn.value)(txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                tx.executed = false;
+                txn.executed = false;
             }
         }
     }
@@ -406,19 +396,19 @@ contract MultiSigWalletWithDailyLimit is MultiSigWallet {
         public
         notExecuted(transactionId)
     {
-        Transaction tx = transactions[transactionId];
+        Transaction txn = transactions[transactionId];
         bool confirmed = isConfirmed(transactionId);
-        if (confirmed || tx.data.length == 0 && isUnderLimit(tx.value)) {
-            tx.executed = true;
+        if (confirmed || txn.data.length == 0 && isUnderLimit(txn.value)) {
+            txn.executed = true;
             if (!confirmed)
-                spentToday += tx.value;
-            if (tx.destination.call.value(tx.value)(tx.data))
+                spentToday += txn.value;
+            if (txn.destination.call.value(txn.value)(txn.data))
                 Execution(transactionId);
             else {
                 ExecutionFailure(transactionId);
-                tx.executed = false;
+                txn.executed = false;
                 if (!confirmed)
-                    spentToday -= tx.value;
+                    spentToday -= txn.value;
             }
         }
     }

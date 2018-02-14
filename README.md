@@ -30,7 +30,7 @@ An ICO made with RICO is:
 - [Whitepaper[JP]](https://dri.network/static/RICO-whitepaper.pdf)
 
 ### Tutorial
-- [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial%EF%BC%88%E3%83%AA%E3%82%B3%E3%83%BC%E3%81%AE%E3%83%81%E3%83%A5%E3%83%BC%E3%83%88%E3%83%AA%E3%82%A2%E3%83%AB%EF%BC%89)
+- [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial（日本語版）)
 
 
 ## Dependencies
@@ -59,6 +59,10 @@ $ npm install -g rico-core
 ```bash
 $ rico new helloico && cd helloico 
 ```
+
+### Local Testnet deploy
+
+Coming soon.
 
 ### Testnet deploy (ropsten)
 
