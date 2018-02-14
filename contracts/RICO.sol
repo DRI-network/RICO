@@ -30,7 +30,7 @@ contract RICO is Ownable {
 
   /**
    * constructor
-   * @dev define owner when this contract deployed.
+   * @dev The owner is defined when this contract is deployed.
    */
 
   function RICO() public { }
