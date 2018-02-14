@@ -12,7 +12,7 @@ contract PoD is Ownable {
   /**
    * Storage
    */
-  
+
   string  public name;
   string  public version;
   address public wallet;
@@ -35,10 +35,9 @@ contract PoD is Ownable {
   /** 
    * event
    */
-  
+
   event Donated(address user, uint256 amount);
   event Ended(uint256 time);
-
 
   /**
    * constructor
@@ -92,7 +91,6 @@ contract PoD is Ownable {
     weiBalances[_user] = 0;
 
     return true;
-
   }
 
   /**
@@ -106,6 +104,7 @@ contract PoD is Ownable {
   /**
    * @dev To get token price.
    */
+
   function getTokenPrice() public constant returns(uint256) {
     return tokenPrice;
   }
@@ -121,6 +120,7 @@ contract PoD is Ownable {
   /**
    * @dev To get maximum wei cap of pod.
    */
+
   function getCapOfWei() public constant returns(uint256) {
     return proofOfDonationCapOfWei;
   }
@@ -136,6 +136,7 @@ contract PoD is Ownable {
   /**
    * @dev To get endTime of pod.
    */
+
   function getEndTime() public constant returns (uint256) {
     return endTime;
   }
