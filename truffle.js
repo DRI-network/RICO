@@ -4,7 +4,6 @@
 // This allows Truffle deployment to work with infura. Note we do
 // this specifically when deploying to the morden network.
 
-
 let provider;
 const HDWalletProvider = require('truffle-hdwallet-provider');
 //const mnemonic = "recipe vintage differ tobacco venture federal inquiry cross pig bean adapt seven"
@@ -12,8 +11,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 const mnemonic = process.env.MNEMONIC_KEY
 ropsten = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/')
 rinkeby = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
-mainnet = new HDWalletProvider(mnemonic, 'https://rinkeby.infura.io/')
-
+mainnet = new HDWalletProvider(mnemonic, 'https://mainnet.infura.io/')
 
 //console.log(rinkebyProvider.address)
 
