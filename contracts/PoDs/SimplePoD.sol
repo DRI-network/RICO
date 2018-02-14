@@ -5,6 +5,13 @@ import "../PoD.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
+/**
+ * @title      SimplePoD
+ * @dev        Simple Proof of Donation
+ * Handles the registration of the donation in the smart contract.
+ * Handles the transfer of funds from the Supporter to the Project Owner's wallet.
+ * (& Handles all donation functionality from PoD.sol)
+ */
 contract SimplePoD is PoD {
 
   uint256 public tokenMultiplier;
@@ -55,6 +62,10 @@ contract SimplePoD is PoD {
     return true;
   }
 
+
+  /**
+   * @dev      finalize() will bring the ICO to a conclusion. Anyone can call this function.
+   */
   function finalize() public {
 
     require(status == Status.PoDStarted);

@@ -15,6 +15,7 @@ contract ContractManager {
    */
   string public name = "ContractManager";
   string public version = "0.9.3";
+  
   /**
    * constructor
    * @dev define owner when this contract deployed.

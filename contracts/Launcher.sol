@@ -36,16 +36,15 @@ contract Launcher {
     state = true;
   }
 
-
   /**
    * @dev standardICO uses 2 pods RICOStandardPoD and SimplePoD.
    * @param _name         Token name of RICO format.
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
-   * @param _wallet       Founder's multisigWallet.
+   * @param _wallet       Founder's multisigWallet. This will become the owner of the ICO.
    * @param _bidParams    params of RICOStandardPoD pod.
    * @param _podParams    params of SimplePoD pod.
-   * @param _owners       array of owners address, 0:bid executor, 1: founder.
+   * @param _tobAddresses array of owner addresses for the Take Over Bid (TOB), 0: TOB Funder, 1: TOB Locker.
    * @param _marketMakers array of marketMakers address of project 
    */
 
@@ -56,7 +55,7 @@ contract Launcher {
     address _wallet,
     uint256[] _bidParams,
     uint256[] _podParams,
-    address[2] _owners,
+    address[2] _tobAddresses,
     address[] _marketMakers
   ) 
   public returns (address)
@@ -64,7 +63,7 @@ contract Launcher {
     address[] memory pods = new address[](2);
 
     RICOStandardPoD rsp = new RICOStandardPoD();
-    rsp.init(_decimals, _bidParams[0], _bidParams[1], _bidParams[2], _owners, _marketMakers, _bidParams[3]);
+    rsp.init(_decimals, _bidParams[0], _bidParams[1], _bidParams[2], _tobAddresses, _marketMakers, _bidParams[3]);
     rsp.transferOwnership(rico);
 
     pods[0] = address(rsp);
@@ -72,7 +71,6 @@ contract Launcher {
 
     return rico.newProject(_name, _symbol, _decimals, pods, _wallet);
   }
-
 
   /**
    * @dev simpleICO uses 2 pods SimplePoD and TokenMintPoD.
@@ -99,7 +97,6 @@ contract Launcher {
     pods[1] = cm.deploy(rico, 1, _decimals, _wallet, _mintParams);
 
     return rico.newProject(_name, _symbol, _decimals, pods, _wallet);
-
   }
 }
 

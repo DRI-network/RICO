@@ -5,9 +5,16 @@ import "../PoD.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
+/**
+ * @title      RICOStandardPoD
+ * @dev        RICO Standard Proof of Donation
+ * Handles the Take Over Bid and the functionality to lock up those tokens.
+ * Handles payments to the Market Makers.
+ * (& Handles all donation functionality from PoD.sol)
+ */
 contract RICOStandardPoD is PoD {
 
-  address public buyer;
+  address public takeOverBidFunder;
   address[] public marketMakers;
   uint256 public tokenMultiplier;
   uint256 public secondCapOfToken;
@@ -26,8 +33,7 @@ contract RICOStandardPoD is PoD {
     address[] _marketMakers,
     uint256 _secondCapOfToken
   ) 
-  public onlyOwner() returns (bool) 
-  {
+  public onlyOwner() returns (bool) {
     require(status == Status.PoDDeployed);
 
     require(_startTimeOfPoD >= block.timestamp);
@@ -43,8 +49,8 @@ contract RICOStandardPoD is PoD {
 
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
 
-    buyer = _owners[0];
-    weiBalances[_owners[1]] = 1;
+    takeOverBidFunder = _owners[0];
+    weiBalances[_owners[1]] = 1; // _owners[1] is the takeOverBidLocker. If (takeOverBidLocker == takeOverBidFunder) then this line won't matter.
 
     secondCapOfToken = _secondCapOfToken;
 
@@ -54,8 +60,7 @@ contract RICOStandardPoD is PoD {
   }
 
   function processDonate(address _user) internal returns (bool) {
-    
-    require(_user == buyer);
+    require(_user == takeOverBidFunder);
     
     uint256 remains = proofOfDonationCapOfWei.sub(totalReceivedWei);
 
@@ -73,8 +78,7 @@ contract RICOStandardPoD is PoD {
   }
 
   function distributeWei(uint _index, uint256 _amount) public returns (bool) {
-
-    require(msg.sender == buyer);
+    require(msg.sender == takeOverBidFunder);
 
     require(_amount <= this.balance);
 
@@ -88,19 +92,17 @@ contract RICOStandardPoD is PoD {
     if (block.timestamp < startTime.add(180 days))
       return 0;
 
-    if (_user == buyer)
+    if (_user == takeOverBidFunder)
       return (tokenMultiplier * weiBalances[_user]) / tokenPrice;
     else 
       return secondCapOfToken * weiBalances[_user];
   }
 
   function resetWeiBalance(address _user) public onlyOwner() returns (bool) {
-
     require(status == Status.PoDEnded);
 
     weiBalances[_user] = 0;
 
     return true;
-
   }
 }

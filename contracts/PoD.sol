@@ -6,6 +6,12 @@ import "./SafeMath.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
+/**
+ * @title      PoD
+ * @dev        Proof of Donation
+ * Handles all donation functionality.
+ * Parent to the smart contracts in ./PoDs
+ */
 contract PoD is Ownable {
   using SafeMath for uint256;
 
@@ -70,7 +76,7 @@ contract PoD is Ownable {
       endTime = now;
       status = Status.PoDEnded;
       Ended(endTime);
-    } 
+    }
 
     totalReceivedWei = totalReceivedWei.add(msg.value);
 

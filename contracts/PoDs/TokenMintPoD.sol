@@ -5,6 +5,12 @@ import "../PoD.sol";
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license let's see in LICENSE
 
+/**
+ * @title      TokenMintPoD
+ * @dev        Token Mint Proof of Donation
+ * Handles a reservation for minting the tokens.
+ * (& Handles all donation functionality from PoD.sol)
+ */
 contract TokenMintPoD is PoD {
 
   mapping(address => uint256) tokenBalances; 

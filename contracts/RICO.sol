@@ -41,7 +41,7 @@ contract RICO is Ownable {
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
    * @param _pods         PoD contract addresses.
-   * @param _projectOwner Token's owner.
+   * @param _projectOwner Token's owner or address Multisig Wallet
    */
    
   function newProject(
@@ -142,8 +142,6 @@ contract RICO is Ownable {
     
     token.transfer(owner, balance);
   }
-
-  
 
   /**
    * @dev To get pods addresses attached to token.
