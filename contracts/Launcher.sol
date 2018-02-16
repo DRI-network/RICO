@@ -52,18 +52,18 @@ contract Launcher {
    * @param _symbol           Token symbol of RICO format.
    * @param _decimals         Token decimals of RICO format.
    * @param _wallet           Project owner's multisig wallet.
-   * @param _bidParams        array              params of RICOStandardPoD pod.
-   *        _bidParams[0]     _startTimeOfPoD    (see RICOStandardPoD.sol)
-   *        _bidParams[1]     _capOfToken        (see RICOStandardPoD.sol)
-   *        _bidParams[2]     _capOfWei          (see RICOStandardPoD.sol)
-   *        _bidParams[3]     _secondCapOfToken  (see RICOStandardPoD.sol)
-   * @param _podParams        array              params of SimplePoD pod.
-   *        _podParams[0]     _startTimeOfPoD    (see SimplePoD.sol)
-   *        _podParams[1]     _capOfToken        (see SimplePoD.sol)
-   *        _podParams[2]     _capOfWei          (see SimplePoD.sol)
-   * @param _tobAddresses     array              owner addresses for the Take Over Bid (TOB).
+   * @param _tobParams        array                   params of RICOStandardPoD pod.
+   *        _tobParams[0]     _startTimeOfTOB         (see RICOStandardPoD.sol)
+   *        _tobParams[1]     _allocationOfTokens     (see RICOStandardPoD.sol)
+   *        _tobParams[2]     _priceInWei             (see RICOStandardPoD.sol)
+   *        _tobParams[3]     _secondOwnerAllocation  (see RICOStandardPoD.sol)
+   * @param _podParams        array                   params of SimplePoD pod.
+   *        _podParams[0]     _startTimeOfPoD         (see SimplePoD.sol)
+   *        _podParams[1]     _capOfToken             (see SimplePoD.sol)
+   *        _podParams[2]     _capOfWei               (see SimplePoD.sol)
+   * @param _tobAddresses     array                   owner addresses for the Take Over Bid (TOB).
    *        _tobAddresses[0]  TOB Funder
-   *        _tobAddresses[1]  TOB Locker
+   *        _tobAddresses[1]  TOB second owner (can receive set allocation)
    * @param _marketMakers     array of marketMakers address of project.
    */
   function standardICO(
@@ -71,7 +71,7 @@ contract Launcher {
     string _symbol, 
     uint8 _decimals, 
     address _wallet,
-    uint256[] _bidParams,
+    uint256[] _tobParams,
     uint256[] _podParams,
     address[2] _tobAddresses,
     address[] _marketMakers
@@ -82,7 +82,7 @@ contract Launcher {
 
     RICOStandardPoD rsp = new RICOStandardPoD();
 
-    rsp.init(_decimals, _bidParams[0], _bidParams[1], _bidParams[2], _tobAddresses, _marketMakers, _bidParams[3]);
+    rsp.init(_decimals, _tobParams[0], _tobParams[1], _tobParams[2], _tobAddresses, _marketMakers, _tobParams[3]);
     rsp.transferOwnership(rico);
 
     pods[0] = address(rsp);
@@ -97,13 +97,13 @@ contract Launcher {
    * @param _symbol        Token symbol of RICO format.
    * @param _decimals      Token decimals of RICO format.
    * @param _wallet        Project owner's multisig wallet.
-   * @param _podParams     array             params of SimplePoD pod.
-   *        _podParams[0]  _startTimeOfPoD   (see SimplePoD.sol)
-   *        _podParams[1]  _capOfToken       (see SimplePoD.sol)
-   *        _podParams[2]  _capOfWei         (see SimplePoD.sol)
-   * @param _mintParams    array             params of TokenMintPoD pod.
-   *        _mintParams[0] _capOfToken       (see TokenMintPod.sol)
-   *        _mintParams[1] _lockTime         (see TokenMintPod.sol)
+   * @param _podParams     array               params of SimplePoD pod.
+   *        _podParams[0]  _startTimeOfPoD     (see SimplePoD.sol)
+   *        _podParams[1]  _capOfToken         (see SimplePoD.sol)
+   *        _podParams[2]  _capOfWei           (see SimplePoD.sol)
+   * @param _mintParams    array               params of TokenMintPoD pod.
+   *        _mintParams[0] _allocationOfTokens (see TokenMintPod.sol)
+   *        _mintParams[1] _lockTime           (see TokenMintPod.sol)
    */
   function simpleICO(
     string _name, 

@@ -26,21 +26,21 @@ contract TokenMintPoD is PoD {
   /**
    * @dev        initialize PoD contract
    *
-   * @param      _user        The address of the user to receive a separate allocation.
-   * @param      _capOfToken  The allocation of tokens.
-   * @param      _lockTime    Lock time of the allocated tokens.
+   * @param      _user                The address of the user to receive a separate allocation.
+   * @param      _allocationOfTokens  Token amount of the separate alloction.
+   * @param      _lockTime            Lock time of the allocated tokens.
    *
    * @return     true
    */
   function init(
     address _user, 
-    uint256 _capOfToken, // _allocationOfTokens
+    uint256 _allocationOfTokens,
     uint256 _lockTime
   ) 
   public onlyOwner() returns (bool) 
   {
     require(status == Status.PoDDeployed);
-    proofOfDonationCapOfToken = _capOfToken;
+    proofOfDonationCapOfToken = _allocationOfTokens;
     tokenBalances[_user] = proofOfDonationCapOfToken;
     lockTime = _lockTime;
     weiBalances[_user] = 1;
