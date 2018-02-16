@@ -2,69 +2,95 @@ const Launcher = artifacts.require("./Launcher.sol")
 const RICO = artifacts.require("./RICO.sol")
 const MultiSigWalletWithDailyLimit = artifacts.require("./MultiSigWalletWithDailyLimit.sol")
 
-const name = "Responsible ICO Token";
-const symbol = "RIT";
+// Set variables for your Responsible ICO:
+const name = "Responsible ICO Token"; // token name
+const symbol = "RIT"; // token symbol
 const decimals = 18;
 
 const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
-const TokenSupply = totalTokenSupply * 10 / 100
-const bidWeiLimit = 100 * 10 ** 18
-const now = parseInt(new Date() / 1000)
-const bidStartTime = now + 72000; //sec
+const now = parseInt(new Date() / 1000);
 
-const podTokenSupply = totalTokenSupply * 90 / 100
-const podWeiLimit = 100 * 10 ** 18
-const podStartTime = now + 172000; //sec
+const publicSaleTokenSupply = totalTokenSupply * 90 / 100; // total token amount for the public sale
+const publicSaleWeiCap = 100 * 10 ** 18; // Set the cap of the public sale to 100 ether.
+const publicSaleStartTime = now + 172800; // Set the start of the Public dat to 2 days from now.
 
-const lastSupply = totalTokenSupply * 30 / 100;
+// Owner of the ICO. All ICO funds to be received in a multisig wallet.
+const multisigWalletAddress1 = 0x0; // Can be your own address. Defaults to the user who executes this script.
+const multisigWalletAddress2 = 0x0; // Must be different from address 1
+const multisigWalletDailyLimit = 1 * 10 ** 18; // Allows an owner to withdraw a daily limit without multisig. Set to 1 ether.
 
-const marketMaker = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
-const owner = 0x8a20a13b75d0aefb995c0626f22df0d98031a4b6;
-const dailyLimit = 200 * 10 ** 18
+/**
+ * Set variables ONLY for Standard ICO (not used with Simple ICO)
+ */
+// Take over Bid (TOB)
+const TOBFunder; // Defaults to the user who executes this script.
+const TOBStartTime = now + 72000; // sec
+const TOBTokenSupply = totalTokenSupply * 8 / 100; // 8% of the totalTokenSupply
+const TOBPrice = 100 * 10 ** 18; // = 100 ether for the TOB
+// A second TOB owner can be set.
+const TOBSecondOwner = 0x0; // (Optional) Second owner of the TOB. Can be the same as TOBFunder. Defaults to the user who executes this script.
+const secondOwnerAllocation = totalTokenSupply * 2 / 100; // 2% of the totalTokenSupply is given to a second owner at the expense of the TOB funder.
+
+const marketMaker = 0x0; // The first market maker's address
+
+/**
+ * Set variables ONLY for Simple ICO (not used with RICO Standard ICO)
+ */
+const separateAllocationTokenAmount = totalTokenSupply * 10 / 100; // Set the separate allocated tokens to 10% of the totalTokenSupply.
+const separateAllocationLockTime = publicSaleStartTime + 2592000; // Set lock time of the separate allocation to 1 month.
 
 module.exports = async function (callback) {
 
-  const rico = await RICO.at(process.env.RICO_ADDR) // ropsten tsetnet
-  const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) //ropsten testnet
-  const po = await getAccount()
+  const rico = await RICO.at(process.env.RICO_ADDR) // retrieve the deployed RICO instance on the network
+  const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) // retrieve the deployed Launcher instance on the network
+  const multisigWalletAddress1 = (!multisigWalletAddress1) ? await getAccount() : multisigWalletAddress1;
+  const TOBFunder = await getAccount();
+  const TOBSecondOwner = (!TOBSecondOwner) ? await getAccount() : TOBSecondOwner;
 
   console.log(`RICO: ${rico.address} launcher: ${launcher.address}`)
 
-  const wallet = await MultiSigWalletWithDailyLimit.new([owner, po], 2, dailyLimit)
+  const wallet = await MultiSigWalletWithDailyLimit.new([multisigWalletAddress1, multisigWalletAddress2], 2, multisigWalletDailyLimit)
 
   console.log(`MultisigWallet: ${wallet.address}`)
 
   var newICO;
 
+  // launch the simpleICO on the already deployed Launcher.sol
+  // see Launcher.sol for clarification on the parameters
   newICO = await launcher.simpleICO(
     name,
     symbol,
     decimals,
-    wallet.address, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
+    wallet.address,
+    [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
+    [separateAllocationTokenAmount, separateAllocationLockTime]
   )
 
+  // launch the standardICO on the already deployed Launcher.sol
+  // see Launcher.sol for clarification on the parameters
   /**
-   *     
-   * newICO = await launcher.standardICO(
-    rico.address,
+   *
+   *
+  newICO = await launcher.standardICO(
     name,
     symbol,
     decimals,
     wallet.address,
-    0, [bidStartTime, bidTokenSupply, bidWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [po, owner], [marketMaker]
+    [TOBStartTime, TOBTokenSupply, TOBPrice, secondOwnerAllocation],
+    [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
+    [TOBFunder, TOBSecondOwner],
+    [marketMaker]
   )
    */
 
-
   console.log(`tx:${newICO.tx}`)
-
 }
 
 function getAccount() {
   return new Promise((resolve, reject) => {
     web3.eth.getAccounts((err, accounts) => {
-      const owner = accounts[0]
-      resolve(owner)
+      const currentUser = accounts[0]
+      resolve(currentUser)
     })
   })
 }
