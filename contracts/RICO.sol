@@ -4,22 +4,28 @@ import "./AbsPoD.sol";
 
 /// @title RICO - Responsible Initial Coin Offering
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
+/**
+ * @title   RICO
+ * @dev     Handles the minting of the Tokens.
+ *          RICO.sol, Launcher.sol and ContractManager.sol, are the three contracts
+ *          that have to be deployed on the network on beforehand.
+ *          Please see the 2_deploy_contracts.js migration for the details.
+ */
 contract RICO is Ownable {
   /// using safemath
   using SafeMath for uint256;
+
   /**
    * Events 
    */
-
   event CreatedNewProject(string name, string symbol, uint8 decimals, uint256 supply, address[] pods, address token);
   event CheckedPodsToken(address pod, uint256 supply);
 
   /**
    * Storage
    */
-
   string public name = "RICO contract";
   string public version = "0.9.3";
 
@@ -30,9 +36,7 @@ contract RICO is Ownable {
 
   /**
    * constructor
-   * @dev The owner is defined when this contract is deployed.
    */
-
   function RICO() public { }
 
   /**
@@ -41,9 +45,8 @@ contract RICO is Ownable {
    * @param _symbol       Token symbol of RICO format.
    * @param _decimals     Token decimals of RICO format.
    * @param _pods         PoD contract addresses.
-   * @param _projectOwner Token's owner or address Multisig Wallet
+   * @param _projectOwner Project's owner address (multisig wallet)
    */
-   
   function newProject(
     string _name, 
     string _symbol, 
@@ -73,12 +76,10 @@ contract RICO is Ownable {
     return address(token);
   }
 
-
   /**
    * @dev To confirm pods and check the token maximum supplies.
    * @param _pods         PoD contract addresses.
    */
-
   function checkPoDs(address[] _pods) internal returns (uint256) {
     uint256 nowSupply = 0;
     for (uint i = 0; i < _pods.length; i++) {
@@ -102,7 +103,6 @@ contract RICO is Ownable {
    * @param _index             pods num of registered array.
    * @param _user              minter address.
    */
-
   function mintToken(address _tokenAddr, uint _index, address _user) public returns(bool) {
 
     address user = msg.sender;
@@ -133,7 +133,6 @@ contract RICO is Ownable {
   /**
    * @dev Emergency call for token transfer miss.
    */
-
   function tokenTransfer(address _token) public onlyOwner() {
     
     MintableToken token = MintableToken(_token);
@@ -146,7 +145,6 @@ contract RICO is Ownable {
   /**
    * @dev To get pods addresses attached to token.
    */
-
   function getTokenPods(address _token) public constant returns (address[]) {
     return tokenToPods[_token];
   }

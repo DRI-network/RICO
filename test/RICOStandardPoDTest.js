@@ -19,7 +19,7 @@ contract('RICOStandardPoD', function (accounts) {
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 
-    //deploy contracts and initialize ico.
+    //deploy contracts and initialize ICO.
     const init = await bid.init(decimals, now + 500, bidTokenSupply, bidWeiLimit, [buyer, owner], mm, bidTokenSupply / 2)
 
     const status = await bid.status.call()

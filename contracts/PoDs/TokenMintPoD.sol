@@ -3,13 +3,15 @@ import "../PoD.sol";
 
 /// @title SimplePoD - SimplePoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
 /**
  * @title      TokenMintPoD
  * @dev        Token Mint Proof of Donation
- * Handles a reservation for minting the tokens.
- * (& Handles all donation functionality from PoD.sol)
+ *             This Contract is used to handle a separate allocation of
+ *             tokens outside of the public sale.
+ *             Handles minting and locking the separately allocated tokens.
+ *             (& Handles all donation functionality from PoD.sol)
  */
 contract TokenMintPoD is PoD {
 
@@ -21,9 +23,18 @@ contract TokenMintPoD is PoD {
     version = "0.9.3";
   }
 
+  /**
+   * @dev        initialize PoD contract
+   *
+   * @param      _user        The address of the user to receive a separate allocation.
+   * @param      _capOfToken  The allocation of tokens.
+   * @param      _lockTime    Lock time of the allocated tokens.
+   *
+   * @return     true
+   */
   function init(
     address _user, 
-    uint256 _capOfToken,
+    uint256 _capOfToken, // _allocationOfTokens
     uint256 _lockTime
   ) 
   public onlyOwner() returns (bool) 

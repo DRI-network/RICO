@@ -5,9 +5,19 @@ import "./PoDs/TokenMintPoD.sol";
 
 /// @title Launcher - RICO Launcher contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
-
+/**
+ * @title   ContractManager
+ * @dev     Takes care of initializing the SimplePoD.sol and TokenMintPoD.sol
+ *          
+ *          RICO.sol, Launcher.sol and ContractManager.sol, are the three contracts
+ *          that have to be deployed on the network on beforehand.
+ *          Please see the 2_deploy_contracts.js migration for the details.
+ *          
+ *          The ContractManager was extracted out of the Launcher because
+ *          deploying Launcher.sol onto the network was too expensive.
+ */
 contract ContractManager {
 
   /**
@@ -15,23 +25,25 @@ contract ContractManager {
    */
   string public name = "ContractManager";
   string public version = "0.9.3";
-  
+
   /**
    * constructor
-   * @dev define owner when this contract deployed.
    */
-
   function ContractManager() public {}
 
   /**
-   * @dev deploy a new contract instance.
-   * @param _rico         address of rico.
-   * @param _mode         Token name of RICO format.
-   * @param _decimals     Token decimals of RICO format.
-   * @param _wallet       Founder's multisig wallet.
-   * @param _params       parameters of pod.
+   * @dev    deploy a new contract instance.
+   * 
+   * @param  _rico      address of rico.
+   * @param  _mode      Token name of RICO format.
+   * @param  _decimals  Token decimals of RICO format.
+   * @param  _wallet    Project owner's multisig wallet.
+   * @param  _params    array         parameters of the PoD.
+   *                    These parameters differ when initializing SimplePoD or TokenMintPoD.
+   *                    Please check Launcher.sol for which parameters are being sent.
+   * 
+   * @return address
    */
-
   function deploy( 
     address _rico, 
     uint _mode,

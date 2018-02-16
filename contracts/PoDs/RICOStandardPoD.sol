@@ -3,14 +3,14 @@ import "../PoD.sol";
 
 /// @title RICOStandardPoD - RICOStandardPoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
 /**
  * @title      RICOStandardPoD
  * @dev        RICO Standard Proof of Donation
- * Handles the Take Over Bid and the functionality to lock up those tokens.
- * Handles payments to the Market Makers.
- * (& Handles all donation functionality from PoD.sol)
+ *             Handles the Take Over Bid and the functionality to lock up those tokens.
+ *             Handles payments to the Market Makers.
+ *             (& Handles all donation functionality from PoD.sol)
  */
 contract RICOStandardPoD is PoD {
 
@@ -24,11 +24,26 @@ contract RICOStandardPoD is PoD {
     version = "0.9.3";
   }
 
+  /**
+   * @dev        initialize PoD contract
+   *
+   * @param      _tokenDecimals    The token decimals
+   * @param      _startTimeOfPoD   The start time for the lock period of 180 days of the owner's tokens.
+   * @param      _capOfToken       The allocation of tokens for the TOB
+   * @param      _capOfWei         The price of Wei for the TOB
+   * @param      _owners           array
+   * @param      _owners[0]        Owner & TOB Funder
+   * @param      _owners[1]        Second owner (can receive pre-set allocation)
+   * @param      _marketMakers     array of addresses of the market makers.
+   * @param      _secondCapOfToken The capability of wei
+   *
+   * @return     true
+   */
   function init(
     uint8 _tokenDecimals, 
     uint256 _startTimeOfPoD,
-    uint256 _capOfToken, 
-    uint256 _capOfWei, 
+    uint256 _capOfToken,
+    uint256 _capOfWei,
     address[2] _owners,
     address[] _marketMakers,
     uint256 _secondCapOfToken
@@ -50,7 +65,7 @@ contract RICOStandardPoD is PoD {
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
 
     takeOverBidFunder = _owners[0];
-    weiBalances[_owners[1]] = 1; // _owners[1] is the takeOverBidLocker. If (takeOverBidLocker == takeOverBidFunder) then this line won't matter.
+    weiBalances[_owners[1]] = 1; // _owners[1] is the takeOverBidLocker.
 
     secondCapOfToken = _secondCapOfToken;
 
@@ -86,7 +101,6 @@ contract RICOStandardPoD is PoD {
 
     return true;
   }
-
 
   function getBalanceOfToken(address _user) public constant returns (uint256) {
     if (block.timestamp < startTime.add(180 days))

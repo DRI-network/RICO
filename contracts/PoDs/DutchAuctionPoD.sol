@@ -3,7 +3,7 @@ import "../PoD.sol";
 
 /// @title DutchAuctionPoD - DutchAuction module contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
 contract DutchAuctionPoD is PoD {
 

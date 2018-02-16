@@ -9,7 +9,6 @@ contract('SimplePoD', function (accounts) {
 
   it("contract should be deployed and initializing token for SimplePoD", async function () {
 
-
     pod = await SimplePoD.new();
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
