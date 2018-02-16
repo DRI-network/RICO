@@ -28,7 +28,7 @@ contract Launcher {
   string public version = "0.9.3";
   RICO public rico;
   ContractManager public cm;
-  bool public state = false;
+  bool public initialized = false;
 
   /**
    * constructor
@@ -40,10 +40,10 @@ contract Launcher {
    * @param _rico        RICO's contract address
    */
   function init(address _rico, address _cm) public {
-    require(!state);
+    require(!initialized);
     rico = RICO(_rico);
     cm = ContractManager(_cm);
-    state = true;
+    initialized = true;
   }
 
   /**
