@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "./PoDs/SimplePoD.sol";
+import "./PoDs/PublicSalePoD.sol";
 import "./PoDs/TokenMintPoD.sol";
 
 /// @title Launcher - RICO Launcher contract
@@ -9,7 +9,7 @@ import "./PoDs/TokenMintPoD.sol";
 
 /**
  * @title   ContractManager
- * @dev     Takes care of initializing the SimplePoD.sol and TokenMintPoD.sol
+ * @dev     Takes care of initializing the PublicSalePoD.sol and TokenMintPoD.sol
  *          
  *          RICO.sol, Launcher.sol and ContractManager.sol, are the three contracts
  *          that have to be deployed on the network on beforehand.
@@ -39,7 +39,7 @@ contract ContractManager {
    * @param  _decimals  Token decimals of RICO format.
    * @param  _wallet    Project owner's multisig wallet.
    * @param  _params    array         parameters of the PoD.
-   *                    These parameters differ when initializing SimplePoD or TokenMintPoD.
+   *                    These parameters differ when initializing PublicSalePoD or TokenMintPoD.
    *                    Please check Launcher.sol for which parameters are being sent.
    * 
    * @return address
@@ -54,7 +54,7 @@ contract ContractManager {
   public returns (address) 
   {
     if (_mode == 0) {
-      SimplePoD pod = new SimplePoD();
+      PublicSalePoD pod = new PublicSalePoD();
       pod.init(_wallet, _decimals, _params[0], _params[1], _params[2]);
       pod.transferOwnership(_rico);
       return address(pod);

@@ -12,7 +12,7 @@ contract('RICOStandardPoD', function (accounts) {
     accounts[3]
   ]
 
-  it("contract should be deployed and initializing token for SimplePoD", async function () {
+  it("contract should be deployed and initializing token for PublicSalePoD", async function () {
 
 
     bid = await RICOStandardPoD.new()

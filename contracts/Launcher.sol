@@ -47,7 +47,7 @@ contract Launcher {
   }
 
   /**
-   * @dev standardICO uses 2 pods RICOStandardPoD and SimplePoD.
+   * @dev standardICO uses 2 pods RICOStandardPoD and PublicSalePoD.
    * @param _name             Token name of RICO format.
    * @param _symbol           Token symbol of RICO format.
    * @param _decimals         Token decimals of RICO format.
@@ -57,10 +57,10 @@ contract Launcher {
    *        _tobParams[1]     _allocationOfTokens     (see RICOStandardPoD.sol)
    *        _tobParams[2]     _priceInWei             (see RICOStandardPoD.sol)
    *        _tobParams[3]     _secondOwnerAllocation  (see RICOStandardPoD.sol)
-   * @param _podParams        array                   params of SimplePoD pod.
-   *        _podParams[0]     _startTimeOfPoD         (see SimplePoD.sol)
-   *        _podParams[1]     _capOfToken             (see SimplePoD.sol)
-   *        _podParams[2]     _capOfWei               (see SimplePoD.sol)
+   * @param _podParams        array                   params of PublicSalePoD pod.
+   *        _podParams[0]     _startTimeOfPoD         (see PublicSalePoD.sol)
+   *        _podParams[1]     _capOfToken             (see PublicSalePoD.sol)
+   *        _podParams[2]     _capOfWei               (see PublicSalePoD.sol)
    * @param _tobAddresses     array                   owner addresses for the Take Over Bid (TOB).
    *        _tobAddresses[0]  TOB Funder
    *        _tobAddresses[1]  TOB second owner (can receive set allocation)
@@ -92,15 +92,15 @@ contract Launcher {
   }
 
   /**
-   * @dev simpleICO uses 2 pods SimplePoD and TokenMintPoD.
+   * @dev simpleICO uses 2 pods PublicSalePoD and TokenMintPoD.
    * @param _name          Token name of RICO format.
    * @param _symbol        Token symbol of RICO format.
    * @param _decimals      Token decimals of RICO format.
    * @param _wallet        Project owner's multisig wallet.
-   * @param _podParams     array               params of SimplePoD pod.
-   *        _podParams[0]  _startTimeOfPoD     (see SimplePoD.sol)
-   *        _podParams[1]  _capOfToken         (see SimplePoD.sol)
-   *        _podParams[2]  _capOfWei           (see SimplePoD.sol)
+   * @param _podParams     array               params of PublicSalePoD pod.
+   *        _podParams[0]  _startTimeOfPoD     (see PublicSalePoD.sol)
+   *        _podParams[1]  _capOfToken         (see PublicSalePoD.sol)
+   *        _podParams[2]  _capOfWei           (see PublicSalePoD.sol)
    * @param _mintParams    array               params of TokenMintPoD pod.
    *        _mintParams[0] _allocationOfTokens (see TokenMintPod.sol)
    *        _mintParams[1] _lockTime           (see TokenMintPod.sol)

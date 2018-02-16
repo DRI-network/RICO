@@ -1,15 +1,15 @@
-const SimplePoD = artifacts.require("./PoDs/SimplePoD.sol");
+const PublicSalePoD = artifacts.require("./PoDs/PublicSalePoD.sol");
 
-contract('SimplePoD', function (accounts) {
+contract('PublicSalePoD', function (accounts) {
   const owner = accounts[0]
 
   const podTokenSupply = 120 * 10 ** 18;
   const podWeiLimit = 10 * 10 ** 18;
   const decimals = 18
 
-  it("contract should be deployed and initializing token for SimplePoD", async function () {
+  it("contract should be deployed and initializing token for PublicSalePoD", async function () {
 
-    pod = await SimplePoD.new();
+    pod = await PublicSalePoD.new();
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
 

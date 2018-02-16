@@ -6,7 +6,7 @@ contract('TokenMintPoD', function (accounts) {
   const podTokenSupply = 120 * 10 ** 18;
   const decimals = 18
 
-  it("contract should be deployed and initializing token for SimplePoD", async function () {
+  it("contract should be deployed and initializing token for PublicSalePoD", async function () {
 
     pod = await TokenMintPoD.new();
     //deploy contracts and initialize ico.

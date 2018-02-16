@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
 
-/// @title SimplePoD - SimplePoD contract
+/// @title PublicSalePoD - PublicSalePoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license - Please check the LICENSE at github.com/DRI-network/RICO
 

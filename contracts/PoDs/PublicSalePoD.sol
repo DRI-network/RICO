@@ -1,24 +1,24 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
 
-/// @title SimplePoD - SimplePoD contract
+/// @title PublicSalePoD - PublicSalePoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
 /// license - Please check the LICENSE at github.com/DRI-network/RICO
 
 /**
- * @title      SimplePoD
+ * @title      PublicSalePoD
  * @dev        Public Sale Proof of Donation
  *             Handles the donations of the public sale and stores them.
  *             Handles the transfer of funds from the donators to the Project Owner's wallet.
  *             (& Handles all donation functionality from PoD.sol)
  */
-contract SimplePoD is PoD {
+contract PublicSalePoD is PoD {
 
   uint256 public tokenMultiplier;
   uint256 public period;
 
-  function SimplePoD() public {
-    name = "SimplePoD strategy token price = capToken/capWei";
+  function PublicSalePoD() public {
+    name = "PublicSalePoD strategy token price = capToken/capWei";
     version = "0.9.3";
   }
 

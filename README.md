@@ -82,7 +82,7 @@ When we look in the new directory we'll see a lot of different contracts. Here i
 Contracts:
 - **RICO.sol** handles the minting of the Tokens of your ICO.
 - **PoD.sol** stands for "Proof of Donation". This handles all the donation logic during your ICO. This contract extends the other PoDs inside the PoDs folder.
-- **PoDs/SimplePoD.sol** handles the donations for the public sale.
+- **PoDs/PublicSalePoD.sol** handles the donations for the public sale.
 - **PoDs/RICOStandardPoD.sol** handles the initial Take Over Bid and rewarding the market makers.
 - **PoDs/TokenMintPoD.sol** handles a separate token allocation outside of the public sale.
 - **PoDs/DutchAuctionPoD.sol** handles the Dutch Auction ICO format.
@@ -97,11 +97,11 @@ The RICO framework makes it possible to easily kickstart your ICO with your own 
 
 #### RICO Standard ICO
 
-RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `SimplePoD.sol` for your RICO. This method is our suggested method and integrates a Take Over Bid and offers functionality for rewarding market makers. The tokens the owner receives from the Take Over Bid are locked for a fixed period of a 180 days.
+RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is our suggested method and integrates a Take Over Bid and offers functionality for rewarding market makers. The tokens the owner receives from the Take Over Bid are locked for a fixed period of a 180 days.
 
 #### Simple ICO
 
-A Simple ICO utilizes the `TokenMintPoD.sol` and `SimplePoD.sol` for your RICO. This method is more old school, having a separate allocation for the owner and offering the remainder of the tokens through a capped or uncapped public sale. The tokens the owner receives from the separate allocation can be locked for a fixed period which can be set freely.
+A Simple ICO utilizes the `TokenMintPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is more old school, having a separate allocation for the owner and offering the remainder of the tokens through a capped or uncapped public sale. The tokens the owner receives from the separate allocation can be locked for a fixed period which can be set freely.
 
 #### Dutch Auction
 
