@@ -25,19 +25,19 @@ contract RICOStandardPoD is PoD {
   }
 
   /**
-   * @dev        initialize PoD contract
+   * @dev      initialize PoD contract
    *
-   * @param      _tokenDecimals           The token decimals
-   * @param      _startTimeOfTOB          The start time for the lock period of 180 days of the owner's tokens.
-   * @param      _allocationOfTokens      The allocation of tokens for the TOB
-   * @param      _priceInWei              The price of Wei for the TOB
-   * @param      _owners                  array
-   * @param      _owners[0]               Owner & TOB Funder
-   * @param      _owners[1]               Second owner (can receive secondOwnerAllocation)
-   * @param      _marketMakers            array of addresses of the market makers.
-   * @param      _secondOwnerAllocation   The allocation of tokens to go to the second owner
+   * @param    _tokenDecimals           The token decimals
+   * @param    _startTimeOfTOB          The start time for the lock period of 180 days of the owner's tokens.
+   * @param    _allocationOfTokens      The allocation of tokens for the TOB
+   * @param    _priceInWei              The price of Wei for the TOB
+   * @param    _owners                  array
+   *           _owners[0]               Owner & TOB Funder
+   *           _owners[1]               Second owner (can receive secondOwnerAllocation)
+   * @param    _marketMakers            array of addresses of the market makers.
+   * @param    _secondOwnerAllocation   The allocation of tokens to go to the second owner
    *
-   * @return     true
+   * @return   true
    */
   function init(
     uint8 _tokenDecimals, 

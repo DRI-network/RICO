@@ -15,7 +15,7 @@ import "./RICO.sol";
  *          that have to be deployed on the network on beforehand.
  *          Please see the 2_deploy_contracts.js migration for the details.
  *          
- * @usage   After deploying Launcher.sol and RICO.sol to the network it's important
+ * @dev     After deploying Launcher.sol and RICO.sol to the network it's important
  *          you register the addresse of RICO.sol and ContractManager.sol in this Launcher.
  *          Please see the 2_deploy_contracts.js migration for the details.
  */
