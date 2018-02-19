@@ -42,7 +42,7 @@ contract('RICOStandardPoD', function (accounts) {
     //console.log(startTime.toNumber(), now)
     const price = await bid.getTokenPrice()
     // console.log(price.toNumber() / 10 ** decimals)
-    assert.equal(price.toNumber() / 10 ** decimals, TOBPrice / TOBTokenSupply, "Error: Token price is not TOBTokenSupply / TOBTokenSupply")
+    assert.equal(price.toNumber() / 10 ** decimals, TOBPrice / TOBTokenSupply, "Error: Token price is not TOBPrice / TOBTokenSupply")
 
     const donate = await bid.donate({
       gasPrice: 50000000000,
