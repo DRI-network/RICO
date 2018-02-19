@@ -1,26 +1,27 @@
 const RICOStandardPoD = artifacts.require("./PoDs/RICOStandardPoD.sol");
 
 contract('RICOStandardPoD', function (accounts) {
-  const owner = accounts[0]
 
-  const bidTokenSupply = 120 * 10 ** 18;
-  const bidWeiLimit = 10 * 10 ** 18;
-  const decimals = 18
-  const buyer = accounts[1]
-  const mm = [
+  const decimals = 18;
+  const TOBTokenSupply = 120 * 10 ** 18;
+  const TOBPrice = 10 * 10 ** 18;
+  const TOBFunder = accounts[0];
+  const TOBSecondOwner = accounts[1];
+  const TOBSecondOwnerAllocation = TOBTokenSupply / 2;
+  const marketMakers = [
     accounts[2],
     accounts[3]
   ]
 
-  it("contract should be deployed and initializing token for SimplePoD", async function () {
-
+  it("contract should be deployed and initializing token for PublicSalePoD", async function () {
 
     bid = await RICOStandardPoD.new()
 
     const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    const TOBStartTime = now + 500;
 
-    //deploy contracts and initialize ico.
-    const init = await bid.init(decimals, now + 500, bidTokenSupply, bidWeiLimit, [buyer, owner], mm, bidTokenSupply / 2)
+    //deploy contracts and initialize ICO.
+    const init = await bid.init(decimals, TOBStartTime, TOBTokenSupply, TOBPrice, [TOBFunder, TOBSecondOwner], marketMakers, TOBSecondOwnerAllocation)
 
     const status = await bid.status.call()
 
@@ -41,12 +42,12 @@ contract('RICOStandardPoD', function (accounts) {
     //console.log(startTime.toNumber(), now)
     const price = await bid.getTokenPrice()
     // console.log(price.toNumber() / 10 ** decimals)
-    assert.equal(price.toNumber() / 10 ** decimals, bidWeiLimit / bidTokenSupply, "Error: Token price is not bidTokenSupply / bidTokenSupply")
+    assert.equal(price.toNumber() / 10 ** decimals, TOBPrice / TOBTokenSupply, "Error: Token price is not TOBPrice / TOBTokenSupply")
 
     const donate = await bid.donate({
       gasPrice: 50000000000,
       value: web3.toWei(8, 'ether'),
-      from: buyer
+      from: TOBFunder
     }).catch((err) => {
       //console.log(err)
     })
@@ -54,7 +55,7 @@ contract('RICOStandardPoD', function (accounts) {
     const status = await bid.status.call()
 
     //console.log(donate.tx, status.toNumber(), proofOfDonationCapOfWei.toNumber())
-    const balanceOfWei = await bid.getBalanceOfWei(buyer)
+    const balanceOfWei = await bid.getBalanceOfWei(TOBFunder)
 
     assert.equal(balanceOfWei.toNumber() / 10 ** 18, 8, "Error: donation has been failed")
     assert.equal(status.toNumber(), 1, "Error: status is not started")
@@ -68,7 +69,7 @@ contract('RICOStandardPoD', function (accounts) {
     const donate = await bid.donate({
       gasPrice: 50000000000,
       value: web3.toWei(100, 'ether'),
-      from: owner
+      from: TOBSecondOwner
     }).catch((err) => {
       //console.log(err)
       assert.equal(err, "Error: VM Exception while processing transaction: revert", 'donate is executable yet.')
@@ -80,13 +81,13 @@ contract('RICOStandardPoD', function (accounts) {
     const donate2 = await bid.donate({
       gasPrice: 50000000000,
       value: web3.toWei(2, 'ether'),
-      from: buyer
+      from: TOBFunder
     })
     const status2 = await bid.status.call()
     assert.equal(status2.toNumber(), 2, "Error: status is not ended")
   })
 
-  it("Check the tokenBalance for buyer", async function () {
+  it("Check the tokenBalance for TOBFunder", async function () {
 
     const setTime = await web3.currentProvider.send({
       jsonrpc: "2.0",
@@ -102,16 +103,16 @@ contract('RICOStandardPoD', function (accounts) {
       assert.equal(err, "Error: VM Exception while processing transaction: revert", 'donate is executable yet.')
     })
 
-    const balance = await bid.getBalanceOfToken(buyer)
+    const balance = await bid.getBalanceOfToken(TOBFunder)
     //console.log(balance.toNumber())
-    assert.equal(balance.toNumber(), bidTokenSupply, "Error: bidTokenSupply is not correct")
+    assert.equal(balance.toNumber(), TOBTokenSupply, "Error: TOBTokenSupply is not correct")
 
   })
-  it("Check the tokenBalance for owner", async function () {
+  it("Check the tokenBalance for TOBSecondOwner", async function () {
 
-    const balance = await bid.getBalanceOfToken(owner)
+    const balance = await bid.getBalanceOfToken(TOBSecondOwner)
     //console.log(balance.toNumber())
-    assert.equal(balance.toNumber(), bidTokenSupply / 2, "Error: bidTokenSupply is not correct")
+    assert.equal(balance.toNumber(), TOBSecondOwnerAllocation, "Error: TOBTokenSupply is not correct")
 
   })
 

@@ -4,15 +4,20 @@ import "./SafeMath.sol";
 
 /// @title PoD - PoD Based contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
+/**
+ * @title      PoD
+ * @dev        Proof of Donation
+ *             Handles all donation functionality.
+ *             Parent to the smart contracts in ./PoDs
+ */
 contract PoD is Ownable {
   using SafeMath for uint256;
 
   /**
    * Storage
    */
-  
   string  public name;
   string  public version;
   address public wallet;
@@ -33,18 +38,15 @@ contract PoD is Ownable {
   Status public status;
 
   /** 
-   * event
+   * events
    */
-  
   event Donated(address user, uint256 amount);
   event Ended(uint256 time);
 
-
   /**
    * constructor
-   * @dev define owner when this contract deployed.
+   * @dev    define owner when this contract deployed.
    */
-
   function PoD() public {
     status = Status.PoDDeployed;
     totalReceivedWei = 0;
@@ -52,9 +54,8 @@ contract PoD is Ownable {
   }
 
   /**
-   * @dev executes donate from project supporter.
+   * @dev    executes donate from project supporter.
    */
-
   function donate() payable public returns (bool) {
 
     require(status == Status.PoDStarted);
@@ -71,7 +72,7 @@ contract PoD is Ownable {
       endTime = now;
       status = Status.PoDEnded;
       Ended(endTime);
-    } 
+    }
 
     totalReceivedWei = totalReceivedWei.add(msg.value);
 
@@ -80,10 +81,9 @@ contract PoD is Ownable {
   }
 
   /**
-   * @dev executes reset user's reserved token .
+   * @dev   executes reset user's reserved token.
    * @param _user         set minter's address
    */
-
   function resetWeiBalance(address _user) public onlyOwner() returns (bool) {
 
     require(status == Status.PoDEnded);
@@ -92,58 +92,53 @@ contract PoD is Ownable {
     weiBalances[_user] = 0;
 
     return true;
-
   }
 
   /**
-   * @dev To get user's balance of wei.
+   * @dev    To get user's balance of wei.
    */
-
   function getBalanceOfWei(address _user) public constant returns(uint) {
     return weiBalances[_user];
   }
 
   /**
-   * @dev To get token price.
+   * @dev    To get token price.
    */
   function getTokenPrice() public constant returns(uint256) {
     return tokenPrice;
   }
 
   /**
-   * @dev To get maximum token cap of pod.
+   * @dev    To get maximum token cap of pod.
    */
-
   function getCapOfToken() public constant returns(uint256) {
     return proofOfDonationCapOfToken;
   }
 
   /**
-   * @dev To get maximum wei cap of pod.
+   * @dev    To get maximum wei cap of pod.
    */
   function getCapOfWei() public constant returns(uint256) {
     return proofOfDonationCapOfWei;
   }
 
   /**
-   * @dev To get maximum wei cap of pod.
+   * @dev    To get maximum wei cap of pod.
    */
-
   function getStartTime() public constant returns (uint256) {
     return startTime;
   }
 
   /**
-   * @dev To get endTime of pod.
+   * @dev    To get endTime of pod.
    */
   function getEndTime() public constant returns (uint256) {
     return endTime;
   }
 
   /**
-   * @dev get the status equal started of pod.
+   * @dev    get the status equal started of pod.
    */
-
   function isPoDStarted() public constant returns(bool) {
     if (status == Status.PoDStarted)
       return true;
@@ -151,9 +146,8 @@ contract PoD is Ownable {
   }
 
   /**
-   * @dev get the status equal ended of pod.
+   * @dev    get the status equal ended of pod.
    */
-
   function isPoDEnded() public constant returns(bool) {
     if (status == Status.PoDEnded)
       return true;
@@ -163,15 +157,13 @@ contract PoD is Ownable {
   /**
    * fallback function
    */
-
   function () payable public {
     donate();
   }
 
   /**
-   * Interface functions. 
+   * Interface functions 
    */
-
   function processDonate(address _user) internal returns (bool);
 
   function getBalanceOfToken(address _user) public constant returns (uint256);

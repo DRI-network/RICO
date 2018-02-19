@@ -2,25 +2,6 @@ const RICO = artifacts.require("./RICO.sol");
 const Launcher = artifacts.require("./Launcher.sol")
 const ContractManager = artifacts.require("./ContractManager.sol")
 
-const name = "Responsible ICO Token";
-const symbol = "RIT";
-const decimals = 18;
-
-const totalTokenSupply = 400000 * 10 ** 18; // set maximum supply to 400,000.
-const bidTokenSupply = totalTokenSupply * 1 / 10
-const bidWeiLimit = 100 * 10 ** 18
-const now = parseInt(new Date() / 1000)
-const bidStartTime = now + 72000; //sec
-
-const podTokenSupply = totalTokenSupply * 90 / 100
-const podWeiLimit = 100 * 10 ** 18
-const podStartTime = now + 172000; //sec
-
-const lastSupply = totalTokenSupply * 30 / 100;
-
-const marketMaker = 0x1d0DcC8d8BcaFa8e8502BEaEeF6CBD49d3AFFCDC; // set first market maker's address 
-const owner = 0x8a20a13b75d0aefb995c0626f22df0d98031a4b6;
-
 module.exports = async function (deployer, network, accounts) {
 
   if (network === "development") return; // Don't deploy on tests
@@ -37,20 +18,6 @@ module.exports = async function (deployer, network, accounts) {
     launcher = await Launcher.deployed()
     cm = await ContractManager.deployed()
     init = await launcher.init(rico.address, cm.address)
-
-    const standardICO = await launcher.standardICO(
-      name,
-      symbol,
-      decimals,
-      projectOwner, [bidStartTime, bidTokenSupply, bidWeiLimit, lastSupply], [podStartTime, podTokenSupply, podWeiLimit], [projectOwner, owner], [marketMaker, owner]
-    )
-
-    const simpleICO = await launcher.simpleICO(
-      name,
-      symbol,
-      decimals,
-      projectOwner, [podStartTime, podTokenSupply, podWeiLimit], [podTokenSupply / 2, podStartTime + 78000]
-    )
 
   });
 }

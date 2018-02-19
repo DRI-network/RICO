@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 /// @title AbsPoD - Abstract PoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
 contract AbsPoD {
 

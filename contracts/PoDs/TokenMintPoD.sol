@@ -1,10 +1,18 @@
 pragma solidity ^0.4.18;
 import "../PoD.sol";
 
-/// @title SimplePoD - SimplePoD contract
+/// @title PublicSalePoD - PublicSalePoD contract
 /// @author - Yusaku Senga - <senga@dri.network>
-/// license let's see in LICENSE
+/// license - Please check the LICENSE at github.com/DRI-network/RICO
 
+/**
+ * @title      TokenMintPoD
+ * @dev        Token Mint Proof of Donation
+ *             This Contract is used to handle a separate allocation of
+ *             tokens outside of the public sale.
+ *             Handles minting and locking the separately allocated tokens.
+ *             (& Handles all donation functionality from PoD.sol)
+ */
 contract TokenMintPoD is PoD {
 
   mapping(address => uint256) tokenBalances; 
@@ -15,15 +23,24 @@ contract TokenMintPoD is PoD {
     version = "0.9.3";
   }
 
+  /**
+   * @dev        initialize PoD contract
+   *
+   * @param      _user                The address of the user to receive a separate allocation.
+   * @param      _allocationOfTokens  Token amount of the separate alloction.
+   * @param      _lockTime            Lock time of the allocated tokens.
+   *
+   * @return     true
+   */
   function init(
     address _user, 
-    uint256 _capOfToken,
+    uint256 _allocationOfTokens,
     uint256 _lockTime
   ) 
   public onlyOwner() returns (bool) 
   {
     require(status == Status.PoDDeployed);
-    proofOfDonationCapOfToken = _capOfToken;
+    proofOfDonationCapOfToken = _allocationOfTokens;
     tokenBalances[_user] = proofOfDonationCapOfToken;
     lockTime = _lockTime;
     weiBalances[_user] = 1;
