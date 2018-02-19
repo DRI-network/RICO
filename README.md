@@ -5,22 +5,20 @@
 
 **This is a Beta version and may still contain bugs. We are not responsible for any losses caused by this version.**
 
-<!-- MarkdownTOC -->
+## Table of Contents
 
-- [Design Concept][design-concept]
-- [Docs][docs]
-  - [Whitepaper][whitepaper]
-  - [Tutorial][tutorial]
-- [Dependencies][dependencies]
-- [Installation & overview][installation--overview]
-  - [RICO file structure][rico-file-structure]
-  - [RICO templates][rico-templates]
-- [Using RICO][using-rico]
-  - [Deploying the RICO contracts][deploying-the-rico-contracts]
-  - [Customize and initialize your ICO][customize-and-initialize-your-ico]
-- [LICENSE][license]
-
-<!-- /MarkdownTOC -->
+- [Design Concept](#design-concept)
+- [Docs](#docs)
+  - [Whitepaper](#whitepaper)
+  - [Tutorial](#tutorial)
+- [Dependencies](#dependencies)
+- [Installation & overview](#installation--overview)
+  - [RICO file structure](#rico-file-structure)
+  - [RICO templates](#rico-templates)
+- [Using RICO](#using-rico)
+  - [Deploying the RICO contracts](#deploying-the-rico-contracts)
+  - [Customize and initialize your ICO](#customize-and-initialize-your-ico)
+- [LICENSE](#license)
 
 ## Design Concept
 
