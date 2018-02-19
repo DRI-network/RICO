@@ -1,20 +1,21 @@
 const PublicSalePoD = artifacts.require("./PoDs/PublicSalePoD.sol");
 
 contract('PublicSalePoD', function (accounts) {
-  const owner = accounts[0]
+  const owner = accounts[0];
 
-  const podTokenSupply = 120 * 10 ** 18;
-  const podWeiLimit = 10 * 10 ** 18;
-  const decimals = 18
+  const decimals = 18;
+  const publicSaleTokenSupply = 120 * 10 ** 18;
+  const publicSaleWeiCap = 10 * 10 ** 18;
 
   it("contract should be deployed and initializing token for PublicSalePoD", async function () {
 
     pod = await PublicSalePoD.new();
 
-    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp
+    const now = web3.eth.getBlock(web3.eth.blockNumber).timestamp;
+    const publicSaleStartTime = now + 200;
 
     //deploy contracts and initialize ico.
-    const init = await pod.init(accounts[0], decimals, now + 200, podTokenSupply, podWeiLimit)
+    const init = await pod.init(accounts[0], decimals, publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap)
 
     const status = await pod.status.call()
 
@@ -33,7 +34,7 @@ contract('PublicSalePoD', function (accounts) {
 
     const price = await pod.getTokenPrice()
 
-    assert.equal(price.toNumber() / 10 ** decimals, podWeiLimit / podTokenSupply, "Error: Token price is not podTokenSupply / podWeiLimit")
+    assert.equal(price.toNumber() / 10 ** decimals, publicSaleWeiCap / publicSaleTokenSupply, "Error: Token price is not publicSaleTokenSupply / publicSaleWeiCap")
 
     const donate = await pod.donate({
       gasPrice: 50000000000,
@@ -90,7 +91,7 @@ contract('PublicSalePoD', function (accounts) {
 
     const balance = await pod.getBalanceOfToken(owner)
     //console.log(balance.toNumber())
-    assert.equal(balance.toNumber(), podTokenSupply, "Error: podTokenSupply is not correct")
+    assert.equal(balance.toNumber(), publicSaleTokenSupply, "Error: publicSaleTokenSupply is not correct")
 
   })
 })
