@@ -52,14 +52,16 @@ An ICO made with RICO is:
 
 ## Dependencies
 
-- [Node](https://nodejs.org/en/) v9.0.0
+- [Node](https://nodejs.org/en/) v9.0.0 (visit the website for installation)
 - [Truffle](http://truffleframework.com/) v4.0.1
 - solidity-compiler v0.4.18
+- ganache-cli
 
 Install dependencies:
 
 ```bash
 $ npm install truffle@4.0.1 -g 
+$ npm install solidity-compiler -g
 $ npm install ganache-cli -g
 ```
 (You can use ethereumjs-testrpc to test your RICO build.)
@@ -70,8 +72,10 @@ Install rico-core and generate a new rico project.
 
 ```bash
 $ npm install -g rico-core
-$ rico new helloico && cd helloico
+$ rico new helloico
 ```
+
+`rico new folder-name` will create a new folder in the current directory with a clean installation of the RICO framework.
 
 ### RICO file structure
 
@@ -126,7 +130,11 @@ First you need to open a local testnet by either (a) opening [Ganache](http://tr
 $ chmod +x rpcrun.bash
 # run the script
 $ ./rpcrun.bash
-# migrate and deploy rico with truffle
+```
+
+Then open a new Terminal window and `cd` into your RICO directory to migrate and deploy rico with truffle.
+
+```bash
 $ truffle migrate --reset --network testrpc
 ```
 
