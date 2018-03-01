@@ -26,13 +26,13 @@ Today I'll show you how easy it is to create a RICO ("Responsible ICO").
 
 ## 1. Setup
 
-Let's setup our dependancies:
+Let's setup our dependencies:
 
 ```bash
 $ npm install truffle@4.0.1 -g 
 $ npm install solidity-compiler -g
 $ npm install ganache-cli -g
-$ npm install -g rico-core
+$ npm install rico-core -g
 ```
 
 Then generate your RICO folder:
