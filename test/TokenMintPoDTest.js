@@ -17,6 +17,8 @@ contract('TokenMintPoD', function (accounts) {
     const status = await pod.status.call()
 
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
+
+    done()
   })
 
   it("Check the donation process should be done", async function () {
@@ -43,6 +45,7 @@ contract('TokenMintPoD', function (accounts) {
 
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
 
+    done()
   })
 
   it("Check the finalize process done", async function () {
@@ -50,6 +53,8 @@ contract('TokenMintPoD', function (accounts) {
     const status = await pod.status.call()
 
     assert.equal(status.toNumber(), 2, "Error: status is not ended")
+
+    done()
   })
   it("Check the tokenBalance for owner", async function () {
 
@@ -63,5 +68,6 @@ contract('TokenMintPoD', function (accounts) {
     //console.log(balance.toNumber())
     assert.equal(balance.toNumber(), separateAllocationTokenAmount, "Error: separateAllocationTokenAmount is not correct")
 
+    done()
   })
 })

@@ -26,6 +26,8 @@ contract('RICOStandardPoD', function (accounts) {
     const status = await bid.status.call()
 
     assert.equal(status.toNumber(), 1, "Error: status is not Initialized")
+
+    done()
   })
 
   it("Check the process for donation should be done", async function () {
@@ -60,6 +62,7 @@ contract('RICOStandardPoD', function (accounts) {
     assert.equal(balanceOfWei.toNumber() / 10 ** 18, 8, "Error: donation has been failed")
     assert.equal(status.toNumber(), 1, "Error: status is not started")
 
+    done()
   })
 
   it("Check the process for donation should be ended when cap reached", async function () {
@@ -85,6 +88,8 @@ contract('RICOStandardPoD', function (accounts) {
     })
     const status2 = await bid.status.call()
     assert.equal(status2.toNumber(), 2, "Error: status is not ended")
+
+    done()
   })
 
   it("Check the tokenBalance for TOBFunder", async function () {
@@ -107,6 +112,7 @@ contract('RICOStandardPoD', function (accounts) {
     //console.log(balance.toNumber())
     assert.equal(balance.toNumber(), TOBTokenSupply, "Error: TOBTokenSupply is not correct")
 
+    done()
   })
   it("Check the tokenBalance for TOBSecondOwner", async function () {
 
@@ -114,6 +120,7 @@ contract('RICOStandardPoD', function (accounts) {
     //console.log(balance.toNumber())
     assert.equal(balance.toNumber(), TOBSecondOwnerAllocation, "Error: TOBTokenSupply is not correct")
 
+    done()
   })
 
 })
