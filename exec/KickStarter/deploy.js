@@ -12,7 +12,7 @@ const now = parseInt(new Date() / 1000);
 
 const publicSaleTokenSupply = totalTokenSupply * 90 / 100; // total token amount for the public sale
 const publicSaleWeiCap = 100 * 10 ** 18; // Set the cap of the public sale to 100 ether.
-const publicSaleStartTime = now + 172800; // Set the start of the Public dat to 2 days from now.
+const publicSaleStartTime = now + 172800; // (seconds) Set the start of the Public dat to 2 days from now.
 
 // Owner of the ICO. All ICO funds to be received in a multisig wallet.
 var multisigWalletAddress1 = '0x0'; // Can be your own address. Defaults to the user who executes this script.
