@@ -239,16 +239,16 @@ Let's check the start time, make time pass on the testnet and make our donation 
 ```js
 // Make sure you still have your ricoPoD instance:
 > RICOStandardPoD.at('0x4ab220389e764e5ffd71b9eb104ca7ae775bb3af').then(inst => { ricopod = inst })
-# Get the ricoPoD startTime and the current timestamp:
+// Get the ricoPoD startTime and the current timestamp:
 > ricopod.getStartTime()
 > web3.eth.getBlock(web3.eth.blockNumber).timestamp
-# Move time forward by 7200 seconds:
+// Move time forward by 7200 seconds:
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [72000], id: 0})
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_mine", params: [], id: 0})
 > web3.eth.getBlock(web3.eth.blockNumber).timestamp
-# Now make your Take Over Bid donation:
+// Now make your Take Over Bid donation:
 > ricopod.donate({value: web3.toWei(10, 'ether'), gas: '700000', from: web3.eth.accounts[0]})
-# Check the status of your PoD:
+// Check the status of your PoD:
 > ricopod.isPoDEnded().then(response => console.log('isPoDEnded: ', response))
 ```
 
