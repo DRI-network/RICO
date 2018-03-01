@@ -1,4 +1,4 @@
-# Bootstrapping your Responsible ICO
+# A Complete Walkthrough to a Responsible ICO
 
 If you are in the market to do an ICO, chances are big that you want to be able to show the world you are doing it responibly!
 
