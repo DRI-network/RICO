@@ -6,6 +6,24 @@ RICO is a framework to be bootstrap your ICO and have a fair and transparent ICO
 
 Today I'll show you how easy it is to create a RICO ("Responsible ICO").
 
+- [1. Setup](#1-setup)
+- [2. Studying the contracts](#2-studying-the-contracts)
+  - [What are RICO Standard ICO's benefits?](#what-are-rico-standard-icos-benefits)
+- [3. Set up a test server](#3-set-up-a-test-server)
+- [4. Set our RICO Standard ICO's parameters](#4-set-our-rico-standard-icos-parameters)
+- [5. Deploy the RICO Contracts](#5-deploy-the-rico-contracts)
+  - [Interact with RICO in the console](#interact-with-rico-in-the-console)
+  - [Check user balances](#check-user-balances)
+- [6. Setup a 'CreatedNewProject' listener](#6-setup-a-creatednewproject-listener)
+- [7. Deploy my RICO Standard ICO](#7-deploy-my-rico-standard-ico)
+  - [Interact with your RICO Standard ICO in the console](#interact-with-your-rico-standard-ico-in-the-console)
+- [8. Start your ICO!](#8-start-your-ico)
+  - [Making the Take Over Bid](#making-the-take-over-bid)
+  - [Making donations for the public sale](#making-donations-for-the-public-sale)
+  - [Conclusion of your Responsible ICO](#conclusion-of-your-responsible-ico)
+- [Conclusion](#conclusion)
+
+
 ## 1. Setup
 
 Let's setup our dependancies:
