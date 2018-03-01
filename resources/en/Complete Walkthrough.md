@@ -183,7 +183,7 @@ Let's check if our RICO Standard ICO was created with the values that we have ch
 First retrieve the RICOStandardPoD and PublicSalePoD instances in the truffle console:
 
 ```js
-# Paste the correct addresses of your PoDs.
+// Paste the correct addresses of your PoDs.
 > RICOStandardPoD.at('0x4ab220389e764e5ffd71b9eb104ca7ae775bb3af').then(inst => { ricopod = inst })
 > PublicSalePoD.at('0x88c8e8a3967830dd305e62967b4b0a1dcfdc2896').then(inst => { salepod = inst })
 ```
@@ -225,7 +225,7 @@ Congratulations! You're ready to start your ICO! You've succesfully deployed the
 Now you just need to inform all your supporters how to donate so let's simulate the actual process. First let's set up an event listener to receive information on all donations that are received.
 
 ```js
-# In truffle console, use the same ricopod and salepod instances from the last step.
+// In truffle console, use the same ricopod and salepod instances from the last step.
 > var newDonateEventTOB = ricopod.Donated({}, {}).watch((error, event) => { console.log(event, error) })
 > var newDonateEventPublicSale = salepod.Donated({}, {}).watch((error, event) => { console.log(event, error) })
 ```
@@ -237,7 +237,7 @@ Before we start receiving donations let's first donate our 10 ETH we set for the
 Let's check the start time, make time pass on the testnet and make our donation for our Take Over Bid:
 
 ```js
-# Make sure you still have your ricoPoD instance:
+// Make sure you still have your ricoPoD instance:
 > RICOStandardPoD.at('0x4ab220389e764e5ffd71b9eb104ca7ae775bb3af').then(inst => { ricopod = inst })
 # Get the ricoPoD startTime and the current timestamp:
 > ricopod.getStartTime()
@@ -265,18 +265,18 @@ This is because the tokens the owner receives are only accesible after 180 days.
 Let's get our PublicSalePoD instance and make some donations until 100 ETH:
 
 ```js
-# Retrieve the public sale PoD instance:
+// Retrieve the public sale PoD instance:
 > PublicSalePoD.at('0x88c8e8a3967830dd305e62967b4b0a1dcfdc2896').then(inst => { salepod = inst })
-# Fast forward time to the start of the public sale:
+// Fast forward time to the start of the public sale:
 > salepod.getStartTime()
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [172800], id: 0})
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_mine", params: [], id: 0})
 > web3.eth.getBlock(web3.eth.blockNumber).timestamp
-# Make them donations!
+// Make them donations!
 > salepod.donate({value: web3.toWei(50, 'ether'), gas: '700000', from: web3.eth.accounts[1]})
 > salepod.donate({value: web3.toWei(40, 'ether'), gas: '700000', from: web3.eth.accounts[2]})
 > salepod.donate({value: web3.toWei(20, 'ether'), gas: '700000', from: web3.eth.accounts[3]})
-# Let's check the new balances:
+// Let's check the new balances:
 > exec ./allBalances.js
 ```
 
@@ -303,12 +303,12 @@ Currently there is a ledger with the balances of who owns how many tokens in you
 We'll need the token address from the `CreatedNewProject` event listener. In your `mintToken()` function you need to fill in the token address as the first parameter and `1` for public sale as the second parameter. The third parameter is the user you want to mint the tokens for.
 
 ```js
-# Make sure we still have the RICO instance:
+// Make sure we still have the RICO instance:
 > RICO.deployed().then(instance => { app = instance })
 > app.mintToken('0xac39bd3d383b216de8fe8d6c0e8317cb2321981c', 1, web3.eth.accounts[1])
-# Get the token instance where the tokens are minted per user:
+// Get the token instance where the tokens are minted per user:
 > MintableToken.at('0xac39bd3d383b216de8fe8d6c0e8317cb2321981c').then(instance => { tokens = instance })
-# Check the balance after the tokens have been minted:
+// Check the balance after the tokens have been minted:
 > tokens.balanceOf(web3.eth.accounts[1])
 > salepod.getBalanceOfToken(web3.eth.accounts[1])
 ```
@@ -331,12 +331,12 @@ One last thing to do before we can call it a day (or a RICO) is to receive the t
 Let's try passing 180 days on our testnet and see what happens:
 
 ```js
-# Pass 180 days in seconds through the evm_increaseTime method:
+// Pass 180 days in seconds through the evm_increaseTime method:
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [15552000], id: 0})
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_mine", params: [], id: 0})
-# Recheck if we have a token balance:
+// Recheck if we have a token balance:
 > ricopod.getBalanceOfToken(web3.eth.accounts[0])
-# Enjoy your tokens!
+// Enjoy your tokens!
 ```
 
 ## Conclusion
