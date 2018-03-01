@@ -228,7 +228,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3193,
+          "SourceUnit": 3216,
           "absolutePath": "/Users/lucaban/.ghq/github.com/DRI-network/RICO/contracts/PoDs/RICOStandardPoD.sol",
           "file": "./PoDs/RICOStandardPoD.sol",
           "scope": 618,
@@ -243,7 +243,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3638,
+          "SourceUnit": 3661,
           "absolutePath": "/Users/lucaban/.ghq/github.com/DRI-network/RICO/contracts/RICO.sol",
           "file": "./RICO.sol",
           "scope": 618,
@@ -262,7 +262,7 @@
             null
           ],
           "contractDependencies": [
-            3192
+            3215
           ],
           "contractKind": "contract",
           "documentation": "@title   Launcher\n@dev     Launcher for deploying the Proof of Donation (PoD) contracts with custom variables.\n         RICO.sol, Launcher.sol and ContractManager.sol, are the three contracts\n         that have to be deployed on the network on beforehand.\n         Please see the 2_deploy_contracts.js migration for the details.\n         \n@dev     After deploying Launcher.sol and RICO.sol to the network it's important\n         you register the addresse of RICO.sol and ContractManager.sol in this Launcher.\n         Please see the 2_deploy_contracts.js migration for the details.",
@@ -374,7 +374,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "RICO",
-                  "referencedDeclaration": 3637,
+                  "referencedDeclaration": 3660,
                   "type": "contract RICO"
                 },
                 "id": 413,
@@ -626,7 +626,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 3747,
+                              "referencedDeclaration": 3770,
                               "type": "function (bool) pure",
                               "value": "require"
                             },
@@ -728,7 +728,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3637,
+                                  "referencedDeclaration": 3660,
                                   "type": "type(contract RICO)",
                                   "value": "RICO"
                                 },
@@ -1394,7 +1394,7 @@
                             "attributes": {
                               "contractScope": null,
                               "name": "RICOStandardPoD",
-                              "referencedDeclaration": 3192,
+                              "referencedDeclaration": 3215,
                               "type": "contract RICOStandardPoD"
                             },
                             "id": 488,
@@ -1440,7 +1440,7 @@
                                 "attributes": {
                                   "contractScope": null,
                                   "name": "RICOStandardPoD",
-                                  "referencedDeclaration": 3192,
+                                  "referencedDeclaration": 3215,
                                   "type": "contract RICOStandardPoD"
                                 },
                                 "id": 490,
@@ -1516,7 +1516,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "init",
-                              "referencedDeclaration": 3047,
+                              "referencedDeclaration": 3070,
                               "type": "function (uint8,uint256,uint256,uint256,address[2] memory,address[] memory,uint256) external returns (bool)"
                             },
                             "children": [
@@ -1796,7 +1796,7 @@
                             "attributes": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_contract$_RICO_$3637",
+                                  "typeIdentifier": "t_contract$_RICO_$3660",
                                   "typeString": "contract RICO"
                                 }
                               ],
@@ -1805,7 +1805,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "transferOwnership",
-                              "referencedDeclaration": 2093,
+                              "referencedDeclaration": 2116,
                               "type": "function (address) external"
                             },
                             "children": [
@@ -1930,7 +1930,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$3192",
+                                      "typeIdentifier": "t_contract$_RICOStandardPoD_$3215",
                                       "typeString": "contract RICOStandardPoD"
                                     }
                                   ],
@@ -2052,7 +2052,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$3637",
+                                      "typeIdentifier": "t_contract$_RICO_$3660",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -2237,7 +2237,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "newProject",
-                              "referencedDeclaration": 3440,
+                              "referencedDeclaration": 3463,
                               "type": "function (string memory,string memory,uint8,address[] memory,address) external returns (address)"
                             },
                             "children": [
@@ -2790,7 +2790,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$3637",
+                                      "typeIdentifier": "t_contract$_RICO_$3660",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -3004,7 +3004,7 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_RICO_$3637",
+                                      "typeIdentifier": "t_contract$_RICO_$3660",
                                       "typeString": "contract RICO"
                                     },
                                     {
@@ -3189,7 +3189,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "newProject",
-                              "referencedDeclaration": 3440,
+                              "referencedDeclaration": 3463,
                               "type": "function (string memory,string memory,uint8,address[] memory,address) external returns (address)"
                             },
                             "children": [
@@ -3316,13 +3316,7 @@
     "name": "solc",
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
-  "networks": {
-    "1519020791435": {
-      "events": {},
-      "links": {},
-      "address": "0x3c1c6091084c408339457bc1b9bbe743d9d279ce"
-    }
-  },
+  "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-19T06:30:25.699Z"
+  "updatedAt": "2018-03-01T06:01:29.323Z"
 }
