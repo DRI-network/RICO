@@ -102,7 +102,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 2926,
+          "SourceUnit": 2949,
           "absolutePath": "/Users/lucaban/.ghq/github.com/DRI-network/RICO/contracts/PoDs/PublicSalePoD.sol",
           "file": "./PoDs/PublicSalePoD.sol",
           "scope": 149,
@@ -117,7 +117,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3314,
+          "SourceUnit": 3337,
           "absolutePath": "/Users/lucaban/.ghq/github.com/DRI-network/RICO/contracts/PoDs/TokenMintPoD.sol",
           "file": "./PoDs/TokenMintPoD.sol",
           "scope": 149,
@@ -136,8 +136,8 @@
             null
           ],
           "contractDependencies": [
-            2925,
-            3313
+            2948,
+            3336
           ],
           "contractKind": "contract",
           "documentation": "@title   ContractManager\n@dev     Takes care of initializing the PublicSalePoD.sol and TokenMintPoD.sol\n         \n         RICO.sol, Launcher.sol and ContractManager.sol, are the three contracts\n         that have to be deployed on the network on beforehand.\n         Please see the 2_deploy_contracts.js migration for the details.\n         \n         The ContractManager was extracted out of the Launcher because\n         deploying Launcher.sol onto the network was too expensive.",
@@ -567,7 +567,7 @@
                                     "attributes": {
                                       "contractScope": null,
                                       "name": "PublicSalePoD",
-                                      "referencedDeclaration": 2925,
+                                      "referencedDeclaration": 2948,
                                       "type": "contract PublicSalePoD"
                                     },
                                     "id": 79,
@@ -613,7 +613,7 @@
                                         "attributes": {
                                           "contractScope": null,
                                           "name": "PublicSalePoD",
-                                          "referencedDeclaration": 2925,
+                                          "referencedDeclaration": 2948,
                                           "type": "contract PublicSalePoD"
                                         },
                                         "id": 81,
@@ -681,7 +681,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "init",
-                                      "referencedDeclaration": 2813,
+                                      "referencedDeclaration": 2836,
                                       "type": "function (address,uint8,uint256,uint256,uint256) external returns (bool)"
                                     },
                                     "children": [
@@ -910,7 +910,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "transferOwnership",
-                                      "referencedDeclaration": 2093,
+                                      "referencedDeclaration": 2116,
                                       "type": "function (address) external"
                                     },
                                     "children": [
@@ -981,7 +981,7 @@
                                     "attributes": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_PublicSalePoD_$2925",
+                                          "typeIdentifier": "t_contract$_PublicSalePoD_$2948",
                                           "typeString": "contract PublicSalePoD"
                                         }
                                       ],
@@ -1111,7 +1111,7 @@
                                     "attributes": {
                                       "contractScope": null,
                                       "name": "TokenMintPoD",
-                                      "referencedDeclaration": 3313,
+                                      "referencedDeclaration": 3336,
                                       "type": "contract TokenMintPoD"
                                     },
                                     "id": 116,
@@ -1157,7 +1157,7 @@
                                         "attributes": {
                                           "contractScope": null,
                                           "name": "TokenMintPoD",
-                                          "referencedDeclaration": 3313,
+                                          "referencedDeclaration": 3336,
                                           "type": "contract TokenMintPoD"
                                         },
                                         "id": 118,
@@ -1217,7 +1217,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "init",
-                                      "referencedDeclaration": 3263,
+                                      "referencedDeclaration": 3286,
                                       "type": "function (address,uint256,uint256) external returns (bool)"
                                     },
                                     "children": [
@@ -1386,7 +1386,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "transferOwnership",
-                                      "referencedDeclaration": 2093,
+                                      "referencedDeclaration": 2116,
                                       "type": "function (address) external"
                                     },
                                     "children": [
@@ -1457,7 +1457,7 @@
                                     "attributes": {
                                       "argumentTypes": [
                                         {
-                                          "typeIdentifier": "t_contract$_TokenMintPoD_$3313",
+                                          "typeIdentifier": "t_contract$_TokenMintPoD_$3336",
                                           "typeString": "contract TokenMintPoD"
                                         }
                                       ],
@@ -1530,13 +1530,7 @@
     "name": "solc",
     "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
   },
-  "networks": {
-    "1519020791435": {
-      "events": {},
-      "links": {},
-      "address": "0x7ca5c3ebba78354bc3ca3bf65d8c861e7c0e48cc"
-    }
-  },
+  "networks": {},
   "schemaVersion": "1.0.1",
-  "updatedAt": "2018-02-19T06:30:25.700Z"
+  "updatedAt": "2018-03-01T06:01:29.318Z"
 }
