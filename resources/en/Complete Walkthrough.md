@@ -1,10 +1,10 @@
-# A Complete Walkthrough to a Responsible ICO
+# Kickstart your ICO: A Complete Walkthrough to the RICO Framework
 
 If you are in the market to do an ICO, chances are big that you want to be able to show the world you are doing it responibly!
 
 RICO is a framework to be bootstrap your ICO and have a fair and transparent ICO. Moreover it's super easy to kickstart your ICO with just changing a few parameters! All the heavy lifting is done entirely by the RICO framework. RICO was created by the Tokyo Ethereum community: DRI - Decentralizedtech Research Institute.
 
-Today I'll show you how easy it is to create a RICO ("Responsible ICO").
+Today I'll show you how easy it is to create a RICO powered ICO.
 
 - [1. Setup](#1-setup)
 - [2. Studying the contracts](#2-studying-the-contracts)
@@ -56,7 +56,7 @@ Today we will focus on the RICO standard ICO.
 
 ### What are RICO Standard ICO's benefits?
 
-The RICO standard ICO includes the following benefits:
+The RICO Standard ICO includes the following benefits:
 
 **A Take Over Bid**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
 
@@ -68,7 +68,7 @@ The RICO standard ICO includes the following benefits:
 
 ## 3. Set up a test server
 
-It's always smart to first test out your RICO on a testnet. We prepared a custom testrpc setting you can execute from the home directory of your RICO project folder:
+It's always smart to first test out your ICO on a testnet. We prepared a custom testrpc setting you can execute from the home directory of your RICO project folder:
 
 ```bash
 $ chmod +x rpcrun.bash
@@ -173,7 +173,7 @@ $ export LAUNCHER_ADDR=0x39326f43557b33afdad3cec0d0272619c0d7ad9b
 $ truffle exec exec/KickStarter/deploy.js --network testrpc
 ```
 
-(For the testnet: Our truffle migration script tells you the the RICO and Launcher addresses, so search in your terminal after you had migrated.)
+(For the testnet: Our truffle migration script tells you your RICO and Launcher addresses. So look in your terminal after you had migrated.)
 
 First of all, take note of the console that logged out your Multisig wallet address. We'll need this address later on.
 

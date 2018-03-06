@@ -43,12 +43,13 @@ An ICO made with RICO is:
 
 ### Whitepaper
 
-- [Whitepaper[EN]](https://dri.network/static/RICO-whitepaper-en.pdf)
-- [Whitepaper[JP]](https://dri.network/static/RICO-whitepaper.pdf)
+- [Whitepaper (English)](https://dri.network/static/RICO-whitepaper-en.pdf)
+- [Whitepaper (Japanese)](https://dri.network/static/RICO-whitepaper.pdf)
 
 ### Tutorial
 
-- [RICOTrutorial[JP]](https://scrapbox.io/DRI-community/RICO_Tutorial（日本語版）)
+- [RICO Tutorial (English)](https://github.com/DRI-network/RICO/blob/master/resources/en/Complete%20Walkthrough.md)
+- [RICO Tutorial (Japanese)](https://scrapbox.io/DRI-community/RICO_Tutorial（日本語版）)
 
 ## Dependencies
 
