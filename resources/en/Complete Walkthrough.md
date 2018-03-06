@@ -20,7 +20,7 @@ Today I'll show you how easy it is to create a RICO powered ICO.
 - [8. Start your ICO!](#8-start-your-ico)
   - [Making the Take Over Bid](#making-the-take-over-bid)
   - [Making donations for the public sale](#making-donations-for-the-public-sale)
-  - [Conclusion of your Responsible ICO](#conclusion-of-your-responsible-ico)
+  - [The aftermatch of your ICO](#the-aftermatch-of-your-ico)
 - [Conclusion](#conclusion)
 
 
@@ -312,7 +312,7 @@ Let's see if our supporters got their tokens:
 > salepod.getBalanceOfToken(web3.eth.accounts[3])
 ```
 
-### Conclusion of your Responsible ICO
+### The aftermatch of your ICO
 
 #### Minting tokens for your supporters
 
