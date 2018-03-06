@@ -1,6 +1,6 @@
 # Kickstart your ICO: A Complete Walkthrough to the RICO Framework
 
-If you are in the market to do an ICO, chances are big that you want to be able to show the world you are doing it responibly!
+If you are in the market to do an ICO, chances are big that you want to be able to show the world you are doing it transparent and responsibly!
 
 RICO is a framework to be bootstrap your ICO and have a fair and transparent ICO. Moreover it's super easy to kickstart your ICO with just changing a few parameters! All the heavy lifting is done entirely by the RICO framework. RICO was created by the Tokyo Ethereum community: DRI - Decentralizedtech Research Institute.
 
