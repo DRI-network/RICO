@@ -56,14 +56,14 @@ An ICO made with RICO is:
 - [Node](https://nodejs.org/en/) v9.0.0 (visit the website for installation)
 - [Truffle](http://truffleframework.com/) v4.0.1
 - solidity-compiler v0.4.18
-- ganache-cli
+- ganache-cli v6.0.3
 
 Install dependencies:
 
 ```bash
 $ npm install truffle@4.0.1 -g 
 $ npm install solidity-compiler -g
-$ npm install ganache-cli -g
+$ npm install ganache-cli@6.0.3 -g
 ```
 (You can use ethereumjs-testrpc to test your RICO build.)
 

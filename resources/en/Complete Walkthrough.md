@@ -31,7 +31,7 @@ Let's setup our dependencies:
 ```bash
 $ npm install truffle@4.0.1 -g 
 $ npm install solidity-compiler -g
-$ npm install ganache-cli -g
+$ npm install ganache-cli@6.0.3 -g 
 $ npm install rico-core -g
 ```
 
