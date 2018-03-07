@@ -22,14 +22,14 @@ const multisigWalletDailyLimit = 1 * 10 ** 18; // Allows an owner to withdraw a 
 /**
  * Set variables ONLY for RICO Standard ICO (not used with Simple ICO)
  */
-// Take over Bid (TOB)
-var TOBFunder; // Defaults to the user who executes this script.
-const TOBStartTime = now + 72000; // sec
-const TOBTokenSupply = totalTokenSupply * 10 / 100; // 8% of the totalTokenSupply
-const TOBPrice = 10 * 10 ** 18; // = 10 ether for the TOB
-// A second TOB owner can be set.
-const TOBSecondOwner = '0x0'; // (Optional) Second owner of the TOB. Cannot be the same as TOBFunder.
-const secondOwnerAllocation = totalTokenSupply * 0 / 100; // 0% of the totalTokenSupply is given to a second owner at the expense of the TOB funder.
+// RICO Initial Deposit (iniDeposit)
+var iniDepositFunder; // Defaults to the user who executes this script.
+const iniDepositStartTime = now + 72000; // sec
+const iniDepositTokenSupply = totalTokenSupply * 10 / 100; // 8% of the totalTokenSupply
+const iniDepositPrice = 10 * 10 ** 18; // = 10 ether for the iniDeposit
+// A second iniDeposit owner can be set.
+const iniDepositSecondOwner = '0x0'; // (Optional) Second owner of the iniDeposit. Cannot be the same as iniDepositFunder.
+const secondOwnerAllocation = totalTokenSupply * 0 / 100; // 0% of the totalTokenSupply is given to a second owner at the expense of the iniDeposit funder.
 
 const marketMaker = '0x0'; // (string) The first market maker's address
 
@@ -49,7 +49,7 @@ module.exports = async function (callback) {
   const wallet = await MultiSigWalletWithDailyLimit.contract.new([multisigWalletAddress1, multisigWalletAddress2], 2, multisigWalletDailyLimit)
   console.log(`MultisigWallet: ${wallet.address}`)
   
-  TOBFunder = await getAccount();
+  iniDepositFunder = await getAccount();
 
   var newICO;
 
@@ -62,9 +62,9 @@ module.exports = async function (callback) {
     symbol,
     decimals,
     wallet.address,
-    [TOBStartTime, TOBTokenSupply, TOBPrice, secondOwnerAllocation],
+    [iniDepositStartTime, iniDepositTokenSupply, iniDepositPrice, secondOwnerAllocation],
     [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
-    [TOBFunder, TOBSecondOwner],
+    [iniDepositFunder, iniDepositSecondOwner],
     [marketMaker]
   )
   /**【Simple ICO】

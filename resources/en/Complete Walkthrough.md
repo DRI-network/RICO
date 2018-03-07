@@ -18,7 +18,7 @@ Today I'll show you how easy it is to create a RICO powered ICO.
 - [7. Deploy my RICO Standard ICO](#7-deploy-my-rico-standard-ico)
   - [Interact with your RICO Standard ICO in the console](#interact-with-your-rico-standard-ico-in-the-console)
 - [8. Start your ICO!](#8-start-your-ico)
-  - [Making the Take Over Bid](#making-the-take-over-bid)
+  - [Making the Initial Deposit](#making-the-initial-deposit)
   - [Making donations for the public sale](#making-donations-for-the-public-sale)
   - [The aftermatch of your ICO](#the-aftermatch-of-your-ico)
 - [Conclusion](#conclusion)
@@ -31,7 +31,7 @@ Let's setup our dependencies:
 ```bash
 $ npm install truffle@4.0.1 -g 
 $ npm install solidity-compiler -g
-$ npm install ganache-cli -g
+$ npm install ganache-cli@6.0.3 -g 
 $ npm install rico-core -g
 ```
 
@@ -58,7 +58,7 @@ Today we will focus on the RICO standard ICO.
 
 The RICO Standard ICO includes the following benefits:
 
-**A Take Over Bid**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
+**A Initial Deposit**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
 
 **Supporting the market makers**: RICO has a system to automatically send the owner's initial investment as fee to the market makers after the ICO concludes.
 
@@ -88,8 +88,8 @@ The values we want to overwrite in this deploy script are these:
 - `publicSaleTokenSupply`: 90% of the tokens is for the public sale.
 - `publicSaleWeiCap`: It's a small project, lets value the 90% of the tokens at 100 ETH. (about 30,000 USD)
 - `multisigWalletAddress`: Multisig addresses 1 can be left empty, which will default to the user sending the transaction (aka account[0]) for the second owner we can use another account who will be co-owning the ICO's wallet.
-- `TOBTokenSupply`: By default set to 8%, but since there is no second owner it will include the `secondOwnerAllocation` making a total of 10% in return for the Take Over Bid.
-- `TOBPrice`: (in Wei) Set to `10 * 10 ** 18` to pay 10 ETH for your Take Over Bid.
+- `iniDepositTokenSupply`: By default set to 8%, but since there is no second owner it will include the `secondOwnerAllocation` making a total of 10% in return for the Initial Deposit.
+- `iniDepositPrice`: (in Wei) Set to `10 * 10 ** 18` to pay 10 ETH for your Initial Deposit.
 - `marketMaker`: let's set the market maker address to a friend who will be responsible for advertising our ICO (He'll receive the 10 ETH we paid).
 
 This is all we need! Now let's deploy our RICO Standard ICO!
@@ -212,8 +212,8 @@ The values we want to check:
 totalTokenSupply = 400000
 publicSaleTokenSupply = 400000*90%
 publicSaleWeiCap = 100 ETH
-TOBTokenSupply = 400000*10%
-TOBPrice = 10 ETH
+iniDepositTokenSupply = 400000*10%
+iniDepositPrice = 10 ETH
 ```
 
 ```js
@@ -244,15 +244,15 @@ Now you just need to inform all your supporters how to donate so let's simulate 
 
 ```js
 // In truffle console, use the same ricopod and salepod instances from the last step.
-> var newDonateEventTOB = ricopod.Donated({}, {}).watch((error, event) => { console.log(event, error) })
+> var newDonateEventiniDeposit = ricopod.Donated({}, {}).watch((error, event) => { console.log(event, error) })
 > var newDonateEventPublicSale = salepod.Donated({}, {}).watch((error, event) => { console.log(event, error) })
 ```
 
-### Making the Take Over Bid
+### Making the Initial Deposit
 
-Before we start receiving donations let's first donate our 10 ETH we set for the Take Over Bid. This can be sent to the `donate()` function of the RICO standard PoD. However, if you remember from our `deploy.js` script we have set the start of the Take Over Bid to `now + 7200` seconds. You can check the `PoDStartTime` by calling `getStartTime()`.
+Before we start receiving donations let's first donate our 10 ETH we set for the Initial Deposit. This can be sent to the `donate()` function of the RICO standard PoD. However, if you remember from our `deploy.js` script we have set the start of the Initial Deposit to `now + 7200` seconds. You can check the `PoDStartTime` by calling `getStartTime()`.
 
-Let's check the start time, make time pass on the testnet and make our donation for our Take Over Bid:
+Let's check the start time, make time pass on the testnet and make our donation for our Initial Deposit:
 
 ```js
 // Make sure you still have your ricoPoD instance:
@@ -264,7 +264,7 @@ Let's check the start time, make time pass on the testnet and make our donation 
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [72000], id: 0})
 > web3.currentProvider.send({jsonrpc: "2.0", method: "evm_mine", params: [], id: 0})
 > web3.eth.getBlock(web3.eth.blockNumber).timestamp
-// Now make your Take Over Bid donation:
+// Now make your Initial Deposit donation:
 > ricopod.donate({value: web3.toWei(10, 'ether'), gas: '700000', from: web3.eth.accounts[0]})
 // Check the status of your PoD:
 > ricopod.isPoDEnded().then(response => console.log('isPoDEnded: ', response))
@@ -335,16 +335,16 @@ Now you can see that the tokens of your users have been moved from your Proof of
 
 #### What about the market maker?
 
-The 10 ETH we paid for the Take Over Bid is going to the market maker and can be transferred via the `distributeWei()` function:
+The 10 ETH we paid for the Initial Deposit is going to the market maker and can be transferred via the `distributeWei()` function:
 
 ```js
 > ricopod.distributeWei(0, web3.toWei(10, 'ether'))
 > exec ./allBalances.js
 ```
 
-#### Retrieve Take Over Bid tokens
+#### Retrieve Initial Deposit tokens
 
-One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make a Take Over Bid that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
+One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make a Initial Deposit that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
 
 Let's try passing 180 days on our testnet and see what happens:
 
