@@ -8,13 +8,13 @@ import "../PoD.sol";
 /**
  * @title      RICOStandardPoD
  * @dev        RICO Standard Proof of Donation
- *             Handles the Take Over Bid and the functionality to lock up those tokens.
+ *             Handles the Initial Deposit and the functionality to lock up those tokens.
  *             Handles payments to the Market Makers.
  *             (& Handles all donation functionality from PoD.sol)
  */
 contract RICOStandardPoD is PoD {
 
-  address public takeOverBidFunder;
+  address public initialDepositFunder;
   address[] public marketMakers;
   uint256 public tokenMultiplier;
   uint256 public secondOwnerAllocation;
@@ -28,11 +28,11 @@ contract RICOStandardPoD is PoD {
    * @dev      initialize PoD contract
    *
    * @param    _tokenDecimals           The token decimals
-   * @param    _startTimeOfTOB          The start time for the lock period of 180 days of the owner's tokens.
-   * @param    _allocationOfTokens      The allocation of tokens for the TOB
-   * @param    _priceInWei              The price of Wei for the TOB
+   * @param    _startTime               The start time for the lock period of 180 days of the owner's tokens.
+   * @param    _allocationOfTokens      The allocation of tokens for the Initial Deposit
+   * @param    _priceInWei              The price of Wei for the Initial Deposit
    * @param    _owners                  array
-   *           _owners[0]               Owner & TOB Funder
+   *           _owners[0]               Owner & Initial Deposit Funder
    *           _owners[1]               Second owner (can receive secondOwnerAllocation)
    * @param    _marketMakers            array of addresses of the market makers.
    * @param    _secondOwnerAllocation   The allocation of tokens to go to the second owner
@@ -41,7 +41,7 @@ contract RICOStandardPoD is PoD {
    */
   function init(
     uint8 _tokenDecimals, 
-    uint256 _startTimeOfTOB,
+    uint256 _startTime,
     uint256 _allocationOfTokens,
     uint256 _priceInWei,
     address[2] _owners,
@@ -51,9 +51,9 @@ contract RICOStandardPoD is PoD {
   public onlyOwner() returns (bool) {
     require(status == Status.PoDDeployed);
 
-    require(_startTimeOfTOB >= block.timestamp);
+    require(_startTime >= block.timestamp);
    
-    startTime = _startTimeOfTOB;
+    startTime = _startTime;
   
     marketMakers = _marketMakers;
 
@@ -64,8 +64,8 @@ contract RICOStandardPoD is PoD {
 
     tokenPrice = tokenMultiplier * proofOfDonationCapOfWei / proofOfDonationCapOfToken;
 
-    takeOverBidFunder = _owners[0];
-    weiBalances[_owners[1]] = 1; // _owners[1] is the takeOverBidLocker.
+    initialDepositFunder = _owners[0];
+    weiBalances[_owners[1]] = 1; // _owners[1] is the initialDepositLocker.
 
     secondOwnerAllocation = _secondOwnerAllocation;
 
@@ -75,7 +75,7 @@ contract RICOStandardPoD is PoD {
   }
 
   function processDonate(address _user) internal returns (bool) {
-    require(_user == takeOverBidFunder);
+    require(_user == initialDepositFunder);
     
     uint256 remains = proofOfDonationCapOfWei.sub(totalReceivedWei);
 
@@ -93,7 +93,7 @@ contract RICOStandardPoD is PoD {
   }
 
   function distributeWei(uint _index, uint256 _amount) public returns (bool) {
-    require(msg.sender == takeOverBidFunder);
+    require(msg.sender == initialDepositFunder);
 
     require(_amount <= this.balance);
 
@@ -106,7 +106,7 @@ contract RICOStandardPoD is PoD {
     if (block.timestamp < startTime.add(180 days))
       return 0;
 
-    if (_user == takeOverBidFunder)
+    if (_user == initialDepositFunder)
       return (tokenMultiplier * weiBalances[_user]) / tokenPrice;
     else 
       return secondOwnerAllocation * weiBalances[_user];

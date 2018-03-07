@@ -48,32 +48,32 @@ contract Launcher {
 
   /**
    * @dev standardICO uses 2 pods RICOStandardPoD and PublicSalePoD.
-   * @param _name             Token name of RICO format.
-   * @param _symbol           Token symbol of RICO format.
-   * @param _decimals         Token decimals of RICO format.
-   * @param _wallet           Project owner's multisig wallet.
-   * @param _tobParams        array                   params of RICOStandardPoD pod.
-   *        _tobParams[0]     _startTimeOfTOB         (see RICOStandardPoD.sol)
-   *        _tobParams[1]     _allocationOfTokens     (see RICOStandardPoD.sol)
-   *        _tobParams[2]     _priceInWei             (see RICOStandardPoD.sol)
-   *        _tobParams[3]     _secondOwnerAllocation  (see RICOStandardPoD.sol)
-   * @param _podParams        array                   params of PublicSalePoD pod.
-   *        _podParams[0]     _startTimeOfPoD         (see PublicSalePoD.sol)
-   *        _podParams[1]     _capOfToken             (see PublicSalePoD.sol)
-   *        _podParams[2]     _capOfWei               (see PublicSalePoD.sol)
-   * @param _tobAddresses     array                   owner addresses for the Take Over Bid (TOB).
-   *        _tobAddresses[0]  TOB Funder
-   *        _tobAddresses[1]  TOB second owner (can receive set allocation)
-   * @param _marketMakers     array of marketMakers address of project.
+   * @param _name                Token name of RICO format.
+   * @param _symbol              Token symbol of RICO format.
+   * @param _decimals            Token decimals of RICO format.
+   * @param _wallet              Project owner's multisig wallet.
+   * @param _iniDepParams        array                   params of RICOStandardPoD pod.
+   *        _iniDepParams[0]     _startTime              (see RICOStandardPoD.sol)
+   *        _iniDepParams[1]     _allocationOfTokens     (see RICOStandardPoD.sol)
+   *        _iniDepParams[2]     _priceInWei             (see RICOStandardPoD.sol)
+   *        _iniDepParams[3]     _secondOwnerAllocation  (see RICOStandardPoD.sol)
+   * @param _podParams           array                   params of PublicSalePoD pod.
+   *        _podParams[0]        _startTimeOfPoD         (see PublicSalePoD.sol)
+   *        _podParams[1]        _capOfToken             (see PublicSalePoD.sol)
+   *        _podParams[2]        _capOfWei               (see PublicSalePoD.sol)
+   * @param _iniDepAddresses     array                   owner addresses for the Initial Deposit (iniDeposit).
+   *        _iniDepAddresses[0]  iniDeposit Funder
+   *        _iniDepAddresses[1]  iniDeposit second owner (can receive set allocation)
+   * @param _marketMakers        array of marketMakers address of project.
    */
   function standardICO(
     string _name, 
     string _symbol, 
     uint8 _decimals, 
     address _wallet,
-    uint256[] _tobParams,
+    uint256[] _iniDepParams,
     uint256[] _podParams,
-    address[2] _tobAddresses,
+    address[2] _iniDepAddresses,
     address[] _marketMakers
   ) 
   public returns (address)
@@ -82,7 +82,7 @@ contract Launcher {
 
     RICOStandardPoD rsp = new RICOStandardPoD();
 
-    rsp.init(_decimals, _tobParams[0], _tobParams[1], _tobParams[2], _tobAddresses, _marketMakers, _tobParams[3]);
+    rsp.init(_decimals, _iniDepParams[0], _iniDepParams[1], _iniDepParams[2], _iniDepAddresses, _marketMakers, _iniDepParams[3]);
     rsp.transferOwnership(rico);
 
     pods[0] = address(rsp);

@@ -86,7 +86,7 @@ Contracts:
 - **RICO.sol** handles the minting of the Tokens of your ICO.
 - **PoD.sol** stands for "Proof of Donation". This handles all the donation logic during your ICO. This contract extends the other PoDs inside the PoDs folder.
 - **PoDs/PublicSalePoD.sol** handles the donations for the public sale.
-- **PoDs/RICOStandardPoD.sol** handles the initial Take Over Bid and rewarding the market makers.
+- **PoDs/RICOStandardPoD.sol** handles the Initial Deposit and rewarding the market makers.
 - **PoDs/TokenMintPoD.sol** handles a separate token allocation outside of the public sale.
 - **PoDs/DutchAuctionPoD.sol** handles the Dutch Auction ICO format.
 - **Launcher.sol** can deploy and initialize your ICO based on your own parameters.
@@ -100,7 +100,7 @@ The RICO framework makes it possible to easily kickstart your ICO with your own 
 
 #### RICO Standard ICO
 
-RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is our suggested method and integrates a Take Over Bid and offers functionality for rewarding market makers. The tokens the owner receives from the Take Over Bid are locked for a fixed period of a 180 days.
+RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is our suggested method and integrates a Initial Deposit and offers functionality for rewarding market makers. The tokens the owner receives from the Initial Deposit are locked for a fixed period of a 180 days.
 
 #### Simple ICO
 
