@@ -88,7 +88,7 @@ The values we want to overwrite in this deploy script are these:
 - `publicSaleTokenSupply`: 90% of the tokens is for the public sale.
 - `publicSaleWeiCap`: It's a small project, lets value the 90% of the tokens at 100 ETH. (about 30,000 USD)
 - `multisigWalletAddress`: Multisig addresses 1 can be left empty, which will default to the user sending the transaction (aka account[0]) for the second owner we can use another account who will be co-owning the ICO's wallet.
-- `iniDepositTokenSupply`: By default set to 8%, but since there is no second owner it will include the `secondOwnerAllocation` making a total of 10% in return for the Initial Deposit.
+- `iniDepositTokenSupply`: Let's leave the default of 10%. This gives us 10% of the ICO tokens in return for the Initial Deposit.
 - `iniDepositPrice`: (in Wei) Set to `10 * 10 ** 18` to pay 10 ETH for your Initial Deposit.
 - `marketMaker`: let's set the market maker address to a friend who will be responsible for advertising our ICO (He'll receive the 10 ETH we paid).
 
