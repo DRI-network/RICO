@@ -24,15 +24,17 @@ Today I'll show you how easy it is to create a RICO powered ICO.
 - [Conclusion](#conclusion)
 
 
+(Please note that the guide is not optimized for Windows.)
+
 ## 1. Setup
 
 Let's setup our dependencies:
 
 ```bash
-$ npm install truffle@4.0.1 -g 
-$ npm install solidity-compiler -g
-$ npm install ganache-cli@6.0.3 -g 
-$ npm install rico-core -g
+$ npm install -g truffle@4.0.1
+$ npm install -g ganache-cli@6.0.3
+$ npm install -g truffle-hdwallet-provider@0.0.3
+$ npm install -g rico-core
 ```
 
 Then generate your RICO folder:
@@ -58,7 +60,7 @@ Today we will focus on the RICO standard ICO.
 
 The RICO Standard ICO includes the following benefits:
 
-**A Initial Deposit**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
+**Initial Deposit**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
 
 **Supporting the market makers**: RICO has a system to automatically send the owner's initial investment as fee to the market makers after the ICO concludes.
 
@@ -71,8 +73,9 @@ The RICO Standard ICO includes the following benefits:
 It's always smart to first test out your ICO on a testnet. We prepared a custom testrpc setting you can execute from the home directory of your RICO project folder:
 
 ```bash
+# if neccesary, cd into your rico folder:
+$ cd MyFirstRICO
 $ chmod +x rpcrun.bash
-# ↑ Mac only (make rpcrun executable)
 $ ./rpcrun.bash
 ```
 
@@ -344,7 +347,7 @@ The 10 ETH we paid for the Initial Deposit is going to the market maker and can 
 
 #### Retrieve Initial Deposit tokens
 
-One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make a Initial Deposit that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
+One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make an Initial Deposit that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
 
 Let's try passing 180 days on our testnet and see what happens:
 
