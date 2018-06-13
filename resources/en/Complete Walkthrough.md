@@ -24,15 +24,17 @@ Today I'll show you how easy it is to create a RICO powered ICO.
 - [Conclusion](#conclusion)
 
 
+(Please note that the guide is not optimized for Windows.)
+
 ## 1. Setup
 
 Let's setup our dependencies:
 
 ```bash
-$ npm install truffle@4.0.1 -g 
-$ npm install solidity-compiler -g
-$ npm install ganache-cli@6.0.3 -g 
-$ npm install rico-core -g
+$ npm install -g truffle@4.0.1
+$ npm install -g ganache-cli@6.0.3
+$ npm install -g truffle-hdwallet-provider@0.0.3
+$ npm install -g rico-core
 ```
 
 Then generate your RICO folder:
@@ -58,7 +60,7 @@ Today we will focus on the RICO standard ICO.
 
 The RICO Standard ICO includes the following benefits:
 
-**A Initial Deposit**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
+**Initial Deposit**: This is an initial deposit by the owner for a separate allocation of the ICO tokens. With RICO even the owners invest some ether for their share of the tokens.
 
 **Supporting the market makers**: RICO has a system to automatically send the owner's initial investment as fee to the market makers after the ICO concludes.
 
@@ -71,12 +73,16 @@ The RICO Standard ICO includes the following benefits:
 It's always smart to first test out your ICO on a testnet. We prepared a custom testrpc setting you can execute from the home directory of your RICO project folder:
 
 ```bash
+# if neccesary, cd into your rico folder:
+$ cd MyFirstRICO
+# make the rpcrun.bash file executable
 $ chmod +x rpcrun.bash
-# ↑ Mac only (make rpcrun executable)
+# run rpcrun.bash
 $ ./rpcrun.bash
 ```
 
 Please take note of the 6 addresses that were generated, as we'll be using them in the next step.
+Be sure to keep open this terminal window at all times, as this is your live local testnet.
 
 ## 4. Set our RICO Standard ICO's parameters
 
@@ -100,6 +106,10 @@ It's time to launch our ICO!
 The way RICO works is that the RICO and Launcher contracts are singletons: They are only deployed onto the blockchain once, and people can use these to create their own ICO contracts. For the sake of this tutorial I'll quickly deploy the RICO contracts onto the local testnet:
 
 ```bash
+# Make sure you are in your MyFirstRICO folder
+# We'll need to install the following dependency in the MyRicoFolder first:
+$ npm install truffle-hdwallet-provider@0.0.3
+# Then we'll migrate our contracts:
 $ truffle migrate --reset --network testrpc
 ```
 
@@ -163,6 +173,10 @@ In order to know on which addresses our RICO Standard ICO PoDs will be deployed,
 ## 7. Deploy my RICO Standard ICO
 
 Now all we need to do is to use execute the `deploy.js` script. It will send all our ICO parameters we set up to the Launcher contract.
+
+Make sure you have set all values of the deploy.js file to your liking! (See [4. Set our RICO Standard ICO's parameters](#4-set-our-rico-standard-icos-parameters))
+Keep your truffle console open and open a new terminal window:
+
 ```bash
 # cd to your MyFirstRICO directory:
 # Paste the correct contract address of the deployed RICO contract.
@@ -344,7 +358,7 @@ The 10 ETH we paid for the Initial Deposit is going to the market maker and can 
 
 #### Retrieve Initial Deposit tokens
 
-One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make a Initial Deposit that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
+One last thing to do before we can call it a day (or a RICO) is to receive the tokens that were kept for the owners. In this case we have make an Initial Deposit that has allocated 10% of the total tokens to be transferred to our owners after 180 days.
 
 Let's try passing 180 days on our testnet and see what happens:
 

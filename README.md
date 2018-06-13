@@ -61,9 +61,9 @@ An ICO made with RICO is:
 Install dependencies:
 
 ```bash
-$ npm install truffle@4.0.1 -g 
-$ npm install solidity-compiler -g
-$ npm install ganache-cli@6.0.3 -g
+$ npm install -g truffle@4.0.1
+$ npm install -g ganache-cli@6.0.3
+$ npm install -g truffle-hdwallet-provider@0.0.3
 ```
 (You can use ethereumjs-testrpc to test your RICO build.)
 
@@ -100,7 +100,7 @@ The RICO framework makes it possible to easily kickstart your ICO with your own 
 
 #### RICO Standard ICO
 
-RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is our suggested method and integrates a Initial Deposit and offers functionality for rewarding market makers. The tokens the owner receives from the Initial Deposit are locked for a fixed period of a 180 days.
+RICO Standard ICO utilizes the `RICOStandardPoD.sol` and `PublicSalePoD.sol` for your RICO. This method is our suggested method and integrates an Initial Deposit and offers functionality for rewarding market makers. The tokens the owner receives from the Initial Deposit are locked for a fixed period of a 180 days.
 
 #### Simple ICO
 
@@ -148,7 +148,8 @@ Replacing Launcher...
 Launcher: 0x39326f43557b33afdad3cec0d0272619c0d7ad9b
 
 We will need the RICO and Launcher addresses as written above.
-Continue to [Customize and initialize your ICO](#customize-and-initialize-your-ico).
+Continue to [Customize and initialize your ICO](#customize-and-initialize-your-ico) down below.
+Or see the [complete walkthrough](https://github.com/DRI-network/RICO/blob/master/resources/en/Complete%20Walkthrough.md) if you have trouble with testing RICO.
 
 #### Testnet deploy (ropsten)
 

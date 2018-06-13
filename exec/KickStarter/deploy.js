@@ -16,7 +16,7 @@ const publicSaleStartTime = now + 172800; // (seconds) Set the start of the Publ
 
 // Owner of the ICO. All ICO funds to be received in a multisig wallet.
 var multisigWalletAddress1 = '0x0'; // Can be your own address. Defaults to the user who executes this script.
-const multisigWalletAddress2 = '0x0'; // Must be different from address 1
+const multisigWalletAddress2 = '0x0'; // (required) Must be different from address 1
 const multisigWalletDailyLimit = 1 * 10 ** 18; // Allows an owner to withdraw a daily limit without multisig. Set to 1 ether.
 
 /**
@@ -40,46 +40,49 @@ const separateAllocationTokenAmount = totalTokenSupply * 10 / 100; // Set the se
 const separateAllocationLockTime = publicSaleStartTime + 2592000; // Set lock time of the separate allocation to 1 month.
 
 module.exports = async function (callback) {
+  try {
+    const rico = await RICO.at(process.env.RICO_ADDR) // retrieve the deployed RICO instance on the network
+    const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) // retrieve the deployed Launcher instance on the network
+    console.log(`RICO: ${rico.address} launcher: ${launcher.address}`)
 
-  const rico = await RICO.at(process.env.RICO_ADDR) // retrieve the deployed RICO instance on the network
-  const launcher = await Launcher.at(process.env.LAUNCHER_ADDR) // retrieve the deployed Launcher instance on the network
-  console.log(`RICO: ${rico.address} launcher: ${launcher.address}`)
-  
-  multisigWalletAddress1 = (!multisigWalletAddress1 || multisigWalletAddress1 == '0x0') ? await getAccount() : multisigWalletAddress1;
-  const wallet = await MultiSigWalletWithDailyLimit.contract.new([multisigWalletAddress1, multisigWalletAddress2], 2, multisigWalletDailyLimit)
-  console.log(`MultisigWallet: ${wallet.address}`)
-  
-  iniDepositFunder = await getAccount();
+    multisigWalletAddress1 = (!multisigWalletAddress1 || multisigWalletAddress1 == '0x0') ? await getAccount() : multisigWalletAddress1;
+    const wallet = await MultiSigWalletWithDailyLimit.new([multisigWalletAddress1, multisigWalletAddress2], 2, multisigWalletDailyLimit)
+    console.log(`MultisigWallet: ${wallet.address}`)
 
-  var newICO;
+    iniDepositFunder = await getAccount();
 
-  /**【RICO Standard ICO】
-   *  launch the standardICO on the already deployed Launcher.sol
-   *  see Launcher.sol for clarification on the parameters
-   */
-  newICO = await launcher.standardICO(
-    name,
-    symbol,
-    decimals,
-    wallet.address,
-    [iniDepositStartTime, iniDepositTokenSupply, iniDepositPrice, secondOwnerAllocation],
-    [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
-    [iniDepositFunder, iniDepositSecondOwner],
-    [marketMaker]
-  )
-  /**【Simple ICO】
-   *  launch the simpleICO on the already deployed Launcher.sol
-   *  see Launcher.sol for clarification on the parameters
-   */
-  // newICO = await launcher.simpleICO(
-  //   name,
-  //   symbol,
-  //   decimals,
-  //   wallet.address,
-  //   [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
-  //   [separateAllocationTokenAmount, separateAllocationLockTime]
-  // )
-  console.log(`tx:${newICO.tx}`)
+    var newICO;
+
+    /**【RICO Standard ICO】
+     *  launch the standardICO on the` already deployed Launcher.sol
+     *  see Launcher.sol for clarification on the parameters
+     */
+    newICO = await launcher.standardICO(
+      name,
+      symbol,
+      decimals,
+      wallet.address,
+      [iniDepositStartTime, iniDepositTokenSupply, iniDepositPrice, secondOwnerAllocation],
+      [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
+      [iniDepositFunder, iniDepositSecondOwner],
+      [marketMaker]
+    )
+    /**【Simple ICO】
+     *  launch the simpleICO on the already deployed Launcher.sol
+     *  see Launcher.sol for clarification on the parameters
+     */
+    // newICO = await launcher.simpleICO(
+    //   name,
+    //   symbol,
+    //   decimals,
+    //   wallet.address,
+    //   [publicSaleStartTime, publicSaleTokenSupply, publicSaleWeiCap],
+    //   [separateAllocationTokenAmount, separateAllocationLockTime]
+    // )
+    console.log(`tx:${newICO.tx}`)
+  } catch (error) {
+    console.log('error → ', error)
+  }
 }
 
 function getAccount() {
